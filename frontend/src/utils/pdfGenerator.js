@@ -55,6 +55,21 @@ export async function generatePDF(element, user, interpretation, counsellorNote 
     pdfContainer.style.width = '800px';
     pdfContainer.style.maxWidth = '800px';
 
+    // Wait for all images to load (including logo)
+    const images = pdfContainer.querySelectorAll('img');
+    const imagePromises = Array.from(images).map(img => {
+      if (img.complete) {
+        return Promise.resolve();
+      }
+      return new Promise((resolve, reject) => {
+        img.onload = resolve;
+        img.onerror = resolve; // Continue even if image fails to load
+        // Timeout after 5 seconds
+        setTimeout(resolve, 5000);
+      });
+    });
+    await Promise.all(imagePromises);
+
     // Wait for rendering
     await new Promise(resolve => setTimeout(resolve, 300));
 

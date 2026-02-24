@@ -284,6 +284,23 @@ function ResultPDF({ interpretation, counsellorNote, user, riasecReport }) {
 
   return (
     <div id="result-pdf" style={styles.container}>
+      {/* Logo - Before Header */}
+      <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '30px', paddingTop: '10px' }}>
+        <img 
+          src="/images/tops-logo.png" 
+          alt="Company Logo" 
+          style={{
+            maxWidth: '250px',
+            maxHeight: '100px',
+            objectFit: 'contain'
+          }}
+          onError={(e) => {
+            // Hide logo if it fails to load
+            e.target.style.display = 'none';
+          }}
+        />
+      </div>
+
       {/* Professional Header */}
       <div style={styles.header}>
         <h1 style={styles.headerTitle}>Career Assessment Report</h1>
