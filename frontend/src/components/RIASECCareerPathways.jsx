@@ -110,73 +110,291 @@ function RIASECCareerPathways({ careerPathways, dimensions }) {
       return { rows: [], bestField: null, bestPath: null };
     }
 
-    const scoreMap = {};
+    // STEP 1: NORMALIZE STUDENT RIASEC SCORES (MANDATORY)
+    const rawScoreMap = {};
     dimensions.forEach(d => {
-      if (d.code) scoreMap[d.code] = d.score || 0;
+      if (d.code) rawScoreMap[d.code] = d.score || 0;
     });
 
-    const sortedDims = [...dimensions].sort((a, b) => {
-      const scoreA = (a.score || 0);
-      const scoreB = (b.score || 0);
-      if (scoreB !== scoreA) return scoreB - scoreA;
-      return (a.code || '').localeCompare(b.code || '');
-    });
-    const top3Codes = sortedDims.slice(0, 3).map(d => d.code).filter(c => c);
+    const total = (rawScoreMap.R || 0) + (rawScoreMap.I || 0) + (rawScoreMap.A || 0) + 
+                  (rawScoreMap.S || 0) + (rawScoreMap.E || 0) + (rawScoreMap.C || 0);
+    
+    // Prevent division by zero
+    const safeTotal = total > 0 ? total : 1;
+    
+    const normalizedScores = {
+      R: (rawScoreMap.R || 0) / safeTotal,
+      I: (rawScoreMap.I || 0) / safeTotal,
+      A: (rawScoreMap.A || 0) / safeTotal,
+      S: (rawScoreMap.S || 0) / safeTotal,
+      E: (rawScoreMap.E || 0) / safeTotal,
+      C: (rawScoreMap.C || 0) / safeTotal
+    };
+
+    // Find dominant dimension
+    const sortedDims = Object.entries(normalizedScores)
+      .map(([code, score]) => ({ code, score }))
+      .sort((a, b) => {
+        if (b.score !== a.score) return b.score - a.score;
+        return a.code.localeCompare(b.code);
+      });
+    
+    const top3Codes = sortedDims.slice(0, 3).map(d => d.code);
     const dominantCode = top3Codes[0] || 'I';
     const riasecMix = top3Codes.length === 3 ? `${top3Codes[0]}-${top3Codes[1]}-${top3Codes[2]}` : top3Codes.join('-');
 
-    // Calculate compatibility score for each aspiring field
-    // Formula: Compatibility = Σ (RIASEC_Weight × Student_Score) for all 6 dimensions
-    // Example: If Engineering has R:0.4, I:0.35 and student scores R:80, I:75
-    //          Compatibility = (0.4 × 80) + (0.35 × 75) + ... for all dimensions
-    const calculateFieldCompatibility = (field) => {
+    // STEP 2: BASE COMPATIBILITY FORMULA (using normalized scores)
+    const calculateBaseCompatibility = (field) => {
       const weights = fieldRIASECMapping[field] || {};
       let compatibility = 0;
       ['R', 'I', 'A', 'S', 'E', 'C'].forEach(code => {
-        const weight = weights[code] || 0;  // Field's RIASEC weight (0-1)
-        const score = scoreMap[code] || 0;   // Student's RIASEC score (0-100)
-        compatibility += weight * score;      // Weighted contribution
+        const weight = weights[code] || 0;
+        const normalizedScore = normalizedScores[code] || 0;
+        compatibility += weight * normalizedScore;
       });
       return compatibility;
     };
 
-    const fieldScores = aspiringFieldsData.map(item => ({
-      field: item.aspiringField,
-      compatibility: calculateFieldCompatibility(item.aspiringField),
-      paths: item.careerPaths || []
-    })).sort((a, b) => {
-      if (b.compatibility !== a.compatibility) return b.compatibility - a.compatibility;
+    // STEP 3: BEHAVIOURAL CONFLICT ENGINE
+    const applyBehavioralConflicts = (field, baseCompatibility) => {
+      let finalScore = baseCompatibility;
+      const Rn = normalizedScores.R;
+      const In = normalizedScores.I;
+      const An = normalizedScores.A;
+      const Sn = normalizedScores.S;
+      const En = normalizedScores.E;
+      const Cn = normalizedScores.C;
+
+      // Field-specific conflict rules
+      switch (field) {
+        case 'Engineering':
+          // Conflict: A dominant with low R
+          if (An > Rn && Rn < 0.15) {
+            finalScore *= 0.75;
+          }
+          break;
+
+        case 'Tech':
+          // Conflict: C dominant with low R/I
+          if (Cn > Math.max(Rn, In) && (Rn + In) < 0.30) {
+            finalScore *= 0.70;
+          }
+          break;
+
+        case 'Medical & Health':
+          // Conflict: S low or R dominant
+          if (Sn < 0.15) {
+            finalScore *= 0.65;
+          } else if (Rn > Math.max(In, Sn)) {
+            finalScore *= 0.75;
+          }
+          break;
+
+        case 'Data Science':
+          // Conflict: R dominant over I
+          if (Rn > In) {
+            finalScore *= 0.80;
+          }
+          // Boost: I dominant
+          if (In > Math.max(Rn, An, Sn, En, Cn)) {
+            finalScore *= 1.10;
+          }
+          break;
+
+        case 'Data Analytics':
+          // Conflict: A dominant
+          if (An > Math.max(In, Cn)) {
+            finalScore *= 0.75;
+          }
+          break;
+
+        case 'Pure & Applied Science':
+          // Conflict: E dominant
+          if (En > Math.max(In, Rn)) {
+            finalScore *= 0.75;
+          }
+          break;
+
+        case 'Business & Management':
+          // Conflict: R dominant
+          if (Rn > Math.max(En, Cn)) {
+            finalScore *= 0.75;
+          }
+          break;
+
+        case 'Accounting':
+          // Critical conflicts
+          if (Rn >= Cn) {
+            finalScore *= 0.60;
+          } else if (In > Cn * 1.2) {
+            finalScore *= 0.75;
+          } else if (An > 0.20) {
+            finalScore *= 0.75;
+          }
+          break;
+
+        case 'Finance':
+          // Conflict: A dominant
+          if (An > Math.max(En, Cn)) {
+            finalScore *= 0.75;
+          }
+          // Boost: E dominant
+          if (En > Math.max(Cn, In)) {
+            finalScore *= 1.05;
+          }
+          break;
+
+        case 'Humanities':
+          // Conflict: C dominant
+          if (Cn > Math.max(An, Sn)) {
+            finalScore *= 0.70;
+          }
+          break;
+
+        case 'Design':
+          // Critical conflict: C >= A
+          if (Cn >= An) {
+            finalScore *= 0.60;
+          }
+          break;
+
+        case 'Media':
+          // Conflict: R dominant
+          if (Rn > Math.max(An, En)) {
+            finalScore *= 0.75;
+          }
+          break;
+
+        case 'Networking':
+          // Conflict: A dominant
+          if (An > Math.max(Rn, In)) {
+            finalScore *= 0.75;
+          }
+          break;
+
+        case 'Marketing':
+          // Conflict: C dominant
+          if (Cn > Math.max(En, An)) {
+            finalScore *= 0.70;
+          }
+          break;
+
+        case 'Law':
+          // Conflict: A dominant
+          if (An > Math.max(En, Cn, In)) {
+            finalScore *= 0.70;
+          }
+          break;
+
+        case 'Computer Applications':
+          // Boost: I dominant
+          if (In > Math.max(Rn, Cn, An, Sn, En)) {
+            finalScore *= 1.15;
+          }
+          // Conflict: C dominant with low I/R
+          if (Cn > Math.max(In, Rn) && (Rn + In) < 0.40) {
+            finalScore *= 0.70;
+          }
+          break;
+
+        case 'Hospitality':
+          // Conflict: I dominant with low S
+          if (In > Math.max(Sn, En) && Sn < 0.20) {
+            finalScore *= 0.75;
+          }
+          break;
+      }
+
+      return finalScore;
+    };
+
+    // Calculate base compatibility and apply conflicts
+    const fieldScores = aspiringFieldsData.map(item => {
+      const baseCompatibility = calculateBaseCompatibility(item.aspiringField);
+      const finalScore = applyBehavioralConflicts(item.aspiringField, baseCompatibility);
+      
+      return {
+        field: item.aspiringField,
+        baseCompatibility,
+        finalScore,
+        paths: item.careerPaths || []
+      };
+    });
+
+    // Sort by final score
+    fieldScores.sort((a, b) => {
+      if (Math.abs(b.finalScore - a.finalScore) > 0.0001) {
+        return b.finalScore - a.finalScore;
+      }
+      // Tie-breaker: dominant dimension weight
       const aDominantWeight = fieldRIASECMapping[a.field]?.[dominantCode] || 0;
       const bDominantWeight = fieldRIASECMapping[b.field]?.[dominantCode] || 0;
       return bDominantWeight - aDominantWeight;
     });
 
-    // Get top 3 fields for confidence calculation
-    const top3Fields = fieldScores.slice(0, 3).map(f => f.field);
-    const bestField = fieldScores[0]?.field || null;
+    // STEP 5: STABILITY MARGIN
+    const bestScore = fieldScores[0]?.finalScore || 0;
+    const secondBestScore = fieldScores[1]?.finalScore || 0;
+    const scoreDifference = bestScore - secondBestScore;
+    const stabilityThreshold = 0.12; // 12% threshold
 
-    // Create one row per aspiring field with all 3 career paths
+    // If unstable competition, prefer fields in same cluster
+    let finalRanking = [...fieldScores];
+    if (scoreDifference < stabilityThreshold && fieldScores.length > 1) {
+      // Get dominant cluster
+      const dominantCluster = dominantCode;
+      const clusterFields = {
+        'I': ['Data Science', 'Pure & Applied Science', 'Tech', 'Computer Applications', 'Data Analytics'],
+        'R': ['Engineering', 'Tech', 'Networking', 'Computer Applications'],
+        'A': ['Design', 'Media', 'Humanities'],
+        'E': ['Business & Management', 'Finance', 'Marketing', 'Law'],
+        'C': ['Accounting', 'Finance', 'Business & Management'],
+        'S': ['Medical & Health', 'Humanities', 'Hospitality']
+      };
+
+      const preferredFields = clusterFields[dominantCluster] || [];
+      
+      // Boost fields in same cluster when competition is tight
+      finalRanking = fieldScores.map(item => {
+        if (preferredFields.includes(item.field) && scoreDifference < stabilityThreshold) {
+          return {
+            ...item,
+            finalScore: item.finalScore * 1.05 // Small boost for cluster alignment
+          };
+        }
+        return item;
+      }).sort((a, b) => {
+        if (Math.abs(b.finalScore - a.finalScore) > 0.0001) {
+          return b.finalScore - a.finalScore;
+        }
+        const aDominantWeight = fieldRIASECMapping[a.field]?.[dominantCode] || 0;
+        const bDominantWeight = fieldRIASECMapping[b.field]?.[dominantCode] || 0;
+        return bDominantWeight - aDominantWeight;
+      });
+    }
+
+    // Get top 3 fields for confidence calculation
+    const top3Fields = finalRanking.slice(0, 3).map(f => f.field);
+    const bestField = finalRanking[0]?.field || null;
+
+    // Create rows with final scores
     const allRows = [];
     aspiringFieldsData.forEach(item => {
-      const fieldCompatibility = calculateFieldCompatibility(item.aspiringField);
-      
-      // Get all 3 career paths for this field
+      const fieldData = finalRanking.find(f => f.field === item.aspiringField);
+      const finalCompatibility = fieldData?.finalScore || 0;
       const allCareerPaths = item.careerPaths || [];
-      
-      // Find the best matching career path (first one has highest priority)
       const bestPathForField = allCareerPaths[0] || null;
       
-      // Add one row per aspiring field with all career paths
       allRows.push({
         aspiringField: item.aspiringField,
-        careerPaths: allCareerPaths, // All 3 career paths
-        bestCareerPath: bestPathForField, // Best matching path for highlighting
+        careerPaths: allCareerPaths,
+        bestCareerPath: bestPathForField,
         riasecMix: riasecMix,
-        compatibility: fieldCompatibility
+        compatibility: finalCompatibility
       });
     });
     
-    // Sort rows by compatibility (best matches first)
+    // Sort rows by final compatibility
     allRows.sort((a, b) => b.compatibility - a.compatibility);
     
     const bestPath = allRows[0]?.bestCareerPath || null;

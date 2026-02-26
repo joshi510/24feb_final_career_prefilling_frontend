@@ -869,49 +869,192 @@ function ResultPDF({ interpretation, counsellorNote, user, riasecReport }) {
         };
 
         const dimensions = riasecReport.dimensions || [];
-        const scoreMap = {};
+        
+        // STEP 1: NORMALIZE STUDENT RIASEC SCORES (MANDATORY)
+        const rawScoreMap = {};
         dimensions.forEach(d => {
-          if (d.code) scoreMap[d.code] = d.score || 0;
+          if (d.code) rawScoreMap[d.code] = d.score || 0;
         });
 
-        const sortedDims = [...dimensions].sort((a, b) => {
-          const scoreA = (a.score || 0);
-          const scoreB = (b.score || 0);
-          if (scoreB !== scoreA) return scoreB - scoreA;
-          return (a.code || '').localeCompare(b.code || '');
-        });
-        const top3Codes = sortedDims.slice(0, 3).map(d => d.code).filter(c => c);
+        const total = (rawScoreMap.R || 0) + (rawScoreMap.I || 0) + (rawScoreMap.A || 0) + 
+                      (rawScoreMap.S || 0) + (rawScoreMap.E || 0) + (rawScoreMap.C || 0);
+        
+        const safeTotal = total > 0 ? total : 1;
+        
+        const normalizedScores = {
+          R: (rawScoreMap.R || 0) / safeTotal,
+          I: (rawScoreMap.I || 0) / safeTotal,
+          A: (rawScoreMap.A || 0) / safeTotal,
+          S: (rawScoreMap.S || 0) / safeTotal,
+          E: (rawScoreMap.E || 0) / safeTotal,
+          C: (rawScoreMap.C || 0) / safeTotal
+        };
+
+        // Find dominant dimension
+        const sortedDims = Object.entries(normalizedScores)
+          .map(([code, score]) => ({ code, score }))
+          .sort((a, b) => {
+            if (b.score !== a.score) return b.score - a.score;
+            return a.code.localeCompare(b.code);
+          });
+        
+        const top3Codes = sortedDims.slice(0, 3).map(d => d.code);
         const dominantCode = top3Codes[0] || 'I';
         const riasecMix = top3Codes.length === 3 ? `${top3Codes[0]}-${top3Codes[1]}-${top3Codes[2]}` : top3Codes.join('-');
 
-        const calculateFieldCompatibility = (field) => {
+        // STEP 2: BASE COMPATIBILITY FORMULA (using normalized scores)
+        const calculateBaseCompatibility = (field) => {
           const weights = fieldRIASECMapping[field] || {};
           let compatibility = 0;
           ['R', 'I', 'A', 'S', 'E', 'C'].forEach(code => {
             const weight = weights[code] || 0;
-            const score = scoreMap[code] || 0;
-            compatibility += weight * score;
+            const normalizedScore = normalizedScores[code] || 0;
+            compatibility += weight * normalizedScore;
           });
           return compatibility;
         };
 
-        const fieldScores = aspiringFieldsData.map(item => ({
-          field: item.aspiringField,
-          compatibility: calculateFieldCompatibility(item.aspiringField),
-          paths: item.careerPaths || []
-        })).sort((a, b) => {
-          if (b.compatibility !== a.compatibility) return b.compatibility - a.compatibility;
+        // STEP 3: BEHAVIOURAL CONFLICT ENGINE
+        const applyBehavioralConflicts = (field, baseCompatibility) => {
+          let finalScore = baseCompatibility;
+          const Rn = normalizedScores.R;
+          const In = normalizedScores.I;
+          const An = normalizedScores.A;
+          const Sn = normalizedScores.S;
+          const En = normalizedScores.E;
+          const Cn = normalizedScores.C;
+
+          switch (field) {
+            case 'Engineering':
+              if (An > Rn && Rn < 0.15) finalScore *= 0.75;
+              break;
+            case 'Tech':
+              if (Cn > Math.max(Rn, In) && (Rn + In) < 0.30) finalScore *= 0.70;
+              break;
+            case 'Medical & Health':
+              if (Sn < 0.15) finalScore *= 0.65;
+              else if (Rn > Math.max(In, Sn)) finalScore *= 0.75;
+              break;
+            case 'Data Science':
+              if (Rn > In) finalScore *= 0.80;
+              if (In > Math.max(Rn, An, Sn, En, Cn)) finalScore *= 1.10;
+              break;
+            case 'Data Analytics':
+              if (An > Math.max(In, Cn)) finalScore *= 0.75;
+              break;
+            case 'Pure & Applied Science':
+              if (En > Math.max(In, Rn)) finalScore *= 0.75;
+              break;
+            case 'Business & Management':
+              if (Rn > Math.max(En, Cn)) finalScore *= 0.75;
+              break;
+            case 'Accounting':
+              if (Rn >= Cn) finalScore *= 0.60;
+              else if (In > Cn * 1.2) finalScore *= 0.75;
+              else if (An > 0.20) finalScore *= 0.75;
+              break;
+            case 'Finance':
+              if (An > Math.max(En, Cn)) finalScore *= 0.75;
+              if (En > Math.max(Cn, In)) finalScore *= 1.05;
+              break;
+            case 'Humanities':
+              if (Cn > Math.max(An, Sn)) finalScore *= 0.70;
+              break;
+            case 'Design':
+              if (Cn >= An) finalScore *= 0.60;
+              break;
+            case 'Media':
+              if (Rn > Math.max(An, En)) finalScore *= 0.75;
+              break;
+            case 'Networking':
+              if (An > Math.max(Rn, In)) finalScore *= 0.75;
+              break;
+            case 'Marketing':
+              if (Cn > Math.max(En, An)) finalScore *= 0.70;
+              break;
+            case 'Law':
+              if (An > Math.max(En, Cn, In)) finalScore *= 0.70;
+              break;
+            case 'Computer Applications':
+              if (In > Math.max(Rn, Cn, An, Sn, En)) finalScore *= 1.15;
+              if (Cn > Math.max(In, Rn) && (Rn + In) < 0.40) finalScore *= 0.70;
+              break;
+            case 'Hospitality':
+              if (In > Math.max(Sn, En) && Sn < 0.20) finalScore *= 0.75;
+              break;
+          }
+
+          return finalScore;
+        };
+
+        // Calculate base compatibility and apply conflicts
+        const fieldScores = aspiringFieldsData.map(item => {
+          const baseCompatibility = calculateBaseCompatibility(item.aspiringField);
+          const finalScore = applyBehavioralConflicts(item.aspiringField, baseCompatibility);
+          
+          return {
+            field: item.aspiringField,
+            baseCompatibility,
+            finalScore,
+            paths: item.careerPaths || []
+          };
+        });
+
+        // Sort by final score
+        fieldScores.sort((a, b) => {
+          if (Math.abs(b.finalScore - a.finalScore) > 0.0001) {
+            return b.finalScore - a.finalScore;
+          }
           const aDominantWeight = fieldRIASECMapping[a.field]?.[dominantCode] || 0;
           const bDominantWeight = fieldRIASECMapping[b.field]?.[dominantCode] || 0;
           return bDominantWeight - aDominantWeight;
         });
 
-        const top3Fields = fieldScores.slice(0, 3).map(f => f.field);
-        const bestField = fieldScores[0]?.field || null;
+        // STEP 5: STABILITY MARGIN
+        const bestScore = fieldScores[0]?.finalScore || 0;
+        const secondBestScore = fieldScores[1]?.finalScore || 0;
+        const scoreDifference = bestScore - secondBestScore;
+        const stabilityThreshold = 0.12;
+
+        let finalRanking = [...fieldScores];
+        if (scoreDifference < stabilityThreshold && fieldScores.length > 1) {
+          const dominantCluster = dominantCode;
+          const clusterFields = {
+            'I': ['Data Science', 'Pure & Applied Science', 'Tech', 'Computer Applications', 'Data Analytics'],
+            'R': ['Engineering', 'Tech', 'Networking', 'Computer Applications'],
+            'A': ['Design', 'Media', 'Humanities'],
+            'E': ['Business & Management', 'Finance', 'Marketing', 'Law'],
+            'C': ['Accounting', 'Finance', 'Business & Management'],
+            'S': ['Medical & Health', 'Humanities', 'Hospitality']
+          };
+
+          const preferredFields = clusterFields[dominantCluster] || [];
+          
+          finalRanking = fieldScores.map(item => {
+            if (preferredFields.includes(item.field) && scoreDifference < stabilityThreshold) {
+              return {
+                ...item,
+                finalScore: item.finalScore * 1.05
+              };
+            }
+            return item;
+          }).sort((a, b) => {
+            if (Math.abs(b.finalScore - a.finalScore) > 0.0001) {
+              return b.finalScore - a.finalScore;
+            }
+            const aDominantWeight = fieldRIASECMapping[a.field]?.[dominantCode] || 0;
+            const bDominantWeight = fieldRIASECMapping[b.field]?.[dominantCode] || 0;
+            return bDominantWeight - aDominantWeight;
+          });
+        }
+
+        const top3Fields = finalRanking.slice(0, 3).map(f => f.field);
+        const bestField = finalRanking[0]?.field || null;
 
         const allRows = [];
         aspiringFieldsData.forEach(item => {
-          const fieldCompatibility = calculateFieldCompatibility(item.aspiringField);
+          const fieldData = finalRanking.find(f => f.field === item.aspiringField);
+          const finalCompatibility = fieldData?.finalScore || 0;
           const allCareerPaths = item.careerPaths || [];
           const bestPathForField = allCareerPaths[0] || null;
           
@@ -920,7 +1063,7 @@ function ResultPDF({ interpretation, counsellorNote, user, riasecReport }) {
             careerPaths: allCareerPaths,
             bestCareerPath: bestPathForField,
             riasecMix: riasecMix,
-            compatibility: fieldCompatibility
+            compatibility: finalCompatibility
           });
         });
         
