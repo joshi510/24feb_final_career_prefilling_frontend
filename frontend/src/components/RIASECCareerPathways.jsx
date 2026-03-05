@@ -85,7 +85,7 @@ function RIASECCareerPathways({ careerPathways, dimensions }) {
       'Medical & Health': { I: 0.30, S: 0.35, C: 0.15, R: 0.10, E: 0.05, A: 0.05 },
       'Data Science': { I: 0.45, A: 0.20, C: 0.15, R: 0.10, E: 0.05, S: 0.05 },
       'Data Analytics': { I: 0.35, C: 0.30, E: 0.15, A: 0.10, S: 0.05, R: 0.05 },
-      'Pure & Applied Science': { I: 0.50, R: 0.20, C: 0.15, A: 0.10, S: 0.03, E: 0.02 },
+      'Pure & Applied Science': { I: 0.40, R: 0.35, C: 0.15, A: 0.05, S: 0.03, E: 0.02 },
       'Business & Management': { E: 0.40, C: 0.25, S: 0.20, I: 0.10, A: 0.03, R: 0.02 },
       'Accounting': { C: 0.50, I: 0.20, E: 0.15, S: 0.10, R: 0.03, A: 0.02 },
       'Finance': { E: 0.35, C: 0.30, I: 0.20, S: 0.10, A: 0.03, R: 0.02 },
@@ -95,7 +95,7 @@ function RIASECCareerPathways({ careerPathways, dimensions }) {
       'Networking': { I: 0.35, R: 0.30, C: 0.20, E: 0.10, A: 0.03, S: 0.02 },
       'Marketing': { E: 0.40, A: 0.25, S: 0.20, I: 0.10, C: 0.03, R: 0.02 },
       'Law': { E: 0.35, I: 0.25, C: 0.20, S: 0.15, A: 0.03, R: 0.02 },
-      'Computer Applications': { I: 0.30, R: 0.25, C: 0.25, A: 0.10, E: 0.05, S: 0.05 },
+      'Computer Applications': { I: 0.30, R: 0.30, C: 0.20, A: 0.10, E: 0.05, S: 0.05 },
       'Hospitality': { S: 0.40, E: 0.30, A: 0.15, C: 0.10, I: 0.03, R: 0.02 }
     };
   }, []);
@@ -345,10 +345,10 @@ function RIASECCareerPathways({ careerPathways, dimensions }) {
       const dominantCluster = dominantCode;
       const clusterFields = {
         'I': ['Data Science', 'Pure & Applied Science', 'Tech', 'Computer Applications', 'Data Analytics'],
-        'R': ['Engineering', 'Tech', 'Networking', 'Computer Applications'],
+        'R': ['Engineering', 'Pure & Applied Science', 'Tech', 'Networking', 'Computer Applications'],
         'A': ['Design', 'Media', 'Humanities'],
         'E': ['Business & Management', 'Finance', 'Marketing', 'Law'],
-        'C': ['Accounting', 'Finance', 'Business & Management'],
+        'C': ['Accounting', 'Finance', 'Business & Management', 'Data Analytics'],
         'S': ['Medical & Health', 'Humanities', 'Hospitality']
       };
 
@@ -373,14 +373,86 @@ function RIASECCareerPathways({ careerPathways, dimensions }) {
       });
     }
 
-    // Get top 3 fields for confidence calculation
-    const top3Fields = finalRanking.slice(0, 3).map(f => f.field);
-    const bestField = finalRanking[0]?.field || null;
+    // STEP 6: ENFORCE TOP 2 POSITIONS BASED ON DOMINANT DIMENSION
+    const dominantTop2Fields = {
+      'R': {
+        first: ['Engineering', 'Pure & Applied Science'],
+        second: ['Computer Applications']
+      },
+      'I': {
+        first: ['Pure & Applied Science'],
+        second: ['Data Science']
+      },
+      'A': {
+        first: ['Design'],
+        second: ['Media']
+      },
+      'S': {
+        first: ['Hospitality'],
+        second: ['Medical & Health']
+      },
+      'E': {
+        first: ['Business & Management'],
+        second: ['Marketing', 'Finance']
+      },
+      'C': {
+        first: ['Accounting'],
+        second: ['Finance', 'Data Analytics']
+      }
+    };
 
-    // Create rows with final scores
+    const top2Rules = dominantTop2Fields[dominantCode] || { first: [], second: [] };
+    
+    // Find current positions of required fields
+    const fieldIndexMap = {};
+    finalRanking.forEach((item, index) => {
+      fieldIndexMap[item.field] = index;
+    });
+
+    // Get the highest score from finalRanking for reference
+    const maxScore = finalRanking[0]?.finalScore || 1;
+    
+    // Adjust scores to enforce top 2 positions
+    const adjustedRanking = finalRanking.map(item => {
+      // First position fields - set to max score (tied)
+      if (top2Rules.first.includes(item.field)) {
+        return { ...item, finalScore: maxScore };
+      }
+      // Second position fields - set to maxScore * 0.95 (slightly below first)
+      if (top2Rules.second.includes(item.field)) {
+        // If multiple second options, use the one with higher original score
+        const secondFields = top2Rules.second.filter(f => fieldIndexMap[f] !== undefined);
+        const secondScores = secondFields.map(f => {
+          const idx = fieldIndexMap[f];
+          return { field: f, score: finalRanking[idx]?.finalScore || 0 };
+        });
+        secondScores.sort((a, b) => b.score - a.score);
+        const bestSecond = secondScores[0]?.field;
+        if (item.field === bestSecond) {
+          return { ...item, finalScore: maxScore * 0.95 };
+        }
+      }
+      return item;
+    });
+
+    // Re-sort with adjusted scores
+    adjustedRanking.sort((a, b) => {
+      if (Math.abs(b.finalScore - a.finalScore) > 0.0001) {
+        return b.finalScore - a.finalScore;
+      }
+      const aDominantWeight = fieldRIASECMapping[a.field]?.[dominantCode] || 0;
+      const bDominantWeight = fieldRIASECMapping[b.field]?.[dominantCode] || 0;
+      return bDominantWeight - aDominantWeight;
+    });
+
+    // Get top 3 fields for confidence calculation
+    const top3Fields = adjustedRanking.slice(0, 3).map(f => f.field);
+    const bestField = adjustedRanking[0]?.field || null;
+
+    // Create rows with final scores and rank numbers
     const allRows = [];
     aspiringFieldsData.forEach(item => {
-      const fieldData = finalRanking.find(f => f.field === item.aspiringField);
+      const fieldData = adjustedRanking.find(f => f.field === item.aspiringField);
       const finalCompatibility = fieldData?.finalScore || 0;
       const allCareerPaths = item.careerPaths || [];
       const bestPathForField = allCareerPaths[0] || null;
@@ -396,6 +468,17 @@ function RIASECCareerPathways({ careerPathways, dimensions }) {
     
     // Sort rows by final compatibility
     allRows.sort((a, b) => b.compatibility - a.compatibility);
+    
+    // Add rank numbers: top 2 get rank 1, then 3, 4, 5...
+    allRows.forEach((row, index) => {
+      if (index < 2) {
+        row.rank = 1;
+        row.isTop2 = true;
+      } else {
+        row.rank = index + 1; // 3, 4, 5, 6...
+        row.isTop2 = false;
+      }
+    });
     
     const bestPath = allRows[0]?.bestCareerPath || null;
 
@@ -469,7 +552,7 @@ function RIASECCareerPathways({ careerPathways, dimensions }) {
         {rows.map((row, index) => {
           const isBestField = row.aspiringField === bestField;
           const isBestPath = row.careerPaths && row.careerPaths.includes(bestPath);
-          const isHighlighted = isBestField || isBestPath;
+          const isHighlighted = row.isTop2 || false; // Highlight top 2
           
           const fieldRank = top3Fields.indexOf(row.aspiringField);
           
@@ -588,9 +671,9 @@ function RIASECCareerPathways({ careerPathways, dimensions }) {
           };
 
           const calculateConfidence = () => {
-            if (fieldRank === 0) {
+            if (row.isTop2) {
               return { level: 'HIGH', label: 'High Confidence' };
-            } else if (fieldRank === 1 || fieldRank === 2) {
+            } else if (index < 5) {
               return { level: 'MODERATE', label: 'Moderate Confidence' };
             } else {
               return { level: 'LOW', label: 'Low Confidence' };
@@ -619,9 +702,14 @@ function RIASECCareerPathways({ careerPathways, dimensions }) {
               {/* Header */}
               <div className="flex items-start justify-between mb-3">
                 <div className="flex-1">
-                  <h4 className={`text-lg font-bold mb-2 ${isBestField ? 'text-indigo-700 dark:text-indigo-300' : 'text-slate-900 dark:text-slate-100'}`}>
-                    {row.aspiringField}
-                  </h4>
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className={`text-sm font-bold ${isHighlighted ? 'text-indigo-700 dark:text-indigo-300' : 'text-slate-500 dark:text-slate-400'}`}>
+                      {row.rank}.
+                    </span>
+                    <h4 className={`text-lg font-bold ${isHighlighted ? 'text-indigo-700 dark:text-indigo-300' : 'text-slate-900 dark:text-slate-100'}`}>
+                      {row.aspiringField}
+                    </h4>
+                  </div>
                   <div className="flex items-center gap-1.5 flex-wrap">
                     {row.riasecMix ? row.riasecMix.split('-').map((code, idx) => {
                       const codeColors = {
@@ -702,7 +790,7 @@ function RIASECCareerPathways({ careerPathways, dimensions }) {
             {rows.map((row, index) => {
               const isBestField = row.aspiringField === bestField;
               const isBestPath = row.careerPaths && row.careerPaths.includes(bestPath);
-              const isHighlighted = isBestField || isBestPath;
+              const isHighlighted = row.isTop2 || false; // Highlight top 2
               
               // Get field rank for confidence calculation
               const fieldRank = top3Fields.indexOf(row.aspiringField);
@@ -822,13 +910,10 @@ function RIASECCareerPathways({ careerPathways, dimensions }) {
               };
 
               const calculateConfidence = () => {
-                // Top 3 confidence logic:
-                // HIGH: Rank 1 (best field)
-                // MODERATE: Rank 2-3
-                // LOW: All others
-                if (fieldRank === 0) {
+                // Top 2 get HIGH confidence, next 3 get MODERATE, rest get LOW
+                if (row.isTop2) {
                   return { level: 'HIGH', label: 'High Confidence' };
-                } else if (fieldRank === 1 || fieldRank === 2) {
+                } else if (index < 5) {
                   return { level: 'MODERATE', label: 'Moderate Confidence' };
                 } else {
                   return { level: 'LOW', label: 'Low Confidence' };
@@ -860,8 +945,13 @@ function RIASECCareerPathways({ careerPathways, dimensions }) {
                   } : {}}
                 >
                   <td className="py-4 px-2 sm:px-4 align-top">
-                    <div className={`font-semibold text-slate-900 dark:text-slate-100 ${isBestField ? 'text-indigo-700 dark:text-indigo-300' : ''}`}>
-                      {row.aspiringField}
+                    <div className="flex items-center gap-2">
+                      <span className={`text-sm font-bold ${isHighlighted ? 'text-indigo-700 dark:text-indigo-300' : 'text-slate-500 dark:text-slate-400'}`}>
+                        {row.rank}.
+                      </span>
+                      <div className={`font-semibold text-slate-900 dark:text-slate-100 ${isHighlighted ? 'text-indigo-700 dark:text-indigo-300' : ''}`}>
+                        {row.aspiringField}
+                      </div>
                     </div>
                   </td>
                   <td className="py-4 px-2 sm:px-4 align-top">

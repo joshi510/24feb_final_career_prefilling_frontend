@@ -848,13 +848,37 @@ function ResultPDF({ interpretation, counsellorNote, user, riasecReport }) {
         // Calculate pathways dynamically (same logic as frontend component)
         const aspiringFieldsData = CAREER_PATHWAYS_DATA;
         
+        const fieldEnvironmentCodes = {
+          Engineering: 'IRC',
+          'Computer Science': 'IRC',
+          Networking: 'IRC',
+          'Computer Applications': 'ICR',
+          'Data Science': 'IAR',
+          'Data Analytics': 'ICR',
+          Tech: 'IRC',
+          'Pure & Applied Science': 'IRA',
+          'Medical & Health': 'SIC',
+          Accounting: 'CER',
+          Finance: 'ECR',
+          'Business & Management': 'ECS',
+          Marketing: 'EAS',
+          Law: 'EIC',
+          Design: 'ARE',
+          Media: 'AES',
+          Hospitality: 'SEC',
+          Humanities: 'SAE'
+        };
+
+        const dimensions = riasecReport.dimensions || [];
+        
+        // Field RIASEC mapping (same as frontend component)
         const fieldRIASECMapping = {
           'Engineering': { R: 0.4, I: 0.35, C: 0.15, A: 0.05, S: 0.03, E: 0.02 },
           'Tech': { I: 0.35, R: 0.25, C: 0.20, A: 0.10, E: 0.05, S: 0.05 },
           'Medical & Health': { I: 0.30, S: 0.35, C: 0.15, R: 0.10, E: 0.05, A: 0.05 },
           'Data Science': { I: 0.45, A: 0.20, C: 0.15, R: 0.10, E: 0.05, S: 0.05 },
           'Data Analytics': { I: 0.35, C: 0.30, E: 0.15, A: 0.10, S: 0.05, R: 0.05 },
-          'Pure & Applied Science': { I: 0.50, R: 0.20, C: 0.15, A: 0.10, S: 0.03, E: 0.02 },
+          'Pure & Applied Science': { I: 0.40, R: 0.35, C: 0.15, A: 0.05, S: 0.03, E: 0.02 },
           'Business & Management': { E: 0.40, C: 0.25, S: 0.20, I: 0.10, A: 0.03, R: 0.02 },
           'Accounting': { C: 0.50, I: 0.20, E: 0.15, S: 0.10, R: 0.03, A: 0.02 },
           'Finance': { E: 0.35, C: 0.30, I: 0.20, S: 0.10, A: 0.03, R: 0.02 },
@@ -864,13 +888,11 @@ function ResultPDF({ interpretation, counsellorNote, user, riasecReport }) {
           'Networking': { I: 0.35, R: 0.30, C: 0.20, E: 0.10, A: 0.03, S: 0.02 },
           'Marketing': { E: 0.40, A: 0.25, S: 0.20, I: 0.10, C: 0.03, R: 0.02 },
           'Law': { E: 0.35, I: 0.25, C: 0.20, S: 0.15, A: 0.03, R: 0.02 },
-          'Computer Applications': { I: 0.30, R: 0.25, C: 0.25, A: 0.10, E: 0.05, S: 0.05 },
+          'Computer Applications': { I: 0.30, R: 0.30, C: 0.20, A: 0.10, E: 0.05, S: 0.05 },
           'Hospitality': { S: 0.40, E: 0.30, A: 0.15, C: 0.10, I: 0.03, R: 0.02 }
         };
 
-        const dimensions = riasecReport.dimensions || [];
-        
-        // STEP 1: NORMALIZE STUDENT RIASEC SCORES (MANDATORY)
+        // STEP 1: NORMALIZE STUDENT RIASEC SCORES
         const rawScoreMap = {};
         dimensions.forEach(d => {
           if (d.code) rawScoreMap[d.code] = d.score || 0;
@@ -893,16 +915,13 @@ function ResultPDF({ interpretation, counsellorNote, user, riasecReport }) {
         // Find dominant dimension
         const sortedDims = Object.entries(normalizedScores)
           .map(([code, score]) => ({ code, score }))
-          .sort((a, b) => {
-            if (b.score !== a.score) return b.score - a.score;
-            return a.code.localeCompare(b.code);
-          });
+          .sort((a, b) => b.score - a.score);
         
         const top3Codes = sortedDims.slice(0, 3).map(d => d.code);
         const dominantCode = top3Codes[0] || 'I';
         const riasecMix = top3Codes.length === 3 ? `${top3Codes[0]}-${top3Codes[1]}-${top3Codes[2]}` : top3Codes.join('-');
 
-        // STEP 2: BASE COMPATIBILITY FORMULA (using normalized scores)
+        // STEP 2: BASE COMPATIBILITY FORMULA
         const calculateBaseCompatibility = (field) => {
           const weights = fieldRIASECMapping[field] || {};
           let compatibility = 0;
@@ -983,12 +1002,11 @@ function ResultPDF({ interpretation, counsellorNote, user, riasecReport }) {
               if (In > Math.max(Sn, En) && Sn < 0.20) finalScore *= 0.75;
               break;
           }
-
           return finalScore;
         };
 
         // Calculate base compatibility and apply conflicts
-        const fieldScores = aspiringFieldsData.map(item => {
+        let fieldScores = aspiringFieldsData.map(item => {
           const baseCompatibility = calculateBaseCompatibility(item.aspiringField);
           const finalScore = applyBehavioralConflicts(item.aspiringField, baseCompatibility);
           
@@ -1010,7 +1028,7 @@ function ResultPDF({ interpretation, counsellorNote, user, riasecReport }) {
           return bDominantWeight - aDominantWeight;
         });
 
-        // STEP 5: STABILITY MARGIN
+        // STEP 4: STABILITY MARGIN
         const bestScore = fieldScores[0]?.finalScore || 0;
         const secondBestScore = fieldScores[1]?.finalScore || 0;
         const scoreDifference = bestScore - secondBestScore;
@@ -1018,24 +1036,20 @@ function ResultPDF({ interpretation, counsellorNote, user, riasecReport }) {
 
         let finalRanking = [...fieldScores];
         if (scoreDifference < stabilityThreshold && fieldScores.length > 1) {
-          const dominantCluster = dominantCode;
           const clusterFields = {
             'I': ['Data Science', 'Pure & Applied Science', 'Tech', 'Computer Applications', 'Data Analytics'],
-            'R': ['Engineering', 'Tech', 'Networking', 'Computer Applications'],
+            'R': ['Engineering', 'Pure & Applied Science', 'Tech', 'Networking', 'Computer Applications'],
             'A': ['Design', 'Media', 'Humanities'],
             'E': ['Business & Management', 'Finance', 'Marketing', 'Law'],
-            'C': ['Accounting', 'Finance', 'Business & Management'],
+            'C': ['Accounting', 'Finance', 'Business & Management', 'Data Analytics'],
             'S': ['Medical & Health', 'Humanities', 'Hospitality']
           };
 
-          const preferredFields = clusterFields[dominantCluster] || [];
+          const preferredFields = clusterFields[dominantCode] || [];
           
           finalRanking = fieldScores.map(item => {
             if (preferredFields.includes(item.field) && scoreDifference < stabilityThreshold) {
-              return {
-                ...item,
-                finalScore: item.finalScore * 1.05
-              };
+              return { ...item, finalScore: item.finalScore * 1.05 };
             }
             return item;
           }).sort((a, b) => {
@@ -1048,26 +1062,93 @@ function ResultPDF({ interpretation, counsellorNote, user, riasecReport }) {
           });
         }
 
-        const top3Fields = finalRanking.slice(0, 3).map(f => f.field);
-        const bestField = finalRanking[0]?.field || null;
+        // Enforce top 2 positions based on dominant dimension
+        const dominantTop2Fields = {
+          'R': {
+            first: ['Engineering', 'Pure & Applied Science'],
+            second: ['Computer Applications']
+          },
+          'I': {
+            first: ['Pure & Applied Science'],
+            second: ['Data Science']
+          },
+          'A': {
+            first: ['Design'],
+            second: ['Media']
+          },
+          'S': {
+            first: ['Hospitality'],
+            second: ['Medical & Health']
+          },
+          'E': {
+            first: ['Business & Management'],
+            second: ['Marketing', 'Finance']
+          },
+          'C': {
+            first: ['Accounting'],
+            second: ['Finance', 'Data Analytics']
+          }
+        };
 
-        const allRows = [];
-        aspiringFieldsData.forEach(item => {
-          const fieldData = finalRanking.find(f => f.field === item.aspiringField);
-          const finalCompatibility = fieldData?.finalScore || 0;
-          const allCareerPaths = item.careerPaths || [];
-          const bestPathForField = allCareerPaths[0] || null;
-          
-          allRows.push({
-            aspiringField: item.aspiringField,
-            careerPaths: allCareerPaths,
-            bestCareerPath: bestPathForField,
-            riasecMix: riasecMix,
-            compatibility: finalCompatibility
-          });
-        });
+        const top2Rules = dominantTop2Fields[dominantCode] || { first: [], second: [] };
         
-        allRows.sort((a, b) => b.compatibility - a.compatibility);
+        // Find current positions of required fields
+        const fieldIndexMap = {};
+        finalRanking.forEach((item, index) => {
+          fieldIndexMap[item.field] = index;
+        });
+
+        // Get the highest score for reference
+        const maxScore = finalRanking[0]?.finalScore || 1;
+        
+        // Adjust scores to enforce top 2 positions
+        const adjustedScores = finalRanking.map(item => {
+          // First position fields - set to max score (tied)
+          if (top2Rules.first.includes(item.field)) {
+            return { ...item, finalScore: maxScore };
+          }
+          // Second position fields - set to maxScore * 0.95 (slightly below first)
+          if (top2Rules.second.includes(item.field)) {
+            // If multiple second options, use the one with higher original score
+            const secondFields = top2Rules.second.filter(f => fieldIndexMap[f] !== undefined);
+            const secondScores = secondFields.map(f => {
+              const idx = fieldIndexMap[f];
+              return { field: f, score: finalRanking[idx]?.finalScore || 0 };
+            });
+            secondScores.sort((a, b) => b.score - a.score);
+            const bestSecond = secondScores[0]?.field;
+            if (item.field === bestSecond) {
+              return { ...item, finalScore: maxScore * 0.95 };
+            }
+          }
+          return item;
+        });
+
+        // Re-sort with adjusted scores
+        adjustedScores.sort((a, b) => b.finalScore - a.finalScore);
+
+        const allRows = adjustedScores.map((item, index) => {
+          let confidence = 'LOW';
+          if (index < 2) confidence = 'HIGH';
+          else if (index < 5) confidence = 'MODERATE';
+          
+          // Add rank: top 2 get rank 1, then 3, 4, 5...
+          const rank = index < 2 ? 1 : index + 1;
+          const isTop2 = index < 2;
+
+          return {
+            aspiringField: item.field,
+            careerPaths: item.paths,
+            bestCareerPath: item.paths[0] || null,
+            riasecMix: riasecMix,
+            congruence: item.finalScore,
+            confidence,
+            rank,
+            isTop2
+          };
+        });
+
+        const bestField = allRows[0]?.aspiringField || null;
         const bestPath = allRows[0]?.bestCareerPath || null;
 
         const calculatePersona = (careerPath) => {
@@ -1203,20 +1284,11 @@ function ResultPDF({ interpretation, counsellorNote, user, riasecReport }) {
                   {allRows.map((row, idx) => {
                     const isBestField = row.aspiringField === bestField;
                     const isBestPath = row.careerPaths && row.careerPaths.includes(bestPath);
-                    const isHighlighted = isBestField || isBestPath;
-                    const fieldRank = top3Fields.indexOf(row.aspiringField);
-                    
-                    const calculateConfidence = () => {
-                      if (fieldRank === 0) {
-                        return { level: 'HIGH', label: 'High Confidence' };
-                      } else if (fieldRank === 1 || fieldRank === 2) {
-                        return { level: 'MODERATE', label: 'Moderate Confidence' };
-                      } else {
-                        return { level: 'LOW', label: 'Low Confidence' };
-                      }
+                    const isHighlighted = row.isTop2 || false; // Highlight top 2
+                    const confidence = {
+                      level: row.confidence,
+                      label: row.confidence === 'HIGH' ? 'High Confidence' : row.confidence === 'MODERATE' ? 'Moderate Confidence' : 'Low Confidence'
                     };
-                    
-                    const confidence = calculateConfidence();
                     const confColors = getConfidenceColor(confidence.level);
                     
                     return (
@@ -1231,8 +1303,19 @@ function ResultPDF({ interpretation, counsellorNote, user, riasecReport }) {
                           } : {})
                         }}
                       >
-                        <td style={{ ...styles.tableCell, fontWeight: '600', color: isBestField ? '#6366f1' : '#1e293b' }}>
-                          {row.aspiringField}
+                        <td style={{ ...styles.tableCell, fontWeight: '600', color: isHighlighted ? '#6366f1' : '#1e293b' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                            <span style={{ 
+                              fontSize: '12px', 
+                              fontWeight: 'bold',
+                              color: isHighlighted ? '#4f46e5' : '#64748b'
+                            }}>
+                              {row.rank}.
+                            </span>
+                            <span>
+                              {row.aspiringField}
+                            </span>
+                          </div>
                     </td>
                     <td style={styles.tableCell}>
                           <div style={{ display: 'flex', gap: '4px', flexWrap: 'wrap' }}>
