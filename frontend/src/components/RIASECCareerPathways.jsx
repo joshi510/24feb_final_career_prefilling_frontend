@@ -12,6 +12,7 @@ const RIASEC_CAREER_FIELDS_MAPPING = {
   "C": ["Accounting", "Finance", "Data Analytics"]
 };
 
+
 // Career pathways data - hardcoded directly in component
 const CAREER_PATHWAYS_DATA = [
   {
