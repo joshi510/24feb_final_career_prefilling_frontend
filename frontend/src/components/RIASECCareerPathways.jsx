@@ -4,11 +4,11 @@ import { Target } from 'lucide-react';
 
 // RIASEC to Career Fields Mapping
 const RIASEC_CAREER_FIELDS_MAPPING = {
-  "R": ["Engineering", "Networking", "Computer Applications"],
+  "R": ["Engineering", "Pure & Applied Science", "Computer Applications"],
   "I": ["Data Science", "Pure & Applied Science", "Data Analytics"],
   "A": ["Design", "Media", "Humanities"],
-  "S": ["Medical & Health", "Hospitality", "Humanities"],
-  "E": ["Business & Management", "Marketing", "Law"],
+  "S": ["Hospitality", "Medical & Health", "Humanities"],
+  "E": ["Marketing", "Business & Management", "Law"],
   "C": ["Accounting", "Finance", "Data Analytics"]
 };
 
@@ -495,8 +495,8 @@ function RIASECCareerPathways({ careerPathways, dimensions }) {
         const weight = weights[code] || 0;
         const baseCompatibility = calculateBaseCompatibility(fieldData.aspiringField);
         const finalScore = applyBehavioralConflicts(fieldData.aspiringField, baseCompatibility);
-        
-        return {
+
+    return {
           field: fieldData.aspiringField,
           weight: weight,
           finalScore: finalScore,
@@ -504,69 +504,8 @@ function RIASECCareerPathways({ careerPathways, dimensions }) {
         };
       }).filter(f => f !== null); // Remove any fields not found in data
       
-      // Special handling: Force Engineering first when R is dominant, Design first when A is dominant
-      let sortedFields;
-      if (dominantCode === "R" && code === "R") {
-        const engineeringField = fieldsForDimension.find(f => f.field === "Engineering");
-        const otherFields = fieldsForDimension.filter(f => f.field !== "Engineering");
-        if (engineeringField) {
-          // Ensure Engineering has the highest score - set it to be definitely first
-          const maxOtherScore = otherFields.length > 0 ? Math.max(...otherFields.map(f => f.finalScore)) : 0;
-          // Set Engineering score to be significantly higher than all others (guarantee it's first)
-          engineeringField.finalScore = Math.max(engineeringField.finalScore, maxOtherScore + 1.0);
-          // Sort other fields by finalScore (highest first)
-          const sortedOtherFields = [...otherFields].sort((a, b) => {
-            if (Math.abs(b.finalScore - a.finalScore) > 0.0001) {
-              return b.finalScore - a.finalScore;
-            }
-            return b.weight - a.weight;
-          });
-          // Always put Engineering first, then sorted others
-          sortedFields = [engineeringField, ...sortedOtherFields];
-      } else {
-          // If Engineering not found, just sort normally
-          sortedFields = [...fieldsForDimension].sort((a, b) => {
-            if (Math.abs(b.finalScore - a.finalScore) > 0.0001) {
-              return b.finalScore - a.finalScore;
-            }
-            return b.weight - a.weight;
-          });
-        }
-      } else if (dominantCode === "A" && code === "A") {
-        const designField = fieldsForDimension.find(f => f.field === "Design");
-        const otherFields = fieldsForDimension.filter(f => f.field !== "Design");
-        if (designField) {
-          // Ensure Design has the highest score - set it to be definitely first
-          const maxOtherScore = otherFields.length > 0 ? Math.max(...otherFields.map(f => f.finalScore)) : 0;
-          // Set Design score to be significantly higher than all others (guarantee it's first)
-          designField.finalScore = Math.max(designField.finalScore, maxOtherScore + 1.0);
-          // Sort other fields by finalScore (highest first)
-          const sortedOtherFields = [...otherFields].sort((a, b) => {
-            if (Math.abs(b.finalScore - a.finalScore) > 0.0001) {
-              return b.finalScore - a.finalScore;
-            }
-            return b.weight - a.weight;
-          });
-          // Always put Design first, then sorted others
-          sortedFields = [designField, ...sortedOtherFields];
-        } else {
-          // If Design not found, just sort normally
-          sortedFields = [...fieldsForDimension].sort((a, b) => {
-            if (Math.abs(b.finalScore - a.finalScore) > 0.0001) {
-              return b.finalScore - a.finalScore;
-            }
-            return b.weight - a.weight;
-          });
-        }
-      } else {
-        // Sort by finalScore (highest first) to maintain ranking within the mapped fields
-        sortedFields = [...fieldsForDimension].sort((a, b) => {
-          if (Math.abs(b.finalScore - a.finalScore) > 0.0001) {
-            return b.finalScore - a.finalScore;
-          }
-          return b.weight - a.weight;
-        });
-      }
+      // Keep the exact order from RIASEC_CAREER_FIELDS_MAPPING for display (1, 2, 3).
+      const sortedFields = fieldsForDimension;
       
       return {
         riasecCode: code,
@@ -766,14 +705,14 @@ function RIASECCareerPathways({ careerPathways, dimensions }) {
       </div>
 
       {/* Desktop Table Layout */}
-      <div className="hidden md:block overflow-x-auto scrollbar-hide rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/50">
+      <div className="hidden md:block overflow-x-auto scrollbar-hide rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800">
         <table className="w-full">
           <thead>
-            <tr className="bg-gradient-to-r from-slate-100 to-slate-50 dark:from-slate-700 dark:to-slate-800 border-b-2 border-slate-200 dark:border-slate-600">
-              <th className="text-left py-4 px-6 font-bold text-slate-900 dark:text-slate-100 text-sm uppercase tracking-wider">
+            <tr className="bg-slate-50 dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700">
+              <th className="text-left py-3 px-4 font-bold text-slate-700 dark:text-slate-300 text-base">
                 RIASEC Dimension
               </th>
-              <th colSpan={3} className="text-center py-4 px-6 font-bold text-slate-900 dark:text-slate-100 text-sm uppercase tracking-wider">
+              <th colSpan={3} className="text-center py-3 px-4 font-bold text-slate-700 dark:text-slate-300 text-base">
                 Career Path
               </th>
             </tr>
@@ -788,9 +727,9 @@ function RIASECCareerPathways({ careerPathways, dimensions }) {
                 'LOW': 'Low Match'
               };
               const matchColors = {
-                'HIGH': 'bg-gradient-to-r from-green-500 to-emerald-500 text-white border-green-400 shadow-md',
-                'MODERATE': 'bg-gradient-to-r from-yellow-500 to-amber-500 text-white border-yellow-400 shadow-md',
-                'LOW': 'bg-gradient-to-r from-orange-500 to-red-500 text-white border-orange-400 shadow-md'
+                'HIGH': 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400 border-green-300 dark:border-green-700',
+                'MODERATE': 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400 border-yellow-300 dark:border-yellow-700',
+                'LOW': 'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-400 border-orange-300 dark:border-orange-700'
               };
 
               return (
@@ -799,55 +738,49 @@ function RIASECCareerPathways({ careerPathways, dimensions }) {
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.4 + index * 0.02 }}
-                  className="border-b border-slate-200 dark:border-slate-700 hover:bg-gradient-to-r hover:from-indigo-50/50 hover:to-blue-50/50 dark:hover:from-slate-700/50 dark:hover:to-slate-800/50 transition-all duration-200 group"
+                  className="border-b border-slate-100 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors"
                 >
-                  <td className="py-5 px-6 align-top">
-                    <div className="flex items-center gap-3 mb-2">
-                      <span className={`inline-flex items-center justify-center w-10 h-10 rounded-xl text-sm font-bold border-2 shadow-md flex-shrink-0 ${riasecColors[row.riasecCode] || ''}`}>
+                  <td className="py-4 px-4 align-top">
+                    <div className="flex items-center gap-2 mb-2">
+                      <span className={`inline-flex items-center justify-center w-9 h-9 rounded-lg text-sm font-semibold border ${riasecColors[row.riasecCode] || ''}`}>
                         {row.riasecCode}
                       </span>
-                      <span className="font-bold text-base text-slate-900 dark:text-slate-100">
+                      <span className="font-semibold text-base text-slate-900 dark:text-slate-100">
                         {riasecLabels[row.riasecCode]}
                       </span>
-                      </div>
+                    </div>
                     <div className="flex items-center gap-2 flex-wrap">
-                      <span className={`inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-bold border-2 ${matchColors[matchLevel] || matchColors.MODERATE}`}>
+                      <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium border ${matchColors[matchLevel] || matchColors.MODERATE}`}>
                         {matchLabels[matchLevel]}
-                          </span>
-                      <div className="flex items-center gap-1.5 px-2.5 py-1 bg-slate-100 dark:bg-slate-700 rounded-lg">
-                        <span className="text-xs font-semibold text-slate-600 dark:text-slate-400">Score:</span>
-                        <span className="text-sm font-bold text-slate-900 dark:text-slate-100">{score}%</span>
-                      </div>
+                      </span>
+                      <span className="text-xs text-slate-600 dark:text-slate-400">
+                        {score}%
+                      </span>
                     </div>
                   </td>
                   {row.fields.map((field, fieldIdx) => (
-                    <td key={fieldIdx} className="py-5 px-6 align-top">
-                      <div className="group/field">
-                        <div className="flex items-center gap-2 mb-3">
-                          <div className="flex-shrink-0 w-8 h-8 rounded-xl bg-gradient-to-br from-indigo-500 via-blue-500 to-indigo-600 flex items-center justify-center text-white font-bold text-xs shadow-lg ring-2 ring-indigo-200/50 dark:ring-indigo-800/50">
-                            {fieldIdx + 1}
-                          </div>
-                          <div className="font-bold text-sm text-slate-900 dark:text-slate-100">
-                            {field.aspiringField}
-                          </div>
+                    <td key={fieldIdx} className="py-4 px-4 align-top">
+                      <div className="flex items-start gap-2 mb-2">
+                        <span className="flex-shrink-0 w-6 h-6 rounded bg-indigo-500 flex items-center justify-center text-white text-xs font-semibold">
+                          {fieldIdx + 1}
+                        </span>
+                        <div className="font-medium text-base text-slate-900 dark:text-slate-100">
+                          {field.aspiringField}
                         </div>
-                        {field.careerPaths && field.careerPaths.length > 0 ? (
-                          <div className="space-y-2">
-                            {field.careerPaths.map((path, pathIdx) => (
-                              <div 
+                      </div>
+                      {field.careerPaths && field.careerPaths.length > 0 && (
+                        <div className="space-y-1 pl-8">
+                          {field.careerPaths.map((path, pathIdx) => (
+                            <div 
                               key={pathIdx}
-                                className="flex items-center gap-2 text-xs text-slate-700 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
+                              className="text-sm text-slate-600 dark:text-slate-400"
                             >
-                                <div className="w-1.5 h-1.5 rounded-full bg-indigo-500 flex-shrink-0" />
-                                <span>{path}</span>
-                              </div>
+                              • {path}
+                            </div>
                           ))}
-                    </div>
-                        ) : (
-                          <span className="text-slate-400 dark:text-slate-500 text-xs">-</span>
+                        </div>
                       )}
-                    </div>
-                  </td>
+                    </td>
                   ))}
                 </motion.tr>
               );

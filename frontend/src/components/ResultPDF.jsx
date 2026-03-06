@@ -2,11 +2,11 @@ import React, { useMemo } from 'react';
 
 // RIASEC to Career Fields Mapping
 const RIASEC_CAREER_FIELDS_MAPPING = {
-  "R": ["Engineering", "Networking", "Computer Applications"],
+  "R": ["Engineering", "Pure & Applied Science", "Computer Applications"],
   "I": ["Data Science", "Pure & Applied Science", "Data Analytics"],
   "A": ["Design", "Media", "Humanities"],
-  "S": ["Medical & Health", "Hospitality", "Humanities"],
-  "E": ["Business & Management", "Marketing", "Law"],
+  "S": ["Hospitality", "Medical & Health", "Humanities"],
+  "E": ["Marketing", "Business & Management", "Law"],
   "C": ["Accounting", "Finance", "Data Analytics"]
 };
 
@@ -1378,68 +1378,8 @@ function ResultPDF({ interpretation, counsellorNote, user, riasecReport }) {
             };
           }).filter(f => f !== null);
           
-          // Special handling: Force Engineering first when R is dominant, Design first when A is dominant
-          let sortedFields;
-          if (dominantCode === "R" && code === "R") {
-            const engineeringField = fieldsForDimension.find(f => f.field === "Engineering");
-            const otherFields = fieldsForDimension.filter(f => f.field !== "Engineering");
-            if (engineeringField) {
-              // Ensure Engineering has the highest score - set it to be definitely first
-              const maxOtherScore = otherFields.length > 0 ? Math.max(...otherFields.map(f => f.finalScore)) : 0;
-              // Set Engineering score to be significantly higher than all others (guarantee it's first)
-              engineeringField.finalScore = Math.max(engineeringField.finalScore, maxOtherScore + 1.0);
-              // Sort other fields by finalScore (highest first)
-              const sortedOtherFields = [...otherFields].sort((a, b) => {
-                if (Math.abs(b.finalScore - a.finalScore) > 0.0001) {
-                  return b.finalScore - a.finalScore;
-                }
-                return b.weight - a.weight;
-              });
-              // Always put Engineering first, then sorted others
-              sortedFields = [engineeringField, ...sortedOtherFields];
-            } else {
-              // If Engineering not found, just sort normally
-              sortedFields = [...fieldsForDimension].sort((a, b) => {
-            if (Math.abs(b.finalScore - a.finalScore) > 0.0001) {
-              return b.finalScore - a.finalScore;
-            }
-                return b.weight - a.weight;
-              });
-            }
-          } else if (dominantCode === "A" && code === "A") {
-            const designField = fieldsForDimension.find(f => f.field === "Design");
-            const otherFields = fieldsForDimension.filter(f => f.field !== "Design");
-            if (designField) {
-              // Ensure Design has the highest score - set it to be definitely first
-              const maxOtherScore = otherFields.length > 0 ? Math.max(...otherFields.map(f => f.finalScore)) : 0;
-              // Set Design score to be significantly higher than all others (guarantee it's first)
-              designField.finalScore = Math.max(designField.finalScore, maxOtherScore + 1.0);
-              // Sort other fields by finalScore (highest first)
-              const sortedOtherFields = [...otherFields].sort((a, b) => {
-                if (Math.abs(b.finalScore - a.finalScore) > 0.0001) {
-                  return b.finalScore - a.finalScore;
-                }
-                return b.weight - a.weight;
-              });
-              // Always put Design first, then sorted others
-              sortedFields = [designField, ...sortedOtherFields];
-            } else {
-              // If Design not found, just sort normally
-              sortedFields = [...fieldsForDimension].sort((a, b) => {
-                if (Math.abs(b.finalScore - a.finalScore) > 0.0001) {
-                  return b.finalScore - a.finalScore;
-                }
-                return b.weight - a.weight;
-              });
-            }
-          } else {
-            sortedFields = [...fieldsForDimension].sort((a, b) => {
-              if (Math.abs(b.finalScore - a.finalScore) > 0.0001) {
-                return b.finalScore - a.finalScore;
-              }
-              return b.weight - a.weight;
-            });
-          }
+          // Keep the exact order from RIASEC_CAREER_FIELDS_MAPPING for display (1, 2, 3).
+          const sortedFields = fieldsForDimension;
 
           return {
             riasecCode: code,
