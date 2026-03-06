@@ -523,7 +523,7 @@ function RIASECCareerPathways({ careerPathways, dimensions }) {
           });
           // Always put Engineering first, then sorted others
           sortedFields = [engineeringField, ...sortedOtherFields];
-        } else {
+      } else {
           // If Engineering not found, just sort normally
           sortedFields = [...fieldsForDimension].sort((a, b) => {
             if (Math.abs(b.finalScore - a.finalScore) > 0.0001) {
@@ -660,8 +660,8 @@ function RIASECCareerPathways({ careerPathways, dimensions }) {
         </div>
         <div>
           <h3 className="text-2xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 dark:from-slate-100 dark:to-slate-300 bg-clip-text text-transparent">
-            Potential Career Pathways
-          </h3>
+        Potential Career Pathways
+      </h3>
           <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">
             Discover your top career matches based on your RIASEC profile
           </p>
@@ -690,7 +690,7 @@ function RIASECCareerPathways({ careerPathways, dimensions }) {
             'MODERATE': 'bg-gradient-to-r from-yellow-500 to-amber-500 text-white border-yellow-400 shadow-yellow-200 dark:shadow-yellow-900/50',
             'LOW': 'bg-gradient-to-r from-orange-500 to-red-500 text-white border-orange-400 shadow-orange-200 dark:shadow-orange-900/50'
           };
-          
+
           return (
             <motion.div
               key={index}
@@ -707,24 +707,24 @@ function RIASECCareerPathways({ careerPathways, dimensions }) {
                 <div className="flex items-center gap-3 mb-3">
                   <span className={`inline-flex items-center justify-center w-10 h-10 rounded-xl text-sm font-bold border-2 shadow-md flex-shrink-0 ${riasecColors[row.riasecCode] || ''}`}>
                     {row.riasecCode}
-                  </span>
+                    </span>
                   <div className="flex-1">
                     <h4 className="text-lg font-bold text-slate-900 dark:text-slate-100">
                       {riasecLabels[row.riasecCode]}
                     </h4>
                   </div>
-                </div>
+                  </div>
                 
                 {/* Match Badge and Score */}
                 <div className="flex items-center gap-3 mb-5">
                   <span className={`inline-flex items-center px-3 py-1.5 rounded-lg text-xs font-bold border-2 shadow-md ${matchColors[matchLevel] || matchColors.MODERATE}`}>
                     {matchLabels[matchLevel]}
-                  </span>
+                </span>
                   <div className="flex items-center gap-2 px-3 py-1.5 bg-slate-100 dark:bg-slate-700 rounded-lg">
                     <span className="text-xs font-semibold text-slate-600 dark:text-slate-400">Score:</span>
                     <span className="text-sm font-bold text-slate-900 dark:text-slate-100">{score}%</span>
                   </div>
-                </div>
+              </div>
 
                 {/* 3 Fields */}
                 <div className="space-y-4">
@@ -736,11 +736,11 @@ function RIASECCareerPathways({ careerPathways, dimensions }) {
                       <div className="flex items-start gap-3">
                         <div className="flex-shrink-0 w-9 h-9 rounded-xl bg-gradient-to-br from-indigo-500 via-blue-500 to-indigo-600 flex items-center justify-center text-white font-bold text-sm shadow-lg ring-2 ring-indigo-200/50 dark:ring-indigo-800/50">
                           {fieldIdx + 1}
-                        </div>
+                      </div>
                         <div className="flex-1 min-w-0">
                           <div className="font-bold text-base text-slate-900 dark:text-slate-100 mb-3">
                             {field.aspiringField}
-                          </div>
+                      </div>
                           {field.careerPaths && field.careerPaths.length > 0 && (
                             <div className="space-y-2">
                               {field.careerPaths.map((path, pathIdx) => (
@@ -750,10 +750,10 @@ function RIASECCareerPathways({ careerPathways, dimensions }) {
                                 >
                                   <div className="w-1.5 h-1.5 rounded-full bg-indigo-500 flex-shrink-0" />
                                   <span>{path}</span>
-                                </div>
-                              ))}
-                            </div>
-                          )}
+                    </div>
+                  ))}
+                </div>
+              )}
                         </div>
                       </div>
                     </div>
@@ -773,14 +773,8 @@ function RIASECCareerPathways({ careerPathways, dimensions }) {
               <th className="text-left py-4 px-6 font-bold text-slate-900 dark:text-slate-100 text-sm uppercase tracking-wider">
                 RIASEC Dimension
               </th>
-              <th className="text-left py-4 px-6 font-bold text-slate-900 dark:text-slate-100 text-sm uppercase tracking-wider">
-                Career Field 1
-              </th>
-              <th className="text-left py-4 px-6 font-bold text-slate-900 dark:text-slate-100 text-sm uppercase tracking-wider">
-                Career Field 2
-              </th>
-              <th className="text-left py-4 px-6 font-bold text-slate-900 dark:text-slate-100 text-sm uppercase tracking-wider">
-                Career Field 3
+              <th colSpan={3} className="text-center py-4 px-6 font-bold text-slate-900 dark:text-slate-100 text-sm uppercase tracking-wider">
+                Career Path
               </th>
             </tr>
           </thead>
@@ -798,7 +792,7 @@ function RIASECCareerPathways({ careerPathways, dimensions }) {
                 'MODERATE': 'bg-gradient-to-r from-yellow-500 to-amber-500 text-white border-yellow-400 shadow-md',
                 'LOW': 'bg-gradient-to-r from-orange-500 to-red-500 text-white border-orange-400 shadow-md'
               };
-              
+
               return (
                 <motion.tr
                   key={index}
@@ -815,11 +809,11 @@ function RIASECCareerPathways({ careerPathways, dimensions }) {
                       <span className="font-bold text-base text-slate-900 dark:text-slate-100">
                         {riasecLabels[row.riasecCode]}
                       </span>
-                    </div>
+                      </div>
                     <div className="flex items-center gap-2 flex-wrap">
                       <span className={`inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-bold border-2 ${matchColors[matchLevel] || matchColors.MODERATE}`}>
                         {matchLabels[matchLevel]}
-                      </span>
+                          </span>
                       <div className="flex items-center gap-1.5 px-2.5 py-1 bg-slate-100 dark:bg-slate-700 rounded-lg">
                         <span className="text-xs font-semibold text-slate-600 dark:text-slate-400">Score:</span>
                         <span className="text-sm font-bold text-slate-900 dark:text-slate-100">{score}%</span>
@@ -841,19 +835,19 @@ function RIASECCareerPathways({ careerPathways, dimensions }) {
                           <div className="space-y-2">
                             {field.careerPaths.map((path, pathIdx) => (
                               <div 
-                                key={pathIdx}
+                              key={pathIdx}
                                 className="flex items-center gap-2 text-xs text-slate-700 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
-                              >
+                            >
                                 <div className="w-1.5 h-1.5 rounded-full bg-indigo-500 flex-shrink-0" />
                                 <span>{path}</span>
                               </div>
-                            ))}
-                          </div>
+                          ))}
+                    </div>
                         ) : (
                           <span className="text-slate-400 dark:text-slate-500 text-xs">-</span>
-                        )}
-                      </div>
-                    </td>
+                      )}
+                    </div>
+                  </td>
                   ))}
                 </motion.tr>
               );

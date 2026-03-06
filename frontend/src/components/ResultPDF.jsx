@@ -842,7 +842,7 @@ function ResultPDF({ interpretation, counsellorNote, user, riasecReport }) {
                     );
                   })()}
                 </ul>
-              </div>
+            </div>
             </div>
 
             {/* Section Scores Breakdown */}
@@ -1400,9 +1400,9 @@ function ResultPDF({ interpretation, counsellorNote, user, riasecReport }) {
             } else {
               // If Engineering not found, just sort normally
               sortedFields = [...fieldsForDimension].sort((a, b) => {
-                if (Math.abs(b.finalScore - a.finalScore) > 0.0001) {
-                  return b.finalScore - a.finalScore;
-                }
+            if (Math.abs(b.finalScore - a.finalScore) > 0.0001) {
+              return b.finalScore - a.finalScore;
+            }
                 return b.weight - a.weight;
               });
             }
@@ -1440,7 +1440,7 @@ function ResultPDF({ interpretation, counsellorNote, user, riasecReport }) {
               return b.weight - a.weight;
             });
           }
-          
+
           return {
             riasecCode: code,
             riasecScore: Math.round(studentScores[code] || 0),
@@ -1603,9 +1603,7 @@ function ResultPDF({ interpretation, counsellorNote, user, riasecReport }) {
               <thead>
                 <tr>
                   <th style={styles.tableHeader}>RIASEC Dimension</th>
-                  <th style={styles.tableHeader}>Career Field 1</th>
-                  <th style={styles.tableHeader}>Career Field 2</th>
-                  <th style={styles.tableHeader}>Career Field 3</th>
+                  <th colSpan={3} style={{...styles.tableHeader, textAlign: 'center'}}>Career Path</th>
                 </tr>
               </thead>
               <tbody>
@@ -1619,11 +1617,11 @@ function ResultPDF({ interpretation, counsellorNote, user, riasecReport }) {
                   };
                   const matchColors = getMatchLevelColor(matchLevel);
                   const dimensionColors = getDimensionColor(row.riasecCode);
-                  
-                  return (
-                    <tr 
+                    
+                    return (
+                      <tr 
                       key={rowIdx} 
-                      style={{ 
+                        style={{ 
                         backgroundColor: rowIdx % 2 === 0 ? '#ffffff' : '#f8fafc'
                       }}
                     >
@@ -1631,7 +1629,7 @@ function ResultPDF({ interpretation, counsellorNote, user, riasecReport }) {
                       <td style={styles.tableCell}>
                         <div style={{ marginBottom: '8px' }}>
                           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
-                            <span style={{
+                            <span style={{ 
                               display: 'inline-flex',
                               alignItems: 'center',
                               justifyContent: 'center',
@@ -1666,14 +1664,14 @@ function ResultPDF({ interpretation, counsellorNote, user, riasecReport }) {
                               <span style={{ fontWeight: '600', color: '#1e293b' }}>{score}%</span>
                             </div>
                           </div>
-                        </div>
-                      </td>
+                          </div>
+                    </td>
                       
                       {/* Career Field 1, Career Field 2, Career Field 3 Columns */}
                       {[0, 1, 2].map((fieldIdx) => {
                         const field = row.fields[fieldIdx];
                         if (!field) {
-                          return (
+                              return (
                             <td key={fieldIdx} style={styles.tableCell}>
                               <span style={{ color: '#94a3b8', fontSize: '11px' }}>-</span>
                             </td>
@@ -1685,23 +1683,23 @@ function ResultPDF({ interpretation, counsellorNote, user, riasecReport }) {
                             <div style={{ marginBottom: '8px' }}>
                               <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '6px' }}>
                                 <span style={{
-                                  display: 'inline-flex',
-                                  alignItems: 'center',
-                                  justifyContent: 'center',
+                                    display: 'inline-flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
                                   width: '20px',
                                   height: '20px',
                                   borderRadius: '4px',
                                   background: 'linear-gradient(135deg, #6366f1 0%, #3b82f6 100%)',
                                   color: '#ffffff',
                                   fontSize: '9px',
-                                  fontWeight: '600'
+                        fontWeight: '600'
                                 }}>
                                   {fieldIdx + 1}
-                                </span>
+                      </span>
                                 <span style={{ fontSize: '12px', fontWeight: '600', color: '#1e293b' }}>
                                   {field.aspiringField}
                                 </span>
-                              </div>
+                          </div>
                               {field.careerPaths && field.careerPaths.length > 0 && (
                                 <div style={{ paddingLeft: '26px' }}>
                                   {field.careerPaths.map((path, pathIdx) => (
@@ -1712,20 +1710,20 @@ function ResultPDF({ interpretation, counsellorNote, user, riasecReport }) {
                                       lineHeight: '1.4'
                                     }}>
                                       • {path}
-                                    </div>
-                                  ))}
                                 </div>
-                              )}
+                              ))}
                             </div>
-                          </td>
+                              )}
+                                </div>
+                    </td>
                         );
                       })}
-                    </tr>
-                  );
-                })}
+                  </tr>
+                    );
+                  })}
               </tbody>
             </table>
-          </div>
+            </div>
       </div>
         );
       })()}
