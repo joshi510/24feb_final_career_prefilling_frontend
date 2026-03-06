@@ -1,5 +1,15 @@
 import React, { useMemo } from 'react';
 
+// RIASEC to Career Fields Mapping
+const RIASEC_CAREER_FIELDS_MAPPING = {
+  "R": ["Engineering", "Networking", "Computer Applications"],
+  "I": ["Data Science", "Pure & Applied Science", "Data Analytics"],
+  "A": ["Design", "Media", "Humanities"],
+  "S": ["Medical & Health", "Hospitality", "Humanities"],
+  "E": ["Business & Management", "Marketing", "Law"],
+  "C": ["Accounting", "Finance", "Data Analytics"]
+};
+
 // Career pathways data - same as frontend component
 const CAREER_PATHWAYS_DATA = [
   {
@@ -421,23 +431,154 @@ function ResultPDF({ interpretation, counsellorNote, user, riasecReport }) {
         </div>
       )}
 
-      {/* RIASEC Radar Chart Summary */}
+      {/* RIASEC Dimensions Overview */}
       {riasecReport && riasecReport.dimensions && riasecReport.dimensions.length > 0 && (
         <div style={styles.section}>
           <h2 style={styles.sectionTitle}>RIASEC Dimensions Overview</h2>
-          <div style={styles.infoBox}>
-            Normalization Logic: The Likert scale (1–5) is linearly normalized to a 0–100 range using min-max scaling: Normalized Score = (value - minimum) / (maximum - minimum)
-          </div>
+          
           {(() => {
+            const getDimensionConfig = (code) => {
+              const configs = {
+                R: { name: 'Realistic', description: 'Hands-on and practical', color: '#EF4444' },
+                I: { name: 'Investigative', description: 'Observant and reflective', color: '#3B82F6' },
+                A: { name: 'Artistic', description: 'Creative and original', color: '#A855F7' },
+                S: { name: 'Social', description: 'Work with people', color: '#22C55E' },
+                E: { name: 'Enterprising', description: 'Decisive and influential', color: '#F59E0B' },
+                C: { name: 'Conventional', description: 'Structure and order', color: '#64748B' }
+              };
+              return configs[code] || { name: code, description: '', color: '#64748B' };
+            };
+
+            const calculateMatchLevel = (score) => {
+              if (score >= 30) return 'HIGH';
+              if (score >= 15) return 'MODERATE';
+              return 'LOW';
+            };
+
             const sortedDimensions = [...riasecReport.dimensions].sort((a, b) => (b.score || 0) - (a.score || 0));
-            const dominantTypes = sortedDimensions.slice(0, 2).map(d => d.title || d.code).join(' + ');
-            const secondaryType = sortedDimensions[2] ? sortedDimensions[2].title || sortedDimensions[2].code : null;
+            const top3Codes = sortedDimensions.slice(0, 3).map(d => d.code);
+            
+            // Order: R, I, A, S, E, C (standard RIASEC order)
+            const orderedDimensions = ['R', 'I', 'A', 'S', 'E', 'C']
+              .map(code => riasecReport.dimensions.find(d => d.code === code))
+              .filter(Boolean);
+
             return (
               <div style={styles.card}>
-                <p style={{ margin: 0, fontSize: '13px', color: '#334155', lineHeight: '1.6' }}>
-                  <strong>Dominant Types:</strong> {dominantTypes}
-                  {secondaryType && <span>. <strong>Secondary Influence:</strong> {secondaryType}</span>}
-                </p>
+                <div style={{ 
+                  display: 'grid', 
+                  gridTemplateColumns: 'repeat(3, 1fr)', 
+                  gap: '12px',
+                  marginBottom: '15px'
+                }}>
+                  {orderedDimensions.map((dimension) => {
+                    const config = getDimensionConfig(dimension.code);
+                    const score = Math.round(dimension.score || 0);
+                    const matchLevel = calculateMatchLevel(score);
+                    const isTop3 = top3Codes.includes(dimension.code);
+                    const matchColors = getMatchLevelColor(matchLevel);
+                    
+                    return (
+                      <div
+                        key={dimension.code}
+                        style={{
+                          padding: '12px',
+                          backgroundColor: '#f8fafc',
+                          border: `2px solid ${config.color}40`,
+                          borderRadius: '8px',
+                          borderLeft: `4px solid ${config.color}`
+                        }}
+                      >
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+                          <div
+                            style={{
+                              width: '32px',
+                              height: '32px',
+                              borderRadius: '6px',
+                              backgroundColor: config.color,
+                              color: '#ffffff',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              fontSize: '12px',
+                              fontWeight: '600'
+                            }}
+                          >
+                            {dimension.code}
+                          </div>
+                          <div style={{ flex: 1 }}>
+                            <div style={{ fontSize: '13px', fontWeight: '600', color: '#1e293b', marginBottom: '2px' }}>
+                              {config.name}
+                            </div>
+                            <div style={{ fontSize: '10px', color: '#64748b' }}>
+                              {config.description}
+                            </div>
+                          </div>
+                        </div>
+                        
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '6px' }}>
+                          <span style={{ fontSize: '20px', fontWeight: 'bold', color: config.color }}>
+                            {score}%
+                          </span>
+                          {isTop3 && (
+                            <span style={{
+                              fontSize: '9px',
+                              fontWeight: '600',
+                              padding: '2px 6px',
+                              borderRadius: '4px',
+                              backgroundColor: '#ffffff',
+                              color: '#64748b',
+                              border: '1px solid #e2e8f0'
+                            }}>
+                              Top 3
+                            </span>
+                          )}
+                        </div>
+                        
+                        <div style={{
+                          width: '100%',
+                          height: '6px',
+                          backgroundColor: '#e2e8f0',
+                          borderRadius: '3px',
+                          overflow: 'hidden',
+                          marginBottom: '4px'
+                        }}>
+                          <div
+                            style={{
+                              width: `${score}%`,
+                              height: '100%',
+                              backgroundColor: config.color,
+                              borderRadius: '3px'
+                            }}
+                          />
+                        </div>
+                        
+                        <div style={{
+                          fontSize: '10px',
+                          fontWeight: '600',
+                          color: matchColors.text,
+                          padding: '2px 6px',
+                          borderRadius: '4px',
+                          backgroundColor: matchColors.bg,
+                          border: `1px solid ${matchColors.border}`,
+                          display: 'inline-block'
+                        }}>
+                          {matchLevel} MATCH
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+                
+                {/* Summary */}
+                <div style={{ marginTop: '15px', padding: '10px', backgroundColor: '#f1f5f9', borderRadius: '6px' }}>
+                  <p style={{ margin: 0, fontSize: '12px', color: '#334155', lineHeight: '1.5' }}>
+                    <strong>Dominant Types:</strong> {sortedDimensions.slice(0, 2).map(d => d.title || d.code || getDimensionConfig(d.code).name).join(' + ')}
+                    {sortedDimensions[2] && (
+                      <span>. <strong>Secondary Influence:</strong> {sortedDimensions[2].title || sortedDimensions[2].code || getDimensionConfig(sortedDimensions[2].code).name}</span>
+                    )}
+                  </p>
+                </div>
               </div>
             );
           })()}
@@ -497,9 +638,6 @@ function ResultPDF({ interpretation, counsellorNote, user, riasecReport }) {
                     <span style={{ fontSize: '24px', fontWeight: 'bold', color: colors.text }}>
                       {score}%
                     </span>
-                  </div>
-                  <div style={styles.infoBox}>
-                    Normalization Logic: The Likert scale (1–5) is linearly normalized to a 0–100 range using min-max scaling: Normalized Score = (value - minimum) / (maximum - minimum)
                   </div>
                   <div style={styles.progressBar}>
                     <div style={{
@@ -617,20 +755,226 @@ function ResultPDF({ interpretation, counsellorNote, user, riasecReport }) {
             ...styles.card,
             border: '2px solid #e2e8f0',
             borderRadius: '16px',
-            padding: '30px',
-            textAlign: 'center'
+            padding: '30px'
           }}>
-            <div style={{ textAlign: 'center', marginBottom: '20px' }}>
+            {/* Overall Score */}
+            <div style={{ textAlign: 'center', marginBottom: '30px' }}>
               <div style={styles.scoreDisplay}>
                 {Math.round(interpretation.overall_percentage || 0)}%
               </div>
               <p style={{ margin: '5px 0', fontSize: '16px', fontWeight: '600', color: '#334155' }}>Overall Performance</p>
-              <div style={{ marginTop: '15px', padding: '12px', backgroundColor: '#f8fafc', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
-                <p style={{ margin: 0, fontSize: '12px', color: '#475569', lineHeight: '1.5' }}>
-                  Percentage Normalization: Scores are normalized to a 0–100% scale for consistent interpretation across all assessment dimensions.
+            </div>
+
+            {/* Strengths and Improvement Areas */}
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '30px' }}>
+              {/* Key Strengths */}
+              <div>
+                <h4 style={{ fontSize: '14px', fontWeight: '600', color: '#166534', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <span style={{ width: '8px', height: '8px', backgroundColor: '#22c55e', borderRadius: '50%' }}></span>
+                  Key Strengths
+                </h4>
+                <p style={{ fontSize: '11px', color: '#64748b', fontStyle: 'italic', marginBottom: '10px' }}>
+                  You have a good base in some skills.
                 </p>
+                <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+                  {(() => {
+                    let strengthsArray = [];
+                    if (interpretation.strengths) {
+                      if (Array.isArray(interpretation.strengths)) {
+                        strengthsArray = interpretation.strengths;
+                      } else if (typeof interpretation.strengths === 'string') {
+                        try {
+                          const parsed = JSON.parse(interpretation.strengths);
+                          strengthsArray = Array.isArray(parsed) ? parsed : [];
+                        } catch {
+                          strengthsArray = interpretation.strengths.split('\n').filter(s => s.trim());
+                        }
+                      }
+                    }
+                    return strengthsArray.length > 0 ? (
+                      strengthsArray.slice(0, 3).map((strength, idx) => (
+                        <li key={idx} style={{ fontSize: '12px', color: '#334155', marginBottom: '8px', paddingLeft: '16px', position: 'relative' }}>
+                          <span style={{ position: 'absolute', left: 0, color: '#22c55e' }}>•</span>
+                          {strength}
+                        </li>
+                      ))
+                    ) : (
+                      <li style={{ fontSize: '12px', color: '#94a3b8', fontStyle: 'italic' }}>No specific strengths identified yet</li>
+                    );
+                  })()}
+                </ul>
+              </div>
+
+              {/* Areas to Improve */}
+              <div>
+                <h4 style={{ fontSize: '14px', fontWeight: '600', color: '#92400e', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <span style={{ width: '8px', height: '8px', backgroundColor: '#f59e0b', borderRadius: '50%' }}></span>
+                  Areas to Improve
+                </h4>
+                <p style={{ fontSize: '11px', color: '#64748b', fontStyle: 'italic', marginBottom: '10px' }}>
+                  Some skills need more practice. This is normal.
+                </p>
+                <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+                  {(() => {
+                    let weaknessesArray = [];
+                    if (interpretation.weaknesses || interpretation.areas_for_improvement) {
+                      const source = interpretation.weaknesses || interpretation.areas_for_improvement;
+                      if (Array.isArray(source)) {
+                        weaknessesArray = source;
+                      } else if (typeof source === 'string') {
+                        try {
+                          const parsed = JSON.parse(source);
+                          weaknessesArray = Array.isArray(parsed) ? parsed : [];
+                        } catch {
+                          weaknessesArray = source.split('\n').filter(s => s.trim());
+                        }
+                      }
+                    }
+                    return weaknessesArray.length > 0 ? (
+                      weaknessesArray.slice(0, 3).map((weakness, idx) => (
+                        <li key={idx} style={{ fontSize: '12px', color: '#334155', marginBottom: '8px', paddingLeft: '16px', position: 'relative' }}>
+                          <span style={{ position: 'absolute', left: 0, color: '#f59e0b' }}>•</span>
+                          {weakness}
+                        </li>
+                      ))
+                    ) : (
+                      <li style={{ fontSize: '12px', color: '#94a3b8', fontStyle: 'italic' }}>No specific improvement areas identified yet</li>
+                    );
+                  })()}
+                </ul>
               </div>
             </div>
+
+            {/* Section Scores Breakdown */}
+            {interpretation.section_scores && interpretation.section_scores.length > 0 && (
+              <div style={{ marginTop: '30px', paddingTop: '20px', borderTop: '1px solid #e2e8f0' }}>
+                <h4 style={{ fontSize: '14px', fontWeight: '600', color: '#1e293b', marginBottom: '15px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <svg style={{ width: '18px', height: '18px', color: '#6366f1' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                  </svg>
+                  Section Scores Breakdown
+                </h4>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '10px', marginBottom: '10px' }}>
+                  {interpretation.section_scores.map((section, idx) => {
+                    const sectionNum = section.section_number || section.sectionNumber || (idx + 1);
+                    let percentage;
+                    if (section.score >= 0 && section.score <= 100 && section.score > 5) {
+                      percentage = Math.round(section.score);
+                    } else {
+                      percentage = Math.round(((section.score - 1) / 4) * 100);
+                    }
+                    percentage = Math.min(100, Math.max(0, percentage));
+                    
+                    const sectionName = section.section_name || section.name;
+                    let displayName = sectionName;
+                    if (!displayName || displayName === 'undefined' || displayName.trim() === '') {
+                      if (sectionNum >= 1 && sectionNum <= 4) {
+                        const careerLabels = { 1: 'Cognitive Reasoning', 2: 'Aptitude Test', 3: 'Study Habits', 4: 'Learning Style' };
+                        displayName = careerLabels[sectionNum] || `Section ${sectionNum}`;
+                      } else if (sectionNum >= 5 && sectionNum <= 10) {
+                        const riasecLabels = { 5: 'Realistic (R)', 6: 'Investigative (I)', 7: 'Artistic (A)', 8: 'Social (S)', 9: 'Enterprising (E)', 10: 'Conventional (C)' };
+                        displayName = riasecLabels[sectionNum] || `Section ${sectionNum}`;
+                      } else {
+                        displayName = `Section ${sectionNum}`;
+                      }
+                    }
+                    
+                    const strokeColor = sectionNum <= 4 ? '#3b82f6' : '#8b5cf6';
+                    const circumference = 2 * Math.PI * 40;
+                    const offset = circumference * (1 - percentage / 100);
+                    
+                    return (
+                      <div
+                        key={sectionNum}
+                        style={{
+                          padding: '10px',
+                          backgroundColor: '#f8fafc',
+                          border: '1px solid #e2e8f0',
+                          borderRadius: '8px',
+                          textAlign: 'center',
+                          minWidth: '0',
+                          overflow: 'hidden'
+                        }}
+                      >
+                        <div style={{ 
+                          fontSize: '9px', 
+                          fontWeight: '500', 
+                          color: '#64748b', 
+                          marginBottom: '6px', 
+                          minHeight: '28px', 
+                          display: 'flex', 
+                          alignItems: 'center', 
+                          justifyContent: 'center',
+                          lineHeight: '1.2',
+                          wordWrap: 'break-word'
+                        }}>
+                          {displayName}
+                        </div>
+                        <div style={{ 
+                          position: 'relative', 
+                          width: '50px', 
+                          height: '50px', 
+                          margin: '0 auto 6px',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center'
+                        }}>
+                          <svg 
+                            width="50" 
+                            height="50" 
+                            viewBox="0 0 100 100" 
+                            style={{ 
+                              position: 'absolute',
+                              top: 0,
+                              left: 0,
+                              transform: 'rotate(-90deg)'
+                            }}
+                          >
+                            {/* Background circle */}
+                            <circle
+                              cx="50"
+                              cy="50"
+                              r="40"
+                              fill="none"
+                              stroke="#e2e8f0"
+                              strokeWidth="8"
+                            />
+                            {/* Progress circle */}
+                            <circle
+                              cx="50"
+                              cy="50"
+                              r="40"
+                              fill="none"
+                              stroke={strokeColor}
+                              strokeWidth="8"
+                              strokeLinecap="round"
+                              strokeDasharray={circumference}
+                              strokeDashoffset={offset}
+                              style={{
+                                transition: 'stroke-dashoffset 0.3s ease'
+                              }}
+                            />
+                          </svg>
+                          <div style={{ 
+                            position: 'relative',
+                            zIndex: 1,
+                            fontSize: '11px', 
+                            fontWeight: 'bold', 
+                            color: '#1e293b',
+                            textAlign: 'center'
+                          }}>
+                            {percentage}%
+                          </div>
+                        </div>
+                        <div style={{ fontSize: '8px', color: '#94a3b8', fontWeight: '500' }}>
+                          {sectionNum <= 4 ? 'Career' : 'RIASEC'}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
           </div>
         </div>
       )}
@@ -847,28 +1191,6 @@ function ResultPDF({ interpretation, counsellorNote, user, riasecReport }) {
       {riasecReport && riasecReport.dimensions && riasecReport.dimensions.length > 0 && (() => {
         // Calculate pathways dynamically (same logic as frontend component)
         const aspiringFieldsData = CAREER_PATHWAYS_DATA;
-        
-        const fieldEnvironmentCodes = {
-          Engineering: 'IRC',
-          'Computer Science': 'IRC',
-          Networking: 'IRC',
-          'Computer Applications': 'ICR',
-          'Data Science': 'IAR',
-          'Data Analytics': 'ICR',
-          Tech: 'IRC',
-          'Pure & Applied Science': 'IRA',
-          'Medical & Health': 'SIC',
-          Accounting: 'CER',
-          Finance: 'ECR',
-          'Business & Management': 'ECS',
-          Marketing: 'EAS',
-          Law: 'EIC',
-          Design: 'ARE',
-          Media: 'AES',
-          Hospitality: 'SEC',
-          Humanities: 'SAE'
-        };
-
         const dimensions = riasecReport.dimensions || [];
         
         // Field RIASEC mapping (same as frontend component)
@@ -915,11 +1237,13 @@ function ResultPDF({ interpretation, counsellorNote, user, riasecReport }) {
         // Find dominant dimension
         const sortedDims = Object.entries(normalizedScores)
           .map(([code, score]) => ({ code, score }))
-          .sort((a, b) => b.score - a.score);
+          .sort((a, b) => {
+            if (b.score !== a.score) return b.score - a.score;
+            return a.code.localeCompare(b.code);
+          });
         
         const top3Codes = sortedDims.slice(0, 3).map(d => d.code);
         const dominantCode = top3Codes[0] || 'I';
-        const riasecMix = top3Codes.length === 3 ? `${top3Codes[0]}-${top3Codes[1]}-${top3Codes[2]}` : top3Codes.join('-');
 
         // STEP 2: BASE COMPATIBILITY FORMULA
         const calculateBaseCompatibility = (field) => {
@@ -945,14 +1269,11 @@ function ResultPDF({ interpretation, counsellorNote, user, riasecReport }) {
 
           switch (field) {
             case 'Engineering':
+              // Priority boost: R dominant
+              if (dominantCode === "R") {
+                finalScore = finalScore + 1;
+              }
               if (An > Rn && Rn < 0.15) finalScore *= 0.75;
-              break;
-            case 'Tech':
-              if (Cn > Math.max(Rn, In) && (Rn + In) < 0.30) finalScore *= 0.70;
-              break;
-            case 'Medical & Health':
-              if (Sn < 0.15) finalScore *= 0.65;
-              else if (Rn > Math.max(In, Sn)) finalScore *= 0.75;
               break;
             case 'Data Science':
               if (Rn > In) finalScore *= 0.80;
@@ -980,6 +1301,10 @@ function ResultPDF({ interpretation, counsellorNote, user, riasecReport }) {
               if (Cn > Math.max(An, Sn)) finalScore *= 0.70;
               break;
             case 'Design':
+              // Priority boost: A dominant
+              if (dominantCode === "A") {
+                finalScore = finalScore + 1;
+              }
               if (Cn >= An) finalScore *= 0.60;
               break;
             case 'Media':
@@ -998,6 +1323,10 @@ function ResultPDF({ interpretation, counsellorNote, user, riasecReport }) {
               if (In > Math.max(Rn, Cn, An, Sn, En)) finalScore *= 1.15;
               if (Cn > Math.max(In, Rn) && (Rn + In) < 0.40) finalScore *= 0.70;
               break;
+            case 'Medical & Health':
+              if (Sn < 0.15) finalScore *= 0.65;
+              else if (Rn > Math.max(In, Sn)) finalScore *= 0.75;
+              break;
             case 'Hospitality':
               if (In > Math.max(Sn, En) && Sn < 0.20) finalScore *= 0.75;
               break;
@@ -1005,151 +1334,133 @@ function ResultPDF({ interpretation, counsellorNote, user, riasecReport }) {
           return finalScore;
         };
 
-        // Calculate base compatibility and apply conflicts
-        let fieldScores = aspiringFieldsData.map(item => {
-          const baseCompatibility = calculateBaseCompatibility(item.aspiringField);
-          const finalScore = applyBehavioralConflicts(item.aspiringField, baseCompatibility);
-          
-          return {
-            field: item.aspiringField,
-            baseCompatibility,
-            finalScore,
-            paths: item.careerPaths || []
-          };
+        // Get student's RIASEC scores
+        const studentScores = {};
+        dimensions.forEach(d => {
+          if (d.code) studentScores[d.code] = d.score || 0;
         });
 
-        // Sort by final score
-        fieldScores.sort((a, b) => {
-          if (Math.abs(b.finalScore - a.finalScore) > 0.0001) {
-            return b.finalScore - a.finalScore;
-          }
-          const aDominantWeight = fieldRIASECMapping[a.field]?.[dominantCode] || 0;
-          const bDominantWeight = fieldRIASECMapping[b.field]?.[dominantCode] || 0;
-          return bDominantWeight - aDominantWeight;
-        });
-
-        // STEP 4: STABILITY MARGIN
-        const bestScore = fieldScores[0]?.finalScore || 0;
-        const secondBestScore = fieldScores[1]?.finalScore || 0;
-        const scoreDifference = bestScore - secondBestScore;
-        const stabilityThreshold = 0.12;
-
-        let finalRanking = [...fieldScores];
-        if (scoreDifference < stabilityThreshold && fieldScores.length > 1) {
-          const clusterFields = {
-            'I': ['Data Science', 'Pure & Applied Science', 'Tech', 'Computer Applications', 'Data Analytics'],
-            'R': ['Engineering', 'Pure & Applied Science', 'Tech', 'Networking', 'Computer Applications'],
-            'A': ['Design', 'Media', 'Humanities'],
-            'E': ['Business & Management', 'Finance', 'Marketing', 'Law'],
-            'C': ['Accounting', 'Finance', 'Business & Management', 'Data Analytics'],
-            'S': ['Medical & Health', 'Humanities', 'Hospitality']
-          };
-
-          const preferredFields = clusterFields[dominantCode] || [];
-          
-          finalRanking = fieldScores.map(item => {
-            if (preferredFields.includes(item.field) && scoreDifference < stabilityThreshold) {
-              return { ...item, finalScore: item.finalScore * 1.05 };
+        // Sort RIASEC dimensions by score (highest first)
+        const sortedDimensions = ['R', 'I', 'A', 'S', 'E', 'C']
+          .map(code => ({
+            code,
+            score: studentScores[code] || 0
+          }))
+          .sort((a, b) => {
+            if (b.score !== a.score) {
+              return b.score - a.score;
             }
-            return item;
-          }).sort((a, b) => {
-            if (Math.abs(b.finalScore - a.finalScore) > 0.0001) {
-              return b.finalScore - a.finalScore;
-            }
-            const aDominantWeight = fieldRIASECMapping[a.field]?.[dominantCode] || 0;
-            const bDominantWeight = fieldRIASECMapping[b.field]?.[dominantCode] || 0;
-            return bDominantWeight - aDominantWeight;
+            return a.code.localeCompare(b.code);
           });
-        }
 
-        // Enforce top 2 positions based on dominant dimension
-        const dominantTop2Fields = {
-          'R': {
-            first: ['Engineering', 'Pure & Applied Science'],
-            second: ['Computer Applications']
-          },
-          'I': {
-            first: ['Pure & Applied Science'],
-            second: ['Data Science']
-          },
-          'A': {
-            first: ['Design'],
-            second: ['Media']
-          },
-          'S': {
-            first: ['Hospitality'],
-            second: ['Medical & Health']
-          },
-          'E': {
-            first: ['Business & Management'],
-            second: ['Marketing', 'Finance']
-          },
-          'C': {
-            first: ['Accounting'],
-            second: ['Finance', 'Data Analytics']
-          }
-        };
-
-        const top2Rules = dominantTop2Fields[dominantCode] || { first: [], second: [] };
-        
-        // Find current positions of required fields
-        const fieldIndexMap = {};
-        finalRanking.forEach((item, index) => {
-          fieldIndexMap[item.field] = index;
-        });
-
-        // Get the highest score for reference
-        const maxScore = finalRanking[0]?.finalScore || 1;
-        
-        // Adjust scores to enforce top 2 positions
-        const adjustedScores = finalRanking.map(item => {
-          // First position fields - set to max score (tied)
-          if (top2Rules.first.includes(item.field)) {
-            return { ...item, finalScore: maxScore };
-          }
-          // Second position fields - set to maxScore * 0.95 (slightly below first)
-          if (top2Rules.second.includes(item.field)) {
-            // If multiple second options, use the one with higher original score
-            const secondFields = top2Rules.second.filter(f => fieldIndexMap[f] !== undefined);
-            const secondScores = secondFields.map(f => {
-              const idx = fieldIndexMap[f];
-              return { field: f, score: finalRanking[idx]?.finalScore || 0 };
-            });
-            secondScores.sort((a, b) => b.score - a.score);
-            const bestSecond = secondScores[0]?.field;
-            if (item.field === bestSecond) {
-              return { ...item, finalScore: maxScore * 0.95 };
-            }
-          }
-          return item;
-        });
-
-        // Re-sort with adjusted scores
-        adjustedScores.sort((a, b) => b.finalScore - a.finalScore);
-
-        const allRows = adjustedScores.map((item, index) => {
-          let confidence = 'LOW';
-          if (index < 2) confidence = 'HIGH';
-          else if (index < 5) confidence = 'MODERATE';
+        // Restructure: Create 6 rows (one per RIASEC dimension) with exact 3 fields from mapping, ordered by score
+        const riasecRows = sortedDimensions.map(({ code }) => {
+          // Get the exact 3 fields for this RIASEC dimension from the mapping
+          const mappedFields = RIASEC_CAREER_FIELDS_MAPPING[code] || [];
           
-          // Add rank: top 2 get rank 1, then 3, 4, 5...
-          const rank = index < 2 ? 1 : index + 1;
-          const isTop2 = index < 2;
-
+          // Get field data for the mapped fields
+          const fieldsForDimension = mappedFields.map(fieldName => {
+            const fieldData = aspiringFieldsData.find(item => item.aspiringField === fieldName);
+            if (!fieldData) {
+              return null;
+            }
+            
+            const weights = fieldRIASECMapping[fieldData.aspiringField] || {};
+            const weight = weights[code] || 0;
+            const baseCompatibility = calculateBaseCompatibility(fieldData.aspiringField);
+            const finalScore = applyBehavioralConflicts(fieldData.aspiringField, baseCompatibility);
+            
+            return {
+              field: fieldData.aspiringField,
+              weight: weight,
+              finalScore: finalScore,
+              paths: fieldData.careerPaths || []
+            };
+          }).filter(f => f !== null);
+          
+          // Special handling: Force Engineering first when R is dominant, Design first when A is dominant
+          let sortedFields;
+          if (dominantCode === "R" && code === "R") {
+            const engineeringField = fieldsForDimension.find(f => f.field === "Engineering");
+            const otherFields = fieldsForDimension.filter(f => f.field !== "Engineering");
+            if (engineeringField) {
+              // Ensure Engineering has the highest score - set it to be definitely first
+              const maxOtherScore = otherFields.length > 0 ? Math.max(...otherFields.map(f => f.finalScore)) : 0;
+              // Set Engineering score to be significantly higher than all others (guarantee it's first)
+              engineeringField.finalScore = Math.max(engineeringField.finalScore, maxOtherScore + 1.0);
+              // Sort other fields by finalScore (highest first)
+              const sortedOtherFields = [...otherFields].sort((a, b) => {
+                if (Math.abs(b.finalScore - a.finalScore) > 0.0001) {
+                  return b.finalScore - a.finalScore;
+                }
+                return b.weight - a.weight;
+              });
+              // Always put Engineering first, then sorted others
+              sortedFields = [engineeringField, ...sortedOtherFields];
+            } else {
+              // If Engineering not found, just sort normally
+              sortedFields = [...fieldsForDimension].sort((a, b) => {
+                if (Math.abs(b.finalScore - a.finalScore) > 0.0001) {
+                  return b.finalScore - a.finalScore;
+                }
+                return b.weight - a.weight;
+              });
+            }
+          } else if (dominantCode === "A" && code === "A") {
+            const designField = fieldsForDimension.find(f => f.field === "Design");
+            const otherFields = fieldsForDimension.filter(f => f.field !== "Design");
+            if (designField) {
+              // Ensure Design has the highest score - set it to be definitely first
+              const maxOtherScore = otherFields.length > 0 ? Math.max(...otherFields.map(f => f.finalScore)) : 0;
+              // Set Design score to be significantly higher than all others (guarantee it's first)
+              designField.finalScore = Math.max(designField.finalScore, maxOtherScore + 1.0);
+              // Sort other fields by finalScore (highest first)
+              const sortedOtherFields = [...otherFields].sort((a, b) => {
+                if (Math.abs(b.finalScore - a.finalScore) > 0.0001) {
+                  return b.finalScore - a.finalScore;
+                }
+                return b.weight - a.weight;
+              });
+              // Always put Design first, then sorted others
+              sortedFields = [designField, ...sortedOtherFields];
+            } else {
+              // If Design not found, just sort normally
+              sortedFields = [...fieldsForDimension].sort((a, b) => {
+                if (Math.abs(b.finalScore - a.finalScore) > 0.0001) {
+                  return b.finalScore - a.finalScore;
+                }
+                return b.weight - a.weight;
+              });
+            }
+          } else {
+            sortedFields = [...fieldsForDimension].sort((a, b) => {
+              if (Math.abs(b.finalScore - a.finalScore) > 0.0001) {
+                return b.finalScore - a.finalScore;
+              }
+              return b.weight - a.weight;
+            });
+          }
+          
           return {
-            aspiringField: item.field,
-            careerPaths: item.paths,
-            bestCareerPath: item.paths[0] || null,
-            riasecMix: riasecMix,
-            congruence: item.finalScore,
-            confidence,
-            rank,
-            isTop2
+            riasecCode: code,
+            riasecScore: Math.round(studentScores[code] || 0),
+            fields: sortedFields.map(f => ({
+              aspiringField: f.field,
+              careerPaths: f.paths,
+              weight: f.weight
+            }))
           };
         });
 
-        const bestField = allRows[0]?.aspiringField || null;
-        const bestPath = allRows[0]?.bestCareerPath || null;
+        // RIASEC labels and colors
+        const riasecLabels = {
+          'R': 'Realistic',
+          'I': 'Investigative',
+          'A': 'Artistic',
+          'S': 'Social',
+          'E': 'Enterprising',
+          'C': 'Conventional'
+        };
 
         const calculatePersona = (careerPath) => {
           const personaMap = {
@@ -1268,165 +1579,153 @@ function ResultPDF({ interpretation, counsellorNote, user, riasecReport }) {
         return (
           <div style={styles.section}>
             <h2 style={styles.sectionTitle}>Potential Career Pathways</h2>
+            
+            {/* Mapping Information Message */}
+            <div style={{
+              backgroundColor: '#eff6ff',
+              border: '1px solid #bfdbfe',
+              borderRadius: '8px',
+              padding: '12px 16px',
+              marginBottom: '20px'
+            }}>
+              <p style={{
+                margin: 0,
+                fontSize: '12px',
+                color: '#1e40af',
+                lineHeight: '1.6'
+              }}>
+                <span style={{ fontWeight: '600' }}>Note:</span> Career fields are mapped to RIASEC personality clusters based on Holland's vocational theory. Some fields may appear in multiple clusters due to overlapping skill and personality requirements.
+              </p>
+            </div>
+            
             <div style={styles.card}>
             <table style={styles.table}>
               <thead>
                 <tr>
-                    <th style={styles.tableHeader}>Aspiring Field</th>
-                  <th style={styles.tableHeader}>RIASEC Mix</th>
-                    <th style={styles.tableHeader}>Career Path</th>
-                  <th style={styles.tableHeader}>Professional Persona</th>
-                    <th style={styles.tableHeader}>Core Tasks & Focus</th>
-                    <th style={styles.tableHeader}>Confidence</th>
+                  <th style={styles.tableHeader}>RIASEC Dimension</th>
+                  <th style={styles.tableHeader}>Career Field 1</th>
+                  <th style={styles.tableHeader}>Career Field 2</th>
+                  <th style={styles.tableHeader}>Career Field 3</th>
                 </tr>
               </thead>
               <tbody>
-                  {allRows.map((row, idx) => {
-                    const isBestField = row.aspiringField === bestField;
-                    const isBestPath = row.careerPaths && row.careerPaths.includes(bestPath);
-                    const isHighlighted = row.isTop2 || false; // Highlight top 2
-                    const confidence = {
-                      level: row.confidence,
-                      label: row.confidence === 'HIGH' ? 'High Confidence' : row.confidence === 'MODERATE' ? 'Moderate Confidence' : 'Low Confidence'
-                    };
-                    const confColors = getConfidenceColor(confidence.level);
-                    
-                    return (
-                      <tr 
-                        key={idx} 
-                        style={{ 
-                          backgroundColor: idx % 2 === 0 ? '#ffffff' : '#f8fafc',
-                          ...(isHighlighted ? {
-                            background: 'linear-gradient(135deg, rgba(99,102,241,0.22), rgba(59,130,246,0.18))',
-                            border: '1px solid rgba(99,102,241,0.35)',
-                            boxShadow: '0 8px 30px rgba(0,0,0,0.35)'
-                          } : {})
-                        }}
-                      >
-                        <td style={{ ...styles.tableCell, fontWeight: '600', color: isHighlighted ? '#6366f1' : '#1e293b' }}>
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                            <span style={{ 
-                              fontSize: '12px', 
-                              fontWeight: 'bold',
-                              color: isHighlighted ? '#4f46e5' : '#64748b'
+                {riasecRows.map((row, rowIdx) => {
+                  const score = row.riasecScore || 0;
+                  const matchLevel = score >= 30 ? 'HIGH' : score >= 15 ? 'MODERATE' : 'LOW';
+                  const matchLabels = {
+                    'HIGH': 'High Match',
+                    'MODERATE': 'Moderate Match',
+                    'LOW': 'Low Match'
+                  };
+                  const matchColors = getMatchLevelColor(matchLevel);
+                  const dimensionColors = getDimensionColor(row.riasecCode);
+                  
+                  return (
+                    <tr 
+                      key={rowIdx} 
+                      style={{ 
+                        backgroundColor: rowIdx % 2 === 0 ? '#ffffff' : '#f8fafc'
+                      }}
+                    >
+                      {/* RIASEC Dimension Column */}
+                      <td style={styles.tableCell}>
+                        <div style={{ marginBottom: '8px' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
+                            <span style={{
+                              display: 'inline-flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              width: '28px',
+                              height: '28px',
+                              borderRadius: '6px',
+                              backgroundColor: dimensionColors.bg,
+                              color: dimensionColors.text,
+                              border: `2px solid ${dimensionColors.border}`,
+                              fontSize: '11px',
+                              fontWeight: '600'
                             }}>
-                              {row.rank}.
+                              {row.riasecCode}
                             </span>
-                            <span>
-                              {row.aspiringField}
+                            <span style={{ fontSize: '13px', fontWeight: '600', color: '#1e293b' }}>
+                              {riasecLabels[row.riasecCode]}
                             </span>
                           </div>
-                    </td>
-                    <td style={styles.tableCell}>
-                          <div style={{ display: 'flex', gap: '4px', flexWrap: 'wrap' }}>
-                            {row.riasecMix ? row.riasecMix.split('-').map((code, codeIdx) => {
-                              const codeColors = getDimensionColor(code);
-                              return (
-                                <span
-                                  key={codeIdx}
-                                  style={{
-                                    display: 'inline-flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    width: '24px',
-                                    height: '24px',
-                                    borderRadius: '50%',
-                                    backgroundColor: codeColors.bg,
-                                    color: codeColors.text,
-                                    border: `1px solid ${codeColors.border}`,
-                                    fontSize: '10px',
-                        fontWeight: '600'
-                                  }}
-                                >
-                                  {code}
-                      </span>
-                              );
-                            }) : '-'}
-                          </div>
-                        </td>
-                        <td style={styles.tableCell}>
-                          {row.careerPaths && row.careerPaths.length > 0 ? (
-                            <ol style={{ margin: 0, paddingLeft: '20px', fontSize: '12px', lineHeight: '1.6' }}>
-                              {row.careerPaths.map((path, pathIdx) => (
-                                <li 
-                                  key={pathIdx}
-                                  style={{ 
-                                    marginBottom: '4px',
-                                    color: isBestPath && path === bestPath ? '#6366f1' : '#334155',
-                                    fontWeight: isBestPath && path === bestPath ? '600' : '400'
-                                  }}
-                                >
-                                  {path}
-                                </li>
-                              ))}
-                            </ol>
-                          ) : '-'}
-                        </td>
-                        <td style={styles.tableCell}>
-                          {row.careerPaths && row.careerPaths.length > 0 ? (
-                            <div style={{ fontSize: '12px', lineHeight: '1.6' }}>
-                              {row.careerPaths.map((path, pathIdx) => (
-                                <div key={pathIdx} style={{ marginBottom: '4px' }}>
-                                  {calculatePersona(path)}
-                                </div>
-                              ))}
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap', marginBottom: '6px' }}>
+                            <span style={{
+                              ...styles.badge,
+                              backgroundColor: matchColors.bg,
+                              color: matchColors.text,
+                              border: `1px solid ${matchColors.border}`,
+                              fontSize: '10px',
+                              padding: '3px 8px'
+                            }}>
+                              {matchLabels[matchLevel]}
+                            </span>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '11px', color: '#64748b' }}>
+                              <span>Score:</span>
+                              <span style={{ fontWeight: '600', color: '#1e293b' }}>{score}%</span>
                             </div>
-                          ) : '-'}
-                        </td>
-                        <td style={styles.tableCell}>
-                          {row.careerPaths && row.careerPaths.length > 0 ? (
-                            <div style={{ fontSize: '11px', lineHeight: '1.5', color: '#475569' }}>
-                              {row.careerPaths.map((path, pathIdx) => (
-                                <div key={pathIdx} style={{ marginBottom: '4px' }}>
-                                  {calculateFocus(path)}
-                                </div>
-                              ))}
-                            </div>
-                          ) : '-'}
-                    </td>
-                        <td style={styles.tableCell}>
-                          <div style={{
-                            ...styles.badge,
-                            backgroundColor: confColors.bg,
-                            color: confColors.text,
-                            border: `1px solid ${confColors.border}`
-                          }}>
-                            {confidence.label}
                           </div>
-                    </td>
-                  </tr>
-                    );
-                  })}
+                        </div>
+                      </td>
+                      
+                      {/* Career Field 1, Career Field 2, Career Field 3 Columns */}
+                      {[0, 1, 2].map((fieldIdx) => {
+                        const field = row.fields[fieldIdx];
+                        if (!field) {
+                          return (
+                            <td key={fieldIdx} style={styles.tableCell}>
+                              <span style={{ color: '#94a3b8', fontSize: '11px' }}>-</span>
+                            </td>
+                          );
+                        }
+                        
+                        return (
+                          <td key={fieldIdx} style={styles.tableCell}>
+                            <div style={{ marginBottom: '8px' }}>
+                              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '6px' }}>
+                                <span style={{
+                                  display: 'inline-flex',
+                                  alignItems: 'center',
+                                  justifyContent: 'center',
+                                  width: '20px',
+                                  height: '20px',
+                                  borderRadius: '4px',
+                                  background: 'linear-gradient(135deg, #6366f1 0%, #3b82f6 100%)',
+                                  color: '#ffffff',
+                                  fontSize: '9px',
+                                  fontWeight: '600'
+                                }}>
+                                  {fieldIdx + 1}
+                                </span>
+                                <span style={{ fontSize: '12px', fontWeight: '600', color: '#1e293b' }}>
+                                  {field.aspiringField}
+                                </span>
+                              </div>
+                              {field.careerPaths && field.careerPaths.length > 0 && (
+                                <div style={{ paddingLeft: '26px' }}>
+                                  {field.careerPaths.map((path, pathIdx) => (
+                                    <div key={pathIdx} style={{ 
+                                      fontSize: '10px', 
+                                      color: '#475569', 
+                                      marginBottom: '3px',
+                                      lineHeight: '1.4'
+                                    }}>
+                                      • {path}
+                                    </div>
+                                  ))}
+                                </div>
+                              )}
+                            </div>
+                          </td>
+                        );
+                      })}
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>
-            
-            {/* Confidence Level Definitions */}
-            <div style={{ marginTop: '20px', paddingTop: '15px', borderTop: '1px solid #e2e8f0' }}>
-              <h4 style={{ margin: '0 0 12px 0', fontSize: '13px', fontWeight: '600', color: '#1e293b' }}>
-                Confidence Level Definitions
-              </h4>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '10px' }}>
-                <div style={{ padding: '10px', backgroundColor: '#dcfce7', border: '1px solid #22c55e', borderRadius: '6px' }}>
-                  <div style={{ fontSize: '12px', fontWeight: '600', color: '#166534', marginBottom: '4px' }}>High Confidence</div>
-                  <div style={{ fontSize: '10px', color: '#334155', lineHeight: '1.4' }}>
-                    Strong alignment between pathway requirements and your RIASEC profile. Primary and secondary traits match top scores with minimal gaps.
-                  </div>
-                </div>
-                <div style={{ padding: '10px', backgroundColor: '#fef3c7', border: '1px solid #f59e0b', borderRadius: '6px' }}>
-                  <div style={{ fontSize: '12px', fontWeight: '600', color: '#92400e', marginBottom: '4px' }}>Moderate Confidence</div>
-                  <div style={{ fontSize: '10px', color: '#334155', lineHeight: '1.4' }}>
-                    Reasonable alignment with your profile. Some traits align well, though there may be moderate gaps between pathway needs and your scores.
-                  </div>
-                </div>
-                <div style={{ padding: '10px', backgroundColor: '#fee2e2', border: '1px solid #ef4444', borderRadius: '6px' }}>
-                  <div style={{ fontSize: '12px', fontWeight: '600', color: '#991b1b', marginBottom: '4px' }}>Low Confidence</div>
-                  <div style={{ fontSize: '10px', color: '#334155', lineHeight: '1.4' }}>
-                    Limited alignment between pathway requirements and your current RIASEC profile. Significant gaps suggest this may require additional development.
-                  </div>
-                </div>
-              </div>
-            </div>
       </div>
         );
       })()}

@@ -1,6 +1,16 @@
 import React, { useMemo } from 'react';
 import { motion } from 'framer-motion';
-import { Rocket } from 'lucide-react';
+import { Target } from 'lucide-react';
+
+// RIASEC to Career Fields Mapping
+const RIASEC_CAREER_FIELDS_MAPPING = {
+  "R": ["Engineering", "Networking", "Computer Applications"],
+  "I": ["Data Science", "Pure & Applied Science", "Data Analytics"],
+  "A": ["Design", "Media", "Humanities"],
+  "S": ["Medical & Health", "Hospitality", "Humanities"],
+  "E": ["Business & Management", "Marketing", "Law"],
+  "C": ["Accounting", "Finance", "Data Analytics"]
+};
 
 // Career pathways data - hardcoded directly in component
 const CAREER_PATHWAYS_DATA = [
@@ -168,6 +178,10 @@ function RIASECCareerPathways({ careerPathways, dimensions }) {
       // Field-specific conflict rules
       switch (field) {
         case 'Engineering':
+          // Priority boost: R dominant
+          if (dominantCode === "R") {
+            finalScore = finalScore + 1;
+          }
           // Conflict: A dominant with low R
           if (An > Rn && Rn < 0.15) {
             finalScore *= 0.75;
@@ -445,48 +459,130 @@ function RIASECCareerPathways({ careerPathways, dimensions }) {
       return bDominantWeight - aDominantWeight;
     });
 
-    // Get top 3 fields for confidence calculation
-    const top3Fields = adjustedRanking.slice(0, 3).map(f => f.field);
-    const bestField = adjustedRanking[0]?.field || null;
+    // Get student's RIASEC scores
+    const studentScores = {};
+    dimensions.forEach(d => {
+      if (d.code) studentScores[d.code] = d.score || 0;
+    });
 
-    // Create rows with final scores and rank numbers
-    const allRows = [];
-    aspiringFieldsData.forEach(item => {
-      const fieldData = adjustedRanking.find(f => f.field === item.aspiringField);
-      const finalCompatibility = fieldData?.finalScore || 0;
-      const allCareerPaths = item.careerPaths || [];
-      const bestPathForField = allCareerPaths[0] || null;
-      
-      allRows.push({
-        aspiringField: item.aspiringField,
-        careerPaths: allCareerPaths,
-        bestCareerPath: bestPathForField,
-        riasecMix: riasecMix,
-        compatibility: finalCompatibility
+    // Sort RIASEC dimensions by score (highest first)
+    const sortedDimensions = ['R', 'I', 'A', 'S', 'E', 'C']
+      .map(code => ({
+        code,
+        score: studentScores[code] || 0
+      }))
+      .sort((a, b) => {
+        // Sort by score descending, then by code if scores are equal
+        if (b.score !== a.score) {
+          return b.score - a.score;
+        }
+        return a.code.localeCompare(b.code);
       });
-    });
-    
-    // Sort rows by final compatibility
-    allRows.sort((a, b) => b.compatibility - a.compatibility);
-    
-    // Add rank numbers: top 2 get rank 1, then 3, 4, 5...
-    allRows.forEach((row, index) => {
-      if (index < 2) {
-        row.rank = 1;
-        row.isTop2 = true;
+
+    // Restructure: Create 6 rows (one per RIASEC dimension) with exact 3 fields from mapping, ordered by score
+    const riasecRows = sortedDimensions.map(({ code }) => {
+      // Get the exact 3 fields for this RIASEC dimension from the mapping
+      const mappedFields = RIASEC_CAREER_FIELDS_MAPPING[code] || [];
+      
+      // Get field data for the mapped fields
+      const fieldsForDimension = mappedFields.map(fieldName => {
+        const fieldData = aspiringFieldsData.find(item => item.aspiringField === fieldName);
+        if (!fieldData) {
+          return null;
+        }
+        
+        const weights = fieldRIASECMapping[fieldData.aspiringField] || {};
+        const weight = weights[code] || 0;
+        const baseCompatibility = calculateBaseCompatibility(fieldData.aspiringField);
+        const finalScore = applyBehavioralConflicts(fieldData.aspiringField, baseCompatibility);
+        
+        return {
+          field: fieldData.aspiringField,
+          weight: weight,
+          finalScore: finalScore,
+          paths: fieldData.careerPaths || []
+        };
+      }).filter(f => f !== null); // Remove any fields not found in data
+      
+      // Special handling: Force Engineering first when R is dominant, Design first when A is dominant
+      let sortedFields;
+      if (dominantCode === "R" && code === "R") {
+        const engineeringField = fieldsForDimension.find(f => f.field === "Engineering");
+        const otherFields = fieldsForDimension.filter(f => f.field !== "Engineering");
+        if (engineeringField) {
+          // Ensure Engineering has the highest score - set it to be definitely first
+          const maxOtherScore = otherFields.length > 0 ? Math.max(...otherFields.map(f => f.finalScore)) : 0;
+          // Set Engineering score to be significantly higher than all others (guarantee it's first)
+          engineeringField.finalScore = Math.max(engineeringField.finalScore, maxOtherScore + 1.0);
+          // Sort other fields by finalScore (highest first)
+          const sortedOtherFields = [...otherFields].sort((a, b) => {
+            if (Math.abs(b.finalScore - a.finalScore) > 0.0001) {
+              return b.finalScore - a.finalScore;
+            }
+            return b.weight - a.weight;
+          });
+          // Always put Engineering first, then sorted others
+          sortedFields = [engineeringField, ...sortedOtherFields];
+        } else {
+          // If Engineering not found, just sort normally
+          sortedFields = [...fieldsForDimension].sort((a, b) => {
+            if (Math.abs(b.finalScore - a.finalScore) > 0.0001) {
+              return b.finalScore - a.finalScore;
+            }
+            return b.weight - a.weight;
+          });
+        }
+      } else if (dominantCode === "A" && code === "A") {
+        const designField = fieldsForDimension.find(f => f.field === "Design");
+        const otherFields = fieldsForDimension.filter(f => f.field !== "Design");
+        if (designField) {
+          // Ensure Design has the highest score - set it to be definitely first
+          const maxOtherScore = otherFields.length > 0 ? Math.max(...otherFields.map(f => f.finalScore)) : 0;
+          // Set Design score to be significantly higher than all others (guarantee it's first)
+          designField.finalScore = Math.max(designField.finalScore, maxOtherScore + 1.0);
+          // Sort other fields by finalScore (highest first)
+          const sortedOtherFields = [...otherFields].sort((a, b) => {
+            if (Math.abs(b.finalScore - a.finalScore) > 0.0001) {
+              return b.finalScore - a.finalScore;
+            }
+            return b.weight - a.weight;
+          });
+          // Always put Design first, then sorted others
+          sortedFields = [designField, ...sortedOtherFields];
+        } else {
+          // If Design not found, just sort normally
+          sortedFields = [...fieldsForDimension].sort((a, b) => {
+            if (Math.abs(b.finalScore - a.finalScore) > 0.0001) {
+              return b.finalScore - a.finalScore;
+            }
+            return b.weight - a.weight;
+          });
+        }
       } else {
-        row.rank = index + 1; // 3, 4, 5, 6...
-        row.isTop2 = false;
+        // Sort by finalScore (highest first) to maintain ranking within the mapped fields
+        sortedFields = [...fieldsForDimension].sort((a, b) => {
+          if (Math.abs(b.finalScore - a.finalScore) > 0.0001) {
+            return b.finalScore - a.finalScore;
+          }
+          return b.weight - a.weight;
+        });
       }
+      
+      return {
+        riasecCode: code,
+        riasecScore: Math.round(studentScores[code] || 0),
+        fields: sortedFields.map(f => ({
+          aspiringField: f.field,
+          careerPaths: f.paths,
+          weight: f.weight
+        }))
+      };
     });
-    
-    const bestPath = allRows[0]?.bestCareerPath || null;
 
     return {
-      rows: allRows,
-      bestField,
-      bestPath,
-      top3Fields
+      rows: riasecRows,
+      bestField: null,
+      bestPath: null
     };
   }, [dimensions, fieldRIASECMapping]);
 
@@ -531,525 +627,239 @@ function RIASECCareerPathways({ careerPathways, dimensions }) {
     );
   }
 
-  const { rows, bestField, bestPath, top3Fields = [] } = calculatedPathways;
+  const { rows } = calculatedPathways;
+
+  const riasecLabels = {
+    'R': 'Realistic',
+    'I': 'Investigative',
+    'A': 'Artistic',
+    'S': 'Social',
+    'E': 'Enterprising',
+    'C': 'Conventional'
+  };
+
+  const riasecColors = {
+    'R': 'bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300 border-orange-300 dark:border-orange-700',
+    'I': 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 border-blue-300 dark:border-blue-700',
+    'A': 'bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 border-purple-300 dark:border-purple-700',
+    'S': 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 border-green-300 dark:border-green-700',
+    'E': 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300 border-red-300 dark:border-red-700',
+    'C': 'bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-600'
+  };
 
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.3 }}
-      className="bg-white dark:bg-slate-800 rounded-xl p-6 border border-slate-200 dark:border-slate-700"
+      className="bg-gradient-to-br from-white via-slate-50 to-blue-50 dark:from-slate-800 dark:via-slate-800 dark:to-slate-900 rounded-2xl p-6 sm:p-8 border border-slate-200 dark:border-slate-700 shadow-xl"
     >
-      <div className="flex items-center gap-2 mb-6">
-        <Rocket className="w-5 h-5 text-slate-700 dark:text-slate-300 flex-shrink-0" />
-        <h3 className="text-xl font-bold text-slate-900 dark:text-slate-100">
-        Potential Career Pathways
-      </h3>
+      <div className="flex items-center gap-3 mb-6">
+        <div className="p-2 bg-gradient-to-br from-indigo-500 to-blue-600 rounded-xl shadow-lg">
+          <Target className="w-6 h-6 text-white flex-shrink-0" />
+        </div>
+        <div>
+          <h3 className="text-2xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 dark:from-slate-100 dark:to-slate-300 bg-clip-text text-transparent">
+            Potential Career Pathways
+          </h3>
+          <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">
+            Discover your top career matches based on your RIASEC profile
+          </p>
+        </div>
+      </div>
+
+      {/* Mapping Information Message */}
+      <div className="mb-6 p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
+        <p className="text-sm text-blue-900 dark:text-blue-200 leading-relaxed">
+          <span className="font-semibold">Note:</span> Career fields are mapped to RIASEC personality clusters based on Holland's vocational theory. Some fields may appear in multiple clusters due to overlapping skill and personality requirements.
+        </p>
       </div>
       
       {/* Mobile Card Layout */}
-      <div className="md:hidden space-y-4">
+      <div className="md:hidden space-y-5">
         {rows.map((row, index) => {
-          const isBestField = row.aspiringField === bestField;
-          const isBestPath = row.careerPaths && row.careerPaths.includes(bestPath);
-          const isHighlighted = row.isTop2 || false; // Highlight top 2
+          const score = row.riasecScore || 0;
+          const matchLevel = score >= 30 ? 'HIGH' : score >= 15 ? 'MODERATE' : 'LOW';
+          const matchLabels = {
+            'HIGH': 'High Match',
+            'MODERATE': 'Moderate Match',
+            'LOW': 'Low Match'
+          };
+          const matchColors = {
+            'HIGH': 'bg-gradient-to-r from-green-500 to-emerald-500 text-white border-green-400 shadow-green-200 dark:shadow-green-900/50',
+            'MODERATE': 'bg-gradient-to-r from-yellow-500 to-amber-500 text-white border-yellow-400 shadow-yellow-200 dark:shadow-yellow-900/50',
+            'LOW': 'bg-gradient-to-r from-orange-500 to-red-500 text-white border-orange-400 shadow-orange-200 dark:shadow-orange-900/50'
+          };
           
-          const fieldRank = top3Fields.indexOf(row.aspiringField);
-          
-          const calculatePersona = (careerPath) => {
-            const personaMap = {
-              'Civil Engineer': 'The Infrastructure Builder',
-              'Mechanical Engineer': 'The Mechanical Innovator',
-              'Robotics Engineer': 'The Automation Specialist',
-              'Software Developer': 'The Code Architect',
-              'Cybersecurity Analyst': 'The Security Guardian',
-              'Cloud Architect': 'The Cloud Strategist',
-              'Medical Doctor': 'The Healthcare Provider',
-              'Registered Nurse': 'The Care Specialist',
-              'Healthcare Administrator': 'The Healthcare Manager',
-              'Machine Learning Engineer': 'The AI Builder',
-              'Data Scientist': 'The Insight Architect',
-              'AI Research Scientist': 'The AI Researcher',
-              'Business Intelligence Analyst': 'The Business Analyst',
-              'Operations Analyst': 'The Operations Specialist',
-              'Market Research Analyst': 'The Market Analyst',
-              'Research Scientist': 'The Research Specialist',
-              'Biotechnologist': 'The Biotechnology Expert',
-              'Environmental Consultant': 'The Environmental Specialist',
-              'Project Manager': 'The Project Leader',
-              'Operations Manager': 'The Operations Leader',
-              'Management Consultant': 'The Strategy Consultant',
-              'Certified Public Accountant': 'The Financial Auditor',
-              'Forensic Accountant': 'The Financial Investigator',
-              'Tax Auditor': 'The Tax Specialist',
-              'Investment Banker': 'The Financial Strategist',
-              'Financial Planner': 'The Wealth Advisor',
-              'Portfolio Manager': 'The Investment Manager',
-              'Psychologist': 'The Mental Health Specialist',
-              'Technical Writer': 'The Documentation Expert',
-              'Policy Analyst': 'The Policy Specialist',
-              'UX/UI Designer': 'The Creative Innovator',
-              'Graphic Designer': 'The Visual Creator',
-              'Industrial Designer': 'The Product Designer',
-              'Content Producer': 'The Content Creator',
-              'Public Relations Specialist': 'The PR Expert',
-              'Digital Editor': 'The Digital Content Manager',
-              'Network Engineer': 'The Network Architect',
-              'Systems Administrator': 'The Systems Manager',
-              'Solutions Architect': 'The Solution Designer',
-              'Digital Marketing Manager': 'The Marketing Strategist',
-              'Brand Strategist': 'The Brand Expert',
-              'Social Media Director': 'The Social Media Leader',
-              'Corporate Attorney': 'The Legal Advisor',
-              'Legal Consultant': 'The Legal Expert',
-              'Paralegal': 'The Legal Assistant',
-              'Web Developer': 'The Web Builder',
-              'Database Administrator': 'The Data Manager',
-              'Mobile App Developer': 'The Mobile Innovator',
-              'Hotel Manager': 'The Hospitality Leader',
-              'Event Coordinator': 'The Event Specialist',
-              'Tourism Director': 'The Tourism Manager'
-            };
-            return personaMap[careerPath] || 'The Professional';
-          };
-
-          const calculateFocus = (careerPath) => {
-            const focusMap = {
-              'Civil Engineer': 'Designing and constructing infrastructure projects through technical expertise and systematic planning.',
-              'Mechanical Engineer': 'Developing mechanical systems and solutions through engineering principles and innovation.',
-              'Robotics Engineer': 'Creating automated systems and robotic solutions through advanced engineering and programming.',
-              'Software Developer': 'Building software applications through coding, problem-solving, and technical implementation.',
-              'Cybersecurity Analyst': 'Protecting digital systems and data through security analysis and threat mitigation.',
-              'Cloud Architect': 'Designing cloud infrastructure solutions for scalable and efficient systems.',
-              'Medical Doctor': 'Providing medical care and treatment through clinical expertise and patient interaction.',
-              'Registered Nurse': 'Delivering patient care and support through medical knowledge and compassion.',
-              'Healthcare Administrator': 'Managing healthcare operations and services through organizational leadership.',
-              'Machine Learning Engineer': 'Developing AI and machine learning systems through advanced algorithms and data science.',
-              'Data Scientist': 'Analyzing complex data to extract insights and drive decision-making through statistical methods.',
-              'AI Research Scientist': 'Advancing artificial intelligence through research, experimentation, and innovation.',
-              'Business Intelligence Analyst': 'Transforming data into business insights through analysis and reporting.',
-              'Operations Analyst': 'Optimizing business operations through data analysis and process improvement.',
-              'Market Research Analyst': 'Understanding market trends and consumer behavior through research and analysis.',
-              'Research Scientist': 'Conducting scientific research and experiments to advance knowledge and innovation.',
-              'Biotechnologist': 'Applying biological processes to develop products and solutions through biotechnology.',
-              'Environmental Consultant': 'Addressing environmental challenges through analysis, planning, and sustainable solutions.',
-              'Project Manager': 'Leading projects to successful completion through planning, coordination, and team management.',
-              'Operations Manager': 'Optimizing business operations through strategic planning and process management.',
-              'Management Consultant': 'Improving organizational performance through strategic advice and analysis.',
-              'Certified Public Accountant': 'Ensuring financial accuracy and compliance through accounting expertise and auditing.',
-              'Forensic Accountant': 'Investigating financial discrepancies and fraud through detailed analysis and investigation.',
-              'Tax Auditor': 'Reviewing tax compliance and accuracy through systematic examination and verification.',
-              'Investment Banker': 'Facilitating financial transactions and investments through financial expertise and strategy.',
-              'Financial Planner': 'Helping clients achieve financial goals through planning, analysis, and advice.',
-              'Portfolio Manager': 'Managing investment portfolios through analysis, strategy, and risk management.',
-              'Psychologist': 'Supporting mental health and well-being through psychological assessment and therapy.',
-              'Technical Writer': 'Creating clear technical documentation through writing expertise and technical knowledge.',
-              'Policy Analyst': 'Analyzing and developing policies through research, evaluation, and strategic thinking.',
-              'UX/UI Designer': 'Designing user experiences and interfaces through creative vision and user research.',
-              'Graphic Designer': 'Creating visual designs and communications through artistic skills and creativity.',
-              'Industrial Designer': 'Designing products and systems through creative problem-solving and technical knowledge.',
-              'Content Producer': 'Creating engaging content through creative storytelling and media production.',
-              'Public Relations Specialist': 'Managing public image and communications through strategic messaging and media relations.',
-              'Digital Editor': 'Curating and editing digital content through editorial expertise and content strategy.',
-              'Network Engineer': 'Designing and maintaining network infrastructure through technical expertise and problem-solving.',
-              'Systems Administrator': 'Managing IT systems and infrastructure through technical administration and maintenance.',
-              'Solutions Architect': 'Designing technical solutions through system architecture and integration expertise.',
-              'Digital Marketing Manager': 'Driving marketing success through digital strategies, campaigns, and analytics.',
-              'Brand Strategist': 'Developing brand identity and positioning through strategic thinking and market analysis.',
-              'Social Media Director': 'Leading social media strategy and engagement through content creation and community management.',
-              'Corporate Attorney': 'Providing legal counsel and representation through legal expertise and strategic advice.',
-              'Legal Consultant': 'Offering legal guidance and solutions through legal knowledge and analysis.',
-              'Paralegal': 'Supporting legal operations through research, documentation, and administrative assistance.',
-              'Web Developer': 'Building websites and web applications through coding and web technologies.',
-              'Database Administrator': 'Managing databases and data systems through technical administration and optimization.',
-              'Mobile App Developer': 'Creating mobile applications through programming and mobile platform expertise.',
-              'Hotel Manager': 'Managing hotel operations and guest services through hospitality leadership and service excellence.',
-              'Event Coordinator': 'Planning and executing events through organization, coordination, and attention to detail.',
-              'Tourism Director': 'Developing tourism strategies and programs through destination management and marketing.'
-            };
-            return focusMap[careerPath] || 'Professional development and career growth through expertise and dedication.';
-          };
-
-          const calculateConfidence = () => {
-            if (row.isTop2) {
-              return { level: 'HIGH', label: 'High Confidence' };
-            } else if (index < 5) {
-              return { level: 'MODERATE', label: 'Moderate Confidence' };
-            } else {
-              return { level: 'LOW', label: 'Low Confidence' };
-            }
-          };
-
-          const confidence = calculateConfidence();
-          const confidenceColors = {
-            HIGH: 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 border-green-300 dark:border-green-700',
-            MODERATE: 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-300 border-yellow-300 dark:border-yellow-700',
-            LOW: 'bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300 border-orange-300 dark:border-orange-700'
-          };
-
           return (
             <motion.div
               key={index}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4 + index * 0.02 }}
-              className={`rounded-xl p-4 border transition-all duration-300 ${
-                isHighlighted
-                  ? 'bg-gradient-to-br from-indigo-50 to-blue-50 dark:from-indigo-900/30 dark:to-blue-900/30 border-indigo-300 dark:border-indigo-700 shadow-lg'
-                  : 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700'
-              }`}
+              className="group relative rounded-2xl p-5 border-2 bg-white dark:bg-slate-800/90 border-slate-200 dark:border-slate-700 shadow-lg hover:shadow-xl transition-all duration-300 hover:border-indigo-300 dark:hover:border-indigo-600 overflow-hidden"
             >
-              {/* Header */}
-              <div className="flex items-start justify-between mb-3">
-                <div className="flex-1">
-                  <div className="flex items-center gap-2 mb-2">
-                    <span className={`text-sm font-bold ${isHighlighted ? 'text-indigo-700 dark:text-indigo-300' : 'text-slate-500 dark:text-slate-400'}`}>
-                      {row.rank}.
-                    </span>
-                    <h4 className={`text-lg font-bold ${isHighlighted ? 'text-indigo-700 dark:text-indigo-300' : 'text-slate-900 dark:text-slate-100'}`}>
-                      {row.aspiringField}
+              {/* Decorative gradient background */}
+              <div className="absolute inset-0 bg-gradient-to-br from-slate-50/50 to-transparent dark:from-slate-700/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              
+              <div className="relative">
+                {/* RIASEC Dimension Header */}
+                <div className="flex items-center gap-3 mb-3">
+                  <span className={`inline-flex items-center justify-center w-10 h-10 rounded-xl text-sm font-bold border-2 shadow-md flex-shrink-0 ${riasecColors[row.riasecCode] || ''}`}>
+                    {row.riasecCode}
+                  </span>
+                  <div className="flex-1">
+                    <h4 className="text-lg font-bold text-slate-900 dark:text-slate-100">
+                      {riasecLabels[row.riasecCode]}
                     </h4>
                   </div>
-                  <div className="flex items-center gap-1.5 flex-wrap">
-                    {row.riasecMix ? row.riasecMix.split('-').map((code, idx) => {
-                      const codeColors = {
-                        'R': 'bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300 border-orange-300 dark:border-orange-700',
-                        'I': 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 border-blue-300 dark:border-blue-700',
-                        'A': 'bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 border-purple-300 dark:border-purple-700',
-                        'S': 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 border-green-300 dark:border-green-700',
-                        'E': 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300 border-red-300 dark:border-red-700',
-                        'C': 'bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-600'
-                      };
-                      return (
-                        <span
-                          key={idx}
-                          className={`inline-flex items-center justify-center w-6 h-6 rounded-full text-xs font-semibold border flex-shrink-0 ${codeColors[code] || 'bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-600'}`}
-                        >
-                          {code}
-                        </span>
-                      );
-                    }) : (
-                      <span className="text-sm text-slate-500 dark:text-slate-400">-</span>
-                    )}
+                </div>
+                
+                {/* Match Badge and Score */}
+                <div className="flex items-center gap-3 mb-5">
+                  <span className={`inline-flex items-center px-3 py-1.5 rounded-lg text-xs font-bold border-2 shadow-md ${matchColors[matchLevel] || matchColors.MODERATE}`}>
+                    {matchLabels[matchLevel]}
+                  </span>
+                  <div className="flex items-center gap-2 px-3 py-1.5 bg-slate-100 dark:bg-slate-700 rounded-lg">
+                    <span className="text-xs font-semibold text-slate-600 dark:text-slate-400">Score:</span>
+                    <span className="text-sm font-bold text-slate-900 dark:text-slate-100">{score}%</span>
                   </div>
                 </div>
-                <span className={`inline-flex items-center px-2.5 py-1 rounded-md text-xs font-semibold border ml-2 flex-shrink-0 ${confidenceColors[confidence.level] || confidenceColors.MODERATE}`}>
-                  {confidence.label}
-                </span>
-              </div>
 
-              {/* Career Paths */}
-              {row.careerPaths && row.careerPaths.length > 0 && (
-                <div className="space-y-3 mt-4">
-                  {row.careerPaths.map((path, pathIdx) => (
-                    <div key={pathIdx} className="border-t border-slate-200 dark:border-slate-700 pt-3 first:border-t-0 first:pt-0">
-                      <div className={`font-semibold text-sm mb-1 ${isBestPath && path === bestPath ? 'text-indigo-700 dark:text-indigo-300' : 'text-slate-900 dark:text-slate-100'}`}>
-                        {pathIdx + 1}. {path}
-                      </div>
-                      <div className="text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">
-                        {calculatePersona(path)}
-                      </div>
-                      <div className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
-                        {calculateFocus(path)}
+                {/* 3 Fields */}
+                <div className="space-y-4">
+                  {row.fields.map((field, fieldIdx) => (
+                    <div 
+                      key={fieldIdx} 
+                      className="relative p-4 rounded-xl bg-gradient-to-br from-slate-50 to-slate-100/50 dark:from-slate-700/50 dark:to-slate-800/50 border border-slate-200 dark:border-slate-600 hover:shadow-md transition-all duration-200"
+                    >
+                      <div className="flex items-start gap-3">
+                        <div className="flex-shrink-0 w-9 h-9 rounded-xl bg-gradient-to-br from-indigo-500 via-blue-500 to-indigo-600 flex items-center justify-center text-white font-bold text-sm shadow-lg ring-2 ring-indigo-200/50 dark:ring-indigo-800/50">
+                          {fieldIdx + 1}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="font-bold text-base text-slate-900 dark:text-slate-100 mb-3">
+                            {field.aspiringField}
+                          </div>
+                          {field.careerPaths && field.careerPaths.length > 0 && (
+                            <div className="space-y-2">
+                              {field.careerPaths.map((path, pathIdx) => (
+                                <div 
+                                  key={pathIdx}
+                                  className="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300"
+                                >
+                                  <div className="w-1.5 h-1.5 rounded-full bg-indigo-500 flex-shrink-0" />
+                                  <span>{path}</span>
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                        </div>
                       </div>
                     </div>
                   ))}
                 </div>
-              )}
+              </div>
             </motion.div>
           );
         })}
       </div>
 
       {/* Desktop Table Layout */}
-      <div className="hidden md:block overflow-x-auto scrollbar-hide">
+      <div className="hidden md:block overflow-x-auto scrollbar-hide rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/50">
         <table className="w-full">
           <thead>
-            <tr className="border-b border-slate-200 dark:border-slate-700">
-              <th className="text-left py-3 px-2 sm:px-4 font-semibold text-slate-900 dark:text-slate-100">
-                Aspiring Field
+            <tr className="bg-gradient-to-r from-slate-100 to-slate-50 dark:from-slate-700 dark:to-slate-800 border-b-2 border-slate-200 dark:border-slate-600">
+              <th className="text-left py-4 px-6 font-bold text-slate-900 dark:text-slate-100 text-sm uppercase tracking-wider">
+                RIASEC Dimension
               </th>
-              <th className="text-left py-3 px-2 sm:px-4 font-semibold text-slate-900 dark:text-slate-100">
-                RIASEC Mix
+              <th className="text-left py-4 px-6 font-bold text-slate-900 dark:text-slate-100 text-sm uppercase tracking-wider">
+                Career Field 1
               </th>
-              <th className="text-left py-3 px-2 sm:px-4 font-semibold text-slate-900 dark:text-slate-100">
-                Career Path
+              <th className="text-left py-4 px-6 font-bold text-slate-900 dark:text-slate-100 text-sm uppercase tracking-wider">
+                Career Field 2
               </th>
-              <th className="text-left py-3 px-2 sm:px-4 font-semibold text-slate-900 dark:text-slate-100">
-                Professional Persona
-              </th>
-              <th className="text-left py-3 px-2 sm:px-4 font-semibold text-slate-900 dark:text-slate-100">
-                Core Tasks & Focus
-              </th>
-              <th className="text-left py-3 px-2 sm:px-4 font-semibold text-slate-900 dark:text-slate-100">
-                Confidence
+              <th className="text-left py-4 px-6 font-bold text-slate-900 dark:text-slate-100 text-sm uppercase tracking-wider">
+                Career Field 3
               </th>
             </tr>
           </thead>
           <tbody>
             {rows.map((row, index) => {
-              const isBestField = row.aspiringField === bestField;
-              const isBestPath = row.careerPaths && row.careerPaths.includes(bestPath);
-              const isHighlighted = row.isTop2 || false; // Highlight top 2
+              const score = row.riasecScore || 0;
+              const matchLevel = score >= 30 ? 'HIGH' : score >= 15 ? 'MODERATE' : 'LOW';
+              const matchLabels = {
+                'HIGH': 'High Match',
+                'MODERATE': 'Moderate Match',
+                'LOW': 'Low Match'
+              };
+              const matchColors = {
+                'HIGH': 'bg-gradient-to-r from-green-500 to-emerald-500 text-white border-green-400 shadow-md',
+                'MODERATE': 'bg-gradient-to-r from-yellow-500 to-amber-500 text-white border-yellow-400 shadow-md',
+                'LOW': 'bg-gradient-to-r from-orange-500 to-red-500 text-white border-orange-400 shadow-md'
+              };
               
-              // Get field rank for confidence calculation
-              const fieldRank = top3Fields.indexOf(row.aspiringField);
-              
-              const calculatePersona = (careerPath) => {
-                const personaMap = {
-                  'Civil Engineer': 'The Infrastructure Builder',
-                  'Mechanical Engineer': 'The Mechanical Innovator',
-                  'Robotics Engineer': 'The Automation Specialist',
-                  'Software Developer': 'The Code Architect',
-                  'Cybersecurity Analyst': 'The Security Guardian',
-                  'Cloud Architect': 'The Cloud Strategist',
-                  'Medical Doctor': 'The Healthcare Provider',
-                  'Registered Nurse': 'The Care Specialist',
-                  'Healthcare Administrator': 'The Healthcare Manager',
-                  'Machine Learning Engineer': 'The AI Builder',
-                  'Data Scientist': 'The Insight Architect',
-                  'AI Research Scientist': 'The AI Researcher',
-                  'Business Intelligence Analyst': 'The Business Analyst',
-                  'Operations Analyst': 'The Operations Specialist',
-                  'Market Research Analyst': 'The Market Analyst',
-                  'Research Scientist': 'The Research Specialist',
-                  'Biotechnologist': 'The Biotechnology Expert',
-                  'Environmental Consultant': 'The Environmental Specialist',
-                  'Project Manager': 'The Project Leader',
-                  'Operations Manager': 'The Operations Leader',
-                  'Management Consultant': 'The Strategy Consultant',
-                  'Certified Public Accountant': 'The Financial Auditor',
-                  'Forensic Accountant': 'The Financial Investigator',
-                  'Tax Auditor': 'The Tax Specialist',
-                  'Investment Banker': 'The Financial Strategist',
-                  'Financial Planner': 'The Wealth Advisor',
-                  'Portfolio Manager': 'The Investment Manager',
-                  'Psychologist': 'The Mental Health Specialist',
-                  'Technical Writer': 'The Documentation Expert',
-                  'Policy Analyst': 'The Policy Specialist',
-                  'UX/UI Designer': 'The Creative Innovator',
-                  'Graphic Designer': 'The Visual Creator',
-                  'Industrial Designer': 'The Product Designer',
-                  'Content Producer': 'The Content Creator',
-                  'Public Relations Specialist': 'The PR Expert',
-                  'Digital Editor': 'The Digital Content Manager',
-                  'Network Engineer': 'The Network Architect',
-                  'Systems Administrator': 'The Systems Manager',
-                  'Solutions Architect': 'The Solution Designer',
-                  'Digital Marketing Manager': 'The Marketing Strategist',
-                  'Brand Strategist': 'The Brand Expert',
-                  'Social Media Director': 'The Social Media Leader',
-                  'Corporate Attorney': 'The Legal Advisor',
-                  'Legal Consultant': 'The Legal Expert',
-                  'Paralegal': 'The Legal Assistant',
-                  'Web Developer': 'The Web Builder',
-                  'Database Administrator': 'The Data Manager',
-                  'Mobile App Developer': 'The Mobile Innovator',
-                  'Hotel Manager': 'The Hospitality Leader',
-                  'Event Coordinator': 'The Event Specialist',
-                  'Tourism Director': 'The Tourism Manager'
-                };
-                return personaMap[careerPath] || 'The Professional';
-              };
-
-              const calculateFocus = (careerPath) => {
-                const focusMap = {
-                  'Civil Engineer': 'Designing and constructing infrastructure projects through technical expertise and systematic planning.',
-                  'Mechanical Engineer': 'Developing mechanical systems and solutions through engineering principles and innovation.',
-                  'Robotics Engineer': 'Creating automated systems and robotic solutions through advanced engineering and programming.',
-                  'Software Developer': 'Building software applications through coding, problem-solving, and technical implementation.',
-                  'Cybersecurity Analyst': 'Protecting digital systems and data through security analysis and threat mitigation.',
-                  'Cloud Architect': 'Designing cloud infrastructure solutions for scalable and efficient systems.',
-                  'Medical Doctor': 'Providing medical care and treatment through clinical expertise and patient interaction.',
-                  'Registered Nurse': 'Delivering patient care and support through medical knowledge and compassion.',
-                  'Healthcare Administrator': 'Managing healthcare operations and services through organizational leadership.',
-                  'Machine Learning Engineer': 'Developing AI and machine learning systems through advanced algorithms and data science.',
-                  'Data Scientist': 'Analyzing complex data to extract insights and drive decision-making through statistical methods.',
-                  'AI Research Scientist': 'Advancing artificial intelligence through research, experimentation, and innovation.',
-                  'Business Intelligence Analyst': 'Transforming data into business insights through analysis and reporting.',
-                  'Operations Analyst': 'Optimizing business operations through data analysis and process improvement.',
-                  'Market Research Analyst': 'Understanding market trends and consumer behavior through research and analysis.',
-                  'Research Scientist': 'Conducting scientific research and experiments to advance knowledge and innovation.',
-                  'Biotechnologist': 'Applying biological processes to develop products and solutions through biotechnology.',
-                  'Environmental Consultant': 'Addressing environmental challenges through analysis, planning, and sustainable solutions.',
-                  'Project Manager': 'Leading projects to successful completion through planning, coordination, and team management.',
-                  'Operations Manager': 'Optimizing business operations through strategic planning and process management.',
-                  'Management Consultant': 'Improving organizational performance through strategic advice and analysis.',
-                  'Certified Public Accountant': 'Ensuring financial accuracy and compliance through accounting expertise and auditing.',
-                  'Forensic Accountant': 'Investigating financial discrepancies and fraud through detailed analysis and investigation.',
-                  'Tax Auditor': 'Reviewing tax compliance and accuracy through systematic examination and verification.',
-                  'Investment Banker': 'Facilitating financial transactions and investments through financial expertise and strategy.',
-                  'Financial Planner': 'Helping clients achieve financial goals through planning, analysis, and advice.',
-                  'Portfolio Manager': 'Managing investment portfolios through analysis, strategy, and risk management.',
-                  'Psychologist': 'Supporting mental health and well-being through psychological assessment and therapy.',
-                  'Technical Writer': 'Creating clear technical documentation through writing expertise and technical knowledge.',
-                  'Policy Analyst': 'Analyzing and developing policies through research, evaluation, and strategic thinking.',
-                  'UX/UI Designer': 'Designing user experiences and interfaces through creative vision and user research.',
-                  'Graphic Designer': 'Creating visual designs and communications through artistic skills and creativity.',
-                  'Industrial Designer': 'Designing products and systems through creative problem-solving and technical knowledge.',
-                  'Content Producer': 'Creating engaging content through creative storytelling and media production.',
-                  'Public Relations Specialist': 'Managing public image and communications through strategic messaging and media relations.',
-                  'Digital Editor': 'Curating and editing digital content through editorial expertise and content strategy.',
-                  'Network Engineer': 'Designing and maintaining network infrastructure through technical expertise and problem-solving.',
-                  'Systems Administrator': 'Managing IT systems and infrastructure through technical administration and maintenance.',
-                  'Solutions Architect': 'Designing technical solutions through system architecture and integration expertise.',
-                  'Digital Marketing Manager': 'Driving marketing success through digital strategies, campaigns, and analytics.',
-                  'Brand Strategist': 'Developing brand identity and positioning through strategic thinking and market analysis.',
-                  'Social Media Director': 'Leading social media strategy and engagement through content creation and community management.',
-                  'Corporate Attorney': 'Providing legal counsel and representation through legal expertise and strategic advice.',
-                  'Legal Consultant': 'Offering legal guidance and solutions through legal knowledge and analysis.',
-                  'Paralegal': 'Supporting legal operations through research, documentation, and administrative assistance.',
-                  'Web Developer': 'Building websites and web applications through coding and web technologies.',
-                  'Database Administrator': 'Managing databases and data systems through technical administration and optimization.',
-                  'Mobile App Developer': 'Creating mobile applications through programming and mobile platform expertise.',
-                  'Hotel Manager': 'Managing hotel operations and guest services through hospitality leadership and service excellence.',
-                  'Event Coordinator': 'Planning and executing events through organization, coordination, and attention to detail.',
-                  'Tourism Director': 'Developing tourism strategies and programs through destination management and marketing.'
-                };
-                return focusMap[careerPath] || 'Professional development and career growth through expertise and dedication.';
-              };
-
-              const calculateConfidence = () => {
-                // Top 2 get HIGH confidence, next 3 get MODERATE, rest get LOW
-                if (row.isTop2) {
-                  return { level: 'HIGH', label: 'High Confidence' };
-                } else if (index < 5) {
-                  return { level: 'MODERATE', label: 'Moderate Confidence' };
-                } else {
-                  return { level: 'LOW', label: 'Low Confidence' };
-                }
-              };
-
-              const confidence = calculateConfidence();
-              const confidenceColors = {
-                HIGH: 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 border-green-300 dark:border-green-700',
-                MODERATE: 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-300 border-yellow-300 dark:border-yellow-700',
-                LOW: 'bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300 border-orange-300 dark:border-orange-700'
-              };
-
               return (
                 <motion.tr
                   key={index}
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.4 + index * 0.02 }}
-                  className={`border-b border-slate-100 dark:border-slate-700 transition-all duration-300 ${
-                    isHighlighted
-                      ? 'relative'
-                      : 'hover:bg-slate-50 dark:hover:bg-slate-700/50'
-                  }`}
-                  style={isHighlighted ? {
-                    background: 'linear-gradient(135deg, rgba(99,102,241,0.35), rgba(59,130,246,0.28))',
-                    border: '1px solid rgba(99,102,241,0.50)',
-                    boxShadow: '0 8px 30px rgba(0,0,0,0.50)'
-                  } : {}}
+                  className="border-b border-slate-200 dark:border-slate-700 hover:bg-gradient-to-r hover:from-indigo-50/50 hover:to-blue-50/50 dark:hover:from-slate-700/50 dark:hover:to-slate-800/50 transition-all duration-200 group"
                 >
-                  <td className="py-4 px-2 sm:px-4 align-top">
-                    <div className="flex items-center gap-2">
-                      <span className={`text-sm font-bold ${isHighlighted ? 'text-indigo-700 dark:text-indigo-300' : 'text-slate-500 dark:text-slate-400'}`}>
-                        {row.rank}.
+                  <td className="py-5 px-6 align-top">
+                    <div className="flex items-center gap-3 mb-2">
+                      <span className={`inline-flex items-center justify-center w-10 h-10 rounded-xl text-sm font-bold border-2 shadow-md flex-shrink-0 ${riasecColors[row.riasecCode] || ''}`}>
+                        {row.riasecCode}
                       </span>
-                      <div className={`font-semibold text-slate-900 dark:text-slate-100 ${isHighlighted ? 'text-indigo-700 dark:text-indigo-300' : ''}`}>
-                        {row.aspiringField}
+                      <span className="font-bold text-base text-slate-900 dark:text-slate-100">
+                        {riasecLabels[row.riasecCode]}
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <span className={`inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-bold border-2 ${matchColors[matchLevel] || matchColors.MODERATE}`}>
+                        {matchLabels[matchLevel]}
+                      </span>
+                      <div className="flex items-center gap-1.5 px-2.5 py-1 bg-slate-100 dark:bg-slate-700 rounded-lg">
+                        <span className="text-xs font-semibold text-slate-600 dark:text-slate-400">Score:</span>
+                        <span className="text-sm font-bold text-slate-900 dark:text-slate-100">{score}%</span>
                       </div>
                     </div>
                   </td>
-                  <td className="py-4 px-2 sm:px-4 align-top">
-                    <div className="flex items-center gap-1.5 flex-wrap">
-                      {row.riasecMix ? row.riasecMix.split('-').map((code, idx) => {
-                        const codeColors = {
-                          'R': 'bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300 border-orange-300 dark:border-orange-700',
-                          'I': 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 border-blue-300 dark:border-blue-700',
-                          'A': 'bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 border-purple-300 dark:border-purple-700',
-                          'S': 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 border-green-300 dark:border-green-700',
-                          'E': 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300 border-red-300 dark:border-red-700',
-                          'C': 'bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-600'
-                        };
-                        return (
-                          <span
-                            key={idx}
-                            className={`inline-flex items-center justify-center w-6 h-6 rounded-full text-xs font-semibold border flex-shrink-0 ${codeColors[code] || 'bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-600'}`}
-                          >
-                            {code}
-                          </span>
-                        );
-                      }) : (
-                        <span className="text-sm text-slate-500 dark:text-slate-400">-</span>
-                      )}
-                    </div>
-                  </td>
-                  <td className="py-4 px-2 sm:px-4 align-top">
-                    <div className="text-sm text-slate-900 dark:text-slate-100">
-                      {row.careerPaths && row.careerPaths.length > 0 ? (
-                        <ol className="list-decimal list-inside space-y-1">
-                          {row.careerPaths.map((path, pathIdx) => (
-                            <li 
-                              key={pathIdx}
-                              className={isBestPath && path === bestPath ? 'text-indigo-700 dark:text-indigo-300 font-semibold' : ''}
-                            >
-                              {path}
-                            </li>
-                          ))}
-                        </ol>
-                      ) : (
-                        <span className="text-slate-500 dark:text-slate-400">-</span>
-                      )}
-                    </div>
-                  </td>
-                  <td className="py-4 px-2 sm:px-4 align-top">
-                    <div className="font-medium text-slate-900 dark:text-slate-100 space-y-1">
-                      {row.careerPaths && row.careerPaths.length > 0 ? (
-                        row.careerPaths.map((path, pathIdx) => (
-                          <div key={pathIdx} className="text-sm">
-                            {calculatePersona(path)}
+                  {row.fields.map((field, fieldIdx) => (
+                    <td key={fieldIdx} className="py-5 px-6 align-top">
+                      <div className="group/field">
+                        <div className="flex items-center gap-2 mb-3">
+                          <div className="flex-shrink-0 w-8 h-8 rounded-xl bg-gradient-to-br from-indigo-500 via-blue-500 to-indigo-600 flex items-center justify-center text-white font-bold text-xs shadow-lg ring-2 ring-indigo-200/50 dark:ring-indigo-800/50">
+                            {fieldIdx + 1}
                           </div>
-                        ))
-                      ) : (
-                        <span className="text-slate-500 dark:text-slate-400">-</span>
-                      )}
-                    </div>
-                  </td>
-                  <td className="py-4 px-2 sm:px-4 align-top">
-                    <div className="text-slate-700 dark:text-slate-300 text-sm space-y-1">
-                      {row.careerPaths && row.careerPaths.length > 0 ? (
-                        row.careerPaths.map((path, pathIdx) => (
-                          <div key={pathIdx} className="text-xs">
-                            {calculateFocus(path)}
+                          <div className="font-bold text-sm text-slate-900 dark:text-slate-100">
+                            {field.aspiringField}
                           </div>
-                        ))
-                      ) : (
-                        <span className="text-slate-500 dark:text-slate-400">-</span>
-                      )}
-                    </div>
-                  </td>
-                  <td className="py-4 px-2 sm:px-4 align-top">
-                    <span className={`inline-flex items-center px-2.5 py-1 rounded-md text-xs font-semibold border ${confidenceColors[confidence.level] || confidenceColors.MODERATE}`}>
-                      {confidence.label}
-                    </span>
-                  </td>
+                        </div>
+                        {field.careerPaths && field.careerPaths.length > 0 ? (
+                          <div className="space-y-2">
+                            {field.careerPaths.map((path, pathIdx) => (
+                              <div 
+                                key={pathIdx}
+                                className="flex items-center gap-2 text-xs text-slate-700 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
+                              >
+                                <div className="w-1.5 h-1.5 rounded-full bg-indigo-500 flex-shrink-0" />
+                                <span>{path}</span>
+                              </div>
+                            ))}
+                          </div>
+                        ) : (
+                          <span className="text-slate-400 dark:text-slate-500 text-xs">-</span>
+                        )}
+                      </div>
+                    </td>
+                  ))}
                 </motion.tr>
               );
             })}
           </tbody>
         </table>
-      </div>
-      
-      <div className="mt-6 pt-4 border-t border-slate-200 dark:border-slate-700">
-        <h4 className="text-sm font-semibold text-slate-900 dark:text-slate-100 mb-3">Confidence Level Definitions</h4>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-3">
-            <div className="font-semibold text-sm text-green-700 dark:text-green-300 mb-1">High Confidence</div>
-            <div className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">Strong alignment between pathway requirements and your RIASEC profile. Primary and secondary traits match top scores with minimal gaps.</div>
-          </div>
-          <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-3">
-            <div className="font-semibold text-sm text-yellow-700 dark:text-yellow-300 mb-1">Moderate Confidence</div>
-            <div className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">Reasonable alignment with your profile. Some traits align well, though there may be moderate gaps between pathway needs and your scores.</div>
-          </div>
-          <div className="bg-orange-50 dark:bg-orange-900/20 border border-orange-200 dark:border-orange-800 rounded-lg p-3">
-            <div className="font-semibold text-sm text-orange-700 dark:text-orange-300 mb-1">Low Confidence</div>
-            <div className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">Limited alignment between pathway requirements and your current RIASEC profile. Significant gaps suggest this may require additional development.</div>
-          </div>
-        </div>
       </div>
     </motion.div>
   );
