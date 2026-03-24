@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../../context/AuthContext';
-import { useTheme } from '../../context/ThemeContext';
 import Footer from '../Footer';
 
 const sidebarItems = [
@@ -11,24 +10,78 @@ const sidebarItems = [
   { path: '/admin/questions', label: 'Questions', icon: 'questions' },
   { path: '/admin/analytics', label: 'Analytics', icon: 'analytics' },
   { path: '/admin/counselors', label: 'Counsellors', icon: 'add-user' },
+  { path: '/admin/appointments', label: 'Appointments', icon: 'calendar' },
 ];
 
-// SVG Icon Components
+// SVG Icon Components - Modern SaaS Style
 const IconDashboard = ({ className }) => (
-  <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+  <svg className={className} fill="none" viewBox="0 0 24 24">
+    {/* Modern dashboard with grid layout and metrics */}
+    <defs>
+      <linearGradient id="dashGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stopColor="currentColor" stopOpacity="0.8" />
+        <stop offset="100%" stopColor="currentColor" stopOpacity="0.4" />
+      </linearGradient>
+    </defs>
+    {/* Grid background */}
+    <rect x="4" y="4" width="7" height="7" rx="1.5" stroke="currentColor" strokeWidth="1.8" fill="currentColor" fillOpacity="0.1" />
+    <rect x="13" y="4" width="7" height="7" rx="1.5" stroke="currentColor" strokeWidth="1.8" fill="currentColor" fillOpacity="0.1" />
+    <rect x="4" y="13" width="7" height="7" rx="1.5" stroke="currentColor" strokeWidth="1.8" fill="currentColor" fillOpacity="0.1" />
+    <rect x="13" y="13" width="7" height="7" rx="1.5" stroke="currentColor" strokeWidth="1.8" fill="currentColor" fillOpacity="0.1" />
+    {/* Chart bars - modern touch */}
+    <rect x="6" y="12" width="1.5" height="6" rx="0.75" fill="currentColor" fillOpacity="0.6" />
+    <rect x="8.5" y="9" width="1.5" height="9" rx="0.75" fill="currentColor" fillOpacity="0.6" />
+    <rect x="15" y="11" width="1.5" height="7" rx="0.75" fill="currentColor" fillOpacity="0.6" />
+    <rect x="17.5" y="8" width="1.5" height="10" rx="0.75" fill="currentColor" fillOpacity="0.6" />
+    {/* Trend line */}
+    <path d="M6 6 L8 7 L10 5.5 L12 8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none" />
   </svg>
 );
 
 const IconUsers = ({ className }) => (
-  <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+  <svg className={className} fill="none" viewBox="0 0 24 24">
+    {/* Modern users icon with gradient and depth */}
+    <defs>
+      <linearGradient id="usersGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stopColor="currentColor" stopOpacity="0.9" />
+        <stop offset="100%" stopColor="currentColor" stopOpacity="0.5" />
+      </linearGradient>
+    </defs>
+    {/* User 1 - left */}
+    <circle cx="8" cy="7" r="3" stroke="currentColor" strokeWidth="2" fill="currentColor" fillOpacity="0.15" />
+    <path d="M3 18 C3 15, 5 13, 8 13 C11 13, 13 15, 13 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" fill="none" />
+    {/* User 2 - center */}
+    <circle cx="12" cy="7" r="3" stroke="currentColor" strokeWidth="2" fill="currentColor" fillOpacity="0.15" />
+    <path d="M7 18 C7 15, 9 13, 12 13 C15 13, 17 15, 17 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" fill="none" />
+    {/* User 3 - right with plus badge */}
+    <circle cx="16" cy="7" r="3" stroke="currentColor" strokeWidth="2" fill="currentColor" fillOpacity="0.15" />
+    <path d="M11 18 C11 15, 13 13, 16 13 C19 13, 21 15, 21 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" fill="none" />
+    {/* Connection line - modern touch */}
+    <line x1="10.5" y1="7" x2="13.5" y2="7" stroke="currentColor" strokeWidth="1.5" strokeOpacity="0.3" strokeDasharray="2 2" />
   </svg>
 );
 
 const IconAnalytics = ({ className }) => (
-  <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+  <svg className={className} fill="none" viewBox="0 0 24 24">
+    {/* Modern analytics with bars and trend */}
+    <defs>
+      <linearGradient id="analyticsGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stopColor="currentColor" stopOpacity="0.8" />
+        <stop offset="100%" stopColor="currentColor" stopOpacity="0.3" />
+      </linearGradient>
+    </defs>
+    {/* Bar chart - left */}
+    <rect x="4" y="16" width="3" height="4" rx="1.5" fill="currentColor" fillOpacity="0.6" />
+    <rect x="8" y="12" width="3" height="8" rx="1.5" fill="currentColor" fillOpacity="0.6" />
+    <rect x="12" y="14" width="3" height="6" rx="1.5" fill="currentColor" fillOpacity="0.6" />
+    {/* Trend line chart - right */}
+    <path d="M17 18 L18.5 15 L20 12 L21.5 8" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+    <circle cx="17" cy="18" r="1.5" fill="currentColor" fillOpacity="0.8" />
+    <circle cx="18.5" cy="15" r="1.5" fill="currentColor" fillOpacity="0.8" />
+    <circle cx="20" cy="12" r="1.5" fill="currentColor" fillOpacity="0.8" />
+    <circle cx="21.5" cy="8" r="1.5" fill="currentColor" fillOpacity="0.8" />
+    {/* Grid lines */}
+    <line x1="4" y1="20" x2="15" y2="20" stroke="currentColor" strokeWidth="1" strokeOpacity="0.2" strokeDasharray="2 2" />
   </svg>
 );
 
@@ -44,18 +97,6 @@ const IconX = ({ className }) => (
   </svg>
 );
 
-const IconChevronRight = ({ className }) => (
-  <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-  </svg>
-);
-
-const IconChevronLeft = ({ className }) => (
-  <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-  </svg>
-);
-
 const IconLogout = ({ className }) => (
   <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
@@ -68,18 +109,6 @@ const IconUser = ({ className }) => (
   </svg>
 );
 
-const IconSun = ({ className }) => (
-  <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
-  </svg>
-);
-
-const IconMoon = ({ className }) => (
-  <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
-  </svg>
-);
-
 const IconChevronDown = ({ className }) => (
   <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
@@ -87,14 +116,68 @@ const IconChevronDown = ({ className }) => (
 );
 
 const IconFileText = ({ className }) => (
-  <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+  <svg className={className} fill="none" viewBox="0 0 24 24">
+    {/* Modern document with lines and corner fold */}
+    <defs>
+      <linearGradient id="fileGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stopColor="currentColor" stopOpacity="0.8" />
+        <stop offset="100%" stopColor="currentColor" stopOpacity="0.4" />
+      </linearGradient>
+    </defs>
+    {/* Document base */}
+    <rect x="5" y="4" width="14" height="16" rx="2" stroke="currentColor" strokeWidth="2" fill="currentColor" fillOpacity="0.08" />
+    {/* Corner fold - modern detail */}
+    <path d="M15 4 L19 4 L19 8 L15 4 Z" fill="currentColor" fillOpacity="0.2" stroke="currentColor" strokeWidth="1.5" />
+    <line x1="15" y1="4" x2="19" y2="8" stroke="currentColor" strokeWidth="1.5" />
+    {/* Text lines */}
+    <line x1="7" y1="9" x2="13" y2="9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+    <line x1="7" y1="12" x2="15" y2="12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+    <line x1="7" y1="15" x2="13" y2="15" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+    {/* Question mark badge */}
+    <circle cx="17" cy="7" r="2.5" fill="currentColor" fillOpacity="0.2" stroke="currentColor" strokeWidth="1.5" />
+    <path d="M17 6.5 L17 7.5 M17 9 L17 9.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
   </svg>
 );
 
 const IconUserPlus = ({ className }) => (
-  <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM12 14H8c-2.209 0-4 1.791-4 4v1h16v-1c0-2.209-1.791-4-4-4z" />
+  <svg className={className} fill="none" viewBox="0 0 24 24">
+    {/* Modern user with plus badge */}
+    <defs>
+      <linearGradient id="userPlusGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stopColor="currentColor" stopOpacity="0.9" />
+        <stop offset="100%" stopColor="currentColor" stopOpacity="0.5" />
+      </linearGradient>
+    </defs>
+    {/* User circle */}
+    <circle cx="12" cy="8" r="4" stroke="currentColor" strokeWidth="2" fill="currentColor" fillOpacity="0.15" />
+    {/* User body */}
+    <path d="M5 20 C5 16, 8 14, 12 14 C16 14, 19 16, 19 20" stroke="currentColor" strokeWidth="2" strokeLinecap="round" fill="none" />
+    {/* Plus badge - modern touch */}
+    <circle cx="17" cy="6" r="4" fill="currentColor" fillOpacity="0.2" stroke="currentColor" strokeWidth="2" />
+    <line x1="17" y1="4" x2="17" y2="8" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
+    <line x1="15" y1="6" x2="19" y2="6" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
+  </svg>
+);
+
+const IconCalendar = ({ className }) => (
+  <svg className={className} fill="none" viewBox="0 0 24 24">
+    {/* Modern minimalist calendar with appointment badge - SaaS style */}
+    {/* Calendar base with rounded corners */}
+    <rect x="4" y="5" width="16" height="15" rx="2.5" stroke="currentColor" strokeWidth="2" fill="none" />
+    {/* Calendar top header */}
+    <rect x="4" y="5" width="16" height="4" rx="2.5" fill="currentColor" fillOpacity="0.12" />
+    {/* Spiral binding detail */}
+    <circle cx="6.5" cy="5" r="0.8" fill="currentColor" fillOpacity="0.3" />
+    <circle cx="17.5" cy="5" r="0.8" fill="currentColor" fillOpacity="0.3" />
+    {/* Subtle grid lines */}
+    <line x1="8.5" y1="9" x2="8.5" y2="20" stroke="currentColor" strokeWidth="1" strokeOpacity="0.15" />
+    <line x1="12" y1="9" x2="12" y2="20" stroke="currentColor" strokeWidth="1" strokeOpacity="0.15" />
+    <line x1="15.5" y1="9" x2="15.5" y2="20" stroke="currentColor" strokeWidth="1" strokeOpacity="0.15" />
+    <line x1="4" y1="12.5" x2="20" y2="12.5" stroke="currentColor" strokeWidth="1" strokeOpacity="0.15" />
+    <line x1="4" y1="16" x2="20" y2="16" stroke="currentColor" strokeWidth="1" strokeOpacity="0.15" />
+    {/* Modern appointment notification badge */}
+    <circle cx="17" cy="16" r="3" fill="currentColor" fillOpacity="0.2" stroke="currentColor" strokeWidth="1.5" />
+    <path d="M15.8 16 L16.5 16.7 L18.2 15" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none" />
   </svg>
 );
 
@@ -104,6 +187,7 @@ const getIcon = (iconName, className) => {
     users: <IconUsers className={className} />,
     questions: <IconFileText className={className} />,
     analytics: <IconAnalytics className={className} />,
+    calendar: <IconCalendar className={className} />,
     'add-user': <IconUserPlus className={className} />,
   };
   return icons[iconName] || <IconDashboard className={className} />;
@@ -113,30 +197,16 @@ function AdminLayout({ children }) {
   const navigate = useNavigate();
   const location = useLocation();
   const { user, logout } = useAuth();
-  const { isDark, toggleTheme } = useTheme();
-  const [sidebarOpen, setSidebarOpen] = useState(() => {
-    const saved = localStorage.getItem('adminSidebarOpen');
-    return saved !== null ? JSON.parse(saved) : true;
-  });
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    localStorage.setItem('adminSidebarOpen', JSON.stringify(sidebarOpen));
-  }, [sidebarOpen]);
+  const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
 
   useEffect(() => {
     const handleResize = () => {
       const mobile = window.innerWidth < 1024;
       setIsMobile(mobile);
       if (mobile) {
-        setSidebarOpen(false);
-      } else {
-        // Restore saved state on desktop
-        const saved = localStorage.getItem('adminSidebarOpen');
-        if (saved !== null) {
-          setSidebarOpen(JSON.parse(saved));
-        }
+        setMobileSidebarOpen(false); // Always closed on mobile by default
       }
     };
     handleResize();
@@ -146,16 +216,16 @@ function AdminLayout({ children }) {
 
   // Close sidebar when clicking outside on mobile
   useEffect(() => {
-    if (sidebarOpen && isMobile) {
+    if (mobileSidebarOpen && isMobile) {
       const handleClickOutside = (e) => {
         if (!e.target.closest('aside') && !e.target.closest('button[aria-label="Toggle sidebar"]')) {
-          setSidebarOpen(false);
+          setMobileSidebarOpen(false);
         }
       };
       document.addEventListener('mousedown', handleClickOutside);
       return () => document.removeEventListener('mousedown', handleClickOutside);
     }
-  }, [sidebarOpen, isMobile]);
+  }, [mobileSidebarOpen, isMobile]);
 
   const handleLogout = () => {
     logout();
@@ -179,27 +249,28 @@ function AdminLayout({ children }) {
     return 'Admin Panel';
   };
 
-  const sidebarWidth = sidebarOpen ? '256px' : '80px';
+  // Desktop: Always 256px, Mobile: 256px when open, 0 when closed
+  const sidebarWidth = '256px';
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-900 transition-colors duration-300">
       {/* Mobile Overlay */}
-      {sidebarOpen && isMobile && (
+      {mobileSidebarOpen && isMobile && (
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          onClick={() => setSidebarOpen(false)}
+          onClick={() => setMobileSidebarOpen(false)}
           className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-30 lg:hidden"
         />
       )}
 
-      {/* Sidebar */}
+      {/* Sidebar - Always visible on desktop, drawer on mobile */}
       <motion.aside
         initial={false}
         animate={{
-          width: isMobile ? (sidebarOpen ? sidebarWidth : 0) : sidebarWidth,
-          x: isMobile && !sidebarOpen ? -sidebarWidth : 0
+          width: isMobile ? (mobileSidebarOpen ? sidebarWidth : 0) : sidebarWidth,
+          x: isMobile && !mobileSidebarOpen ? -sidebarWidth : 0
         }}
         transition={{ duration: 0.25, ease: [0.4, 0, 0.2, 1] }}
         className="fixed left-0 top-0 h-full bg-white dark:bg-slate-800 border-r border-slate-200 dark:border-slate-700 z-40 shadow-sm overflow-hidden"
@@ -207,59 +278,26 @@ function AdminLayout({ children }) {
         <div className="flex flex-col h-full">
           {/* Logo Section */}
           <div className="px-6 py-5 border-b border-slate-200 dark:border-slate-700 flex items-center justify-between">
-            <AnimatePresence mode="wait">
-              {sidebarOpen ? (
-                <motion.div
-                  key="logo-expanded"
-                  initial={{ opacity: 0, x: -10 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -10 }}
-                  className="flex items-center gap-3"
-                >
-                  <img 
-                    src="/images/tops-logo.png" 
-                    alt="TOPS TECHNOLOGIES Logo" 
-                    className="h-10 w-auto max-w-[180px]"
-                    style={{ objectFit: 'contain' }}
-                    onError={(e) => {
-                      e.target.style.display = 'none';
-                    }}
-                  />
-                </motion.div>
-              ) : (
-                <motion.div
-                  key="logo-collapsed"
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.8 }}
-                  className="flex items-center justify-center mx-auto"
-                >
-                  <img 
-                    src="/images/tops-logo.png" 
-                    alt="TOPS TECHNOLOGIES Logo" 
-                    className="h-8 w-auto max-w-[120px]"
-                    style={{ objectFit: 'contain' }}
-                    onError={(e) => {
-                      e.target.style.display = 'none';
-                      if (e.target.nextSibling) {
-                        e.target.nextSibling.style.display = 'flex';
-                      }
-                    }}
-                  />
-                  <div style={{ display: 'none' }} className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center">
-                  <span className="text-white font-bold text-sm">CP</span>
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-            {sidebarOpen && (
+            <div className="flex items-center gap-3">
+              <img 
+                src="/images/tops-logo.png" 
+                alt="TOPS TECHNOLOGIES Logo" 
+                className="h-10 w-auto max-w-[180px]"
+                style={{ objectFit: 'contain' }}
+                onError={(e) => {
+                  e.target.style.display = 'none';
+                }}
+              />
+            </div>
+            {/* Close button only on mobile */}
+            {isMobile && mobileSidebarOpen && (
               <motion.button
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                onClick={() => setSidebarOpen(false)}
+                onClick={() => setMobileSidebarOpen(false)}
                 className="p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-400 transition-colors"
               >
-                <IconChevronLeft className="w-4 h-4" />
+                <IconX className="w-4 h-4" />
               </motion.button>
             )}
           </div>
@@ -283,18 +321,9 @@ function AdminLayout({ children }) {
                   <span className={`flex-shrink-0 ${active ? 'text-blue-600 dark:text-blue-400' : ''}`}>
                     {getIcon(item.icon, 'w-5 h-5')}
                   </span>
-                  <AnimatePresence>
-                    {sidebarOpen && (
-                      <motion.span
-                        initial={{ opacity: 0, width: 0 }}
-                        animate={{ opacity: 1, width: 'auto' }}
-                        exit={{ opacity: 0, width: 0 }}
-                        className="truncate"
-                      >
-                        {item.label}
-                      </motion.span>
-                    )}
-                  </AnimatePresence>
+                  <span className="truncate">
+                    {item.label}
+                  </span>
                   {active && (
                     <motion.div
                       className="absolute right-2 w-1.5 h-1.5 rounded-full bg-blue-600 dark:bg-blue-400"
@@ -318,23 +347,15 @@ function AdminLayout({ children }) {
         <header className="sticky top-0 z-30 bg-white/95 dark:bg-slate-800/95 backdrop-blur-md border-b border-slate-200 dark:border-slate-700">
           <div className="px-3 sm:px-4 lg:px-6 py-2.5 sm:py-3 flex items-center justify-between gap-2 sm:gap-4">
             <div className="flex items-center gap-2 sm:gap-4 min-w-0 flex-1">
-              <motion.button
-                onClick={() => setSidebarOpen(!sidebarOpen)}
-                className="p-2 sm:p-2.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors touch-manipulation min-w-[44px] min-h-[44px] flex items-center justify-center"
-                whileTap={{ scale: 0.95 }}
-                aria-label="Toggle sidebar"
-              >
-                {sidebarOpen ? <IconX className="w-5 h-5" /> : <IconMenu className="w-5 h-5" />}
-              </motion.button>
-              {!sidebarOpen && (
+              {/* Toggle button only on mobile */}
+              {isMobile && (
                 <motion.button
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  onClick={() => setSidebarOpen(true)}
-                  className="hidden lg:flex p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors touch-manipulation min-w-[44px] min-h-[44px] items-center justify-center"
+                  onClick={() => setMobileSidebarOpen(!mobileSidebarOpen)}
+                  className="p-2 sm:p-2.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors touch-manipulation min-w-[44px] min-h-[44px] flex items-center justify-center"
                   whileTap={{ scale: 0.95 }}
+                  aria-label="Toggle sidebar"
                 >
-                  <IconChevronRight className="w-5 h-5" />
+                  {mobileSidebarOpen ? <IconX className="w-5 h-5" /> : <IconMenu className="w-5 h-5" />}
                 </motion.button>
               )}
               <h2 className="text-sm sm:text-base lg:text-lg xl:text-xl font-semibold text-slate-900 dark:text-slate-100 truncate">
@@ -342,16 +363,6 @@ function AdminLayout({ children }) {
               </h2>
             </div>
             <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
-              {/* Theme Toggle */}
-              <motion.button
-                onClick={toggleTheme}
-                className="p-2 sm:p-2.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors touch-manipulation min-w-[44px] min-h-[44px] flex items-center justify-center"
-                whileTap={{ scale: 0.95 }}
-                aria-label="Toggle theme"
-              >
-                {isDark ? <IconSun className="w-5 h-5" /> : <IconMoon className="w-5 h-5" />}
-              </motion.button>
-
               {/* Role Badge */}
               <span className="hidden sm:inline-flex px-2.5 sm:px-3 py-1 rounded-full text-xs font-medium bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300">
                 ADMIN

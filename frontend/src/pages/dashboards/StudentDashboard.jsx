@@ -80,17 +80,10 @@ function StudentDashboard() {
           // Only redirect if not already on result page
           const completedTestId = sectionsData.completed_test_attempt_id;
           if (completedTestId) {
-            // Check if there's a stored attemptId in sessionStorage (user was viewing a specific result)
-            const storedAttemptId = sessionStorage.getItem('currentResultAttemptId');
-            if (storedAttemptId && storedAttemptId !== completedTestId.toString()) {
-              // User was viewing a different result - redirect to that one instead
-              console.log('Redirecting to stored result attempt:', storedAttemptId);
-              navigate(`/result/${storedAttemptId}`);
-            } else {
-              // Redirect to latest completed test
-              console.log('Redirecting to latest completed test:', completedTestId);
-              navigate(`/result/${completedTestId}`);
-            }
+            // Always use the attempt id from the API for this logged-in student.
+            // sessionStorage can still hold a previous user's attempt after account switch.
+            console.log('Redirecting to latest completed test:', completedTestId);
+            navigate(`/result/${completedTestId}`);
             return;
           } else {
             // If no ID, still prevent access

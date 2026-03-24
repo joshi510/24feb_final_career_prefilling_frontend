@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
+import { simplifyReportText } from '../utils/simplifiedReportCopy.js';
 
 function ScoreSummary({ interpretation }) {
   const isDark = document.documentElement.classList.contains('dark');
@@ -19,6 +20,26 @@ function ScoreSummary({ interpretation }) {
     return null;
   }
   const remaining = 100 - score;
+
+  // Get section scores from interpretation
+  const sectionScores = interpretation.section_scores || [];
+  
+  // Convert section scores to percentages
+  // Backend returns raw score_value (1-5 scale average), need to convert to 0-100%
+  const sectionScoresWithPercentages = sectionScores.map(section => {
+    let percentage;
+    // If score is already in 0-100 range, use it directly
+    if (section.score >= 0 && section.score <= 100 && section.score > 5) {
+      percentage = Math.round(section.score);
+    } else {
+      // Convert from 1-5 scale to 0-100%: ((score - 1) / 4) * 100
+      percentage = Math.round(((section.score - 1) / 4) * 100);
+    }
+    return {
+      ...section,
+      percentage: Math.min(100, Math.max(0, percentage))
+    };
+  });
 
   const pieData = [
     { name: 'Score', value: score, fill: '#3b82f6' },
@@ -69,7 +90,7 @@ function ScoreSummary({ interpretation }) {
             <div className="absolute inset-0 flex items-center justify-center">
               <div className="text-center">
                 <div className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-slate-100">{score}%</div>
-                <div className="text-xs text-slate-500 dark:text-slate-400">Overall</div>
+                <div className="text-xs text-slate-500 dark:text-slate-400">Overall Score</div>
               </div>
             </div>
           </div>
@@ -79,7 +100,7 @@ function ScoreSummary({ interpretation }) {
         <div className="flex-1 order-2 md:order-none">
           <h4 className="text-sm font-semibold text-green-700 dark:text-green-400 mb-2 flex items-center">
             <span className="w-2 h-2 bg-green-500 rounded-full mr-2"></span>
-            Key Strengths
+            Your Strengths
           </h4>
           <p className="text-xs text-slate-600 dark:text-slate-400 mb-2 italic">You have a good base in some skills.</p>
           <ul className="space-y-2">
@@ -110,7 +131,7 @@ function ScoreSummary({ interpretation }) {
                     className="text-sm text-slate-700 dark:text-slate-300 flex items-start"
                   >
                     <span className="text-green-500 mr-2 mt-0.5 flex-shrink-0">•</span>
-                    <span className="line-clamp-3">{strength}</span>
+                    <span className="line-clamp-3">{simplifyReportText(strength)}</span>
                   </motion.li>
                 ))
               ) : (
@@ -156,7 +177,7 @@ function ScoreSummary({ interpretation }) {
                     className="text-sm text-slate-700 dark:text-slate-300 flex items-start"
                   >
                     <span className="text-amber-500 mr-2 mt-0.5 flex-shrink-0">•</span>
-                    <span className="line-clamp-3">{weakness}</span>
+                    <span className="line-clamp-3">{simplifyReportText(weakness)}</span>
                   </motion.li>
                 ))
               ) : (
@@ -166,6 +187,116 @@ function ScoreSummary({ interpretation }) {
           </ul>
         </div>
       </div>
+
+      {/* Section Scores Breakdown */}
+      {sectionScoresWithPercentages.length > 0 && (
+        <div className="mt-6 pt-6 border-t border-slate-200 dark:border-slate-700">
+          <h4 className="text-base sm:text-lg font-semibold text-slate-900 dark:text-slate-100 mb-4 flex items-center">
+            <svg className="w-5 h-5 mr-2 text-indigo-600 dark:text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+            </svg>
+            Your Scores
+          </h4>
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 sm:gap-4">
+            {sectionScoresWithPercentages.map((section, idx) => (
+              <motion.div
+                key={section.section_number || idx}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: idx * 0.05 }}
+                className="bg-gradient-to-br from-slate-50 to-slate-100/50 dark:from-slate-700/50 dark:to-slate-800/50 rounded-xl p-4 border border-slate-200 dark:border-slate-600 hover:shadow-md transition-all duration-200"
+              >
+                <div className="text-center">
+                  <div className="text-xs sm:text-sm font-medium text-slate-600 dark:text-slate-400 mb-2 line-clamp-2">
+                    {(() => {
+                      // Handle different possible field names and provide fallbacks
+                      const sectionName = section.section_name || section.name;
+                      const sectionNum = section.section_number || section.sectionNumber || (idx + 1);
+                      
+                      if (sectionName && sectionName !== 'undefined' && sectionName.trim() !== '') {
+                        return sectionName;
+                      }
+                      
+                      // Career Readiness labels for sections 1-4
+                      if (sectionNum >= 1 && sectionNum <= 4) {
+                        const careerLabels = {
+                          1: 'Cognitive Reasoning',
+                          2: 'Aptitude Test',
+                          3: 'Study Habits',
+                          4: 'Learning Style'
+                        };
+                        return careerLabels[sectionNum] || `Section ${sectionNum}`;
+                      }
+                      
+                      // RIASEC labels for sections 5-10
+                      if (sectionNum >= 5 && sectionNum <= 10) {
+                        const riasecLabels = {
+                          5: 'Realistic (R)',
+                          6: 'Investigative (I)',
+                          7: 'Artistic (A)',
+                          8: 'Social (S)',
+                          9: 'Enterprising (E)',
+                          10: 'Conventional (C)'
+                        };
+                        return riasecLabels[sectionNum] || `Section ${sectionNum}`;
+                      }
+                      
+                      return `Section ${sectionNum}`;
+                    })()}
+                  </div>
+                  <div className="relative w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-2">
+                    <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
+                      <circle
+                        cx="50"
+                        cy="50"
+                        r="40"
+                        fill="none"
+                        stroke={isDark ? '#334155' : '#e2e8f0'}
+                        strokeWidth="8"
+                      />
+                      <circle
+                        cx="50"
+                        cy="50"
+                        r="40"
+                        fill="none"
+                        stroke={(section.section_number || section.sectionNumber || (idx + 1)) <= 4 
+                          ? 'url(#careerGradient)' 
+                          : 'url(#riasecGradient)'}
+                        strokeWidth="8"
+                        strokeLinecap="round"
+                        strokeDasharray={2 * Math.PI * 40}
+                        strokeDashoffset={2 * Math.PI * 40 * (1 - section.percentage / 100)}
+                        className="transition-all duration-500"
+                      />
+                      <defs>
+                        <linearGradient id="careerGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                          <stop offset="0%" stopColor="#3b82f6" />
+                          <stop offset="100%" stopColor="#6366f1" />
+                        </linearGradient>
+                        <linearGradient id="riasecGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                          <stop offset="0%" stopColor="#8b5cf6" />
+                          <stop offset="100%" stopColor="#a855f7" />
+                        </linearGradient>
+                      </defs>
+                    </svg>
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <span className="text-lg sm:text-xl font-bold text-slate-900 dark:text-slate-100">
+                        {section.percentage}%
+                      </span>
+                    </div>
+                  </div>
+                  <div className="text-xs text-slate-500 dark:text-slate-400">
+                    {(() => {
+                      const sectionNum = section.section_number || section.sectionNumber || (idx + 1);
+                      return sectionNum <= 4 ? 'Career' : 'RIASEC';
+                    })()}
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      )}
     </motion.div>
   );
 }

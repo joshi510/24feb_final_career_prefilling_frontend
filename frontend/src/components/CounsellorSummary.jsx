@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { simplifyReportText } from '../utils/simplifiedReportCopy.js';
 
 function CounsellorSummary({ counsellorSummary }) {
   if (!counsellorSummary || !counsellorSummary.trim()) {
@@ -23,11 +24,10 @@ function CounsellorSummary({ counsellorSummary }) {
         </div>
         <div className="flex-1">
           <h2 className="text-xl font-bold text-slate-900 dark:text-slate-100 mb-2 flex items-center">
-            Counsellor Summary
-            <span className="ml-2 text-xs font-normal text-slate-500 dark:text-slate-400">(Quick Reference)</span>
+            Counsellor Notes
           </h2>
           <p className="text-slate-700 dark:text-slate-300 leading-relaxed text-base">
-            {counsellorSummary}
+            {simplifyReportText(counsellorSummary)}
           </p>
         </div>
       </div>

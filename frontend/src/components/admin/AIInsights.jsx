@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { readinessAnalyticsDisplayLabel, simplifyReportText } from '../../utils/simplifiedReportCopy.js';
 
 const IconLightbulb = ({ className }) => (
   <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -17,26 +18,42 @@ function AIInsights({ readinessData, careerClusterData, stats, sectionScores }) 
     const readyPercent = ((readinessData['READY'] || 0) / totalReadiness) * 100;
     const partiallyReadyPercent = ((readinessData['PARTIALLY READY'] || 0) / totalReadiness) * 100;
 
+    const labelStillExploring = readinessAnalyticsDisplayLabel('NOT READY');
+    const labelGettingClearer = readinessAnalyticsDisplayLabel('PARTIALLY READY');
+    const labelGoodToGo = readinessAnalyticsDisplayLabel('READY');
+
     if (notReadyPercent > 50) {
       insights.push({
         type: 'warning',
-        title: 'High Exploration Phase',
-        message: `Over ${Math.round(notReadyPercent)}% of students are in the exploration phase (NOT READY). This suggests students may be taking the assessment too early in their academic journey, or they need more career exposure before making decisions. Consider providing early-stage career counselling focused on exploration rather than finalization.`,
-        action: 'Schedule early career exploration sessions for students showing NOT READY status.'
+        title: 'Many Students Still Exploring',
+        message: simplifyReportText(
+          `Over ${Math.round(notReadyPercent)}% of students are Still Exploring. This suggests students may be taking the assessment early, or they need more career exposure before making decisions. Consider early-stage career counselling focused on exploration rather than finalization.`
+        ),
+        action: simplifyReportText(
+          `Schedule early career exploration sessions for students in the "${labelStillExploring}" group.`
+        )
       });
     } else if (readyPercent > 40) {
       insights.push({
         type: 'success',
         title: 'Strong Career Clarity',
-        message: `${Math.round(readyPercent)}% of students show strong career readiness, indicating good self-awareness and career direction. These students are likely ready for more specific career planning and mentorship programs.`,
-        action: 'Connect READY students with industry mentors and advanced career planning resources.'
+        message: simplifyReportText(
+          `${Math.round(readyPercent)}% of students show strong Career Readiness (${labelGoodToGo}), indicating good self-awareness and career direction. These students are likely ready for more specific career planning and mentorship programs.`
+        ),
+        action: simplifyReportText(
+          `Connect students in the "${labelGoodToGo}" group with industry mentors and advanced career planning resources.`
+        )
       });
     } else if (partiallyReadyPercent > 40) {
       insights.push({
         type: 'info',
         title: 'Development in Progress',
-        message: `Most students (${Math.round(partiallyReadyPercent)}%) are in the PARTIALLY READY stage, showing they're developing career-related strengths but need further guidance. This is a healthy development stage that requires targeted support.`,
-        action: 'Provide structured career development workshops focusing on skill-building and career exploration.'
+        message: simplifyReportText(
+          `Most students (${Math.round(partiallyReadyPercent)}%) are Getting Clearer (${labelGettingClearer}), showing they're building career-related strengths but need further guidance. This is a healthy stage that needs targeted support.`
+        ),
+        action: simplifyReportText(
+          'Provide structured career development workshops focusing on skill-building and career exploration.'
+        )
       });
     }
   }
@@ -230,14 +247,14 @@ function AIInsights({ readinessData, careerClusterData, stats, sectionScores }) 
                     {insight.title}
                   </h4>
                   <p className="text-xs sm:text-sm text-slate-700 dark:text-slate-300 mb-2 sm:mb-3 leading-relaxed">
-                    {insight.message}
+                    {simplifyReportText(insight.message)}
                   </p>
                   <div className="pt-2 border-t border-slate-200 dark:border-slate-600">
                     <p className="text-xs font-medium text-slate-600 dark:text-slate-400 mb-1">
                       Recommended Action:
                     </p>
                     <p className="text-xs text-slate-700 dark:text-slate-300">
-                      {insight.action}
+                      {simplifyReportText(insight.action)}
                     </p>
                   </div>
                 </div>

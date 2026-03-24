@@ -1,8 +1,10 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { filterSecondaryReportLinesRemovingCoreAdvice } from '../utils/simplifiedReportCopy.js';
 
-function ReadinessActionGuidance({ readinessActionGuidance, readinessStatus }) {
-  if (!readinessActionGuidance || readinessActionGuidance.length === 0) {
+function ReadinessActionGuidance({ readinessActionGuidance, readinessStatus: _readinessStatus }) {
+  const lines = filterSecondaryReportLinesRemovingCoreAdvice(readinessActionGuidance || []);
+  if (lines.length === 0) {
     return null;
   }
 
@@ -15,10 +17,10 @@ function ReadinessActionGuidance({ readinessActionGuidance, readinessStatus }) {
     >
       <h2 className="text-2xl font-semibold text-slate-900 dark:text-slate-100 mb-4 flex items-center">
         <span className="w-3 h-3 bg-blue-500 rounded-full mr-3"></span>
-        What This Stage Means for You
+        What To Do Next
       </h2>
       <ul className="space-y-3">
-        {readinessActionGuidance.map((guidance, idx) => (
+        {lines.map((guidance, idx) => (
           <motion.li
             key={idx}
             initial={{ opacity: 0, x: -10 }}

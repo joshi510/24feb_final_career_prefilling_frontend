@@ -17,6 +17,8 @@ const QuestionsList = lazy(() => import('./pages/admin/QuestionsList'));
 const QuestionForm = lazy(() => import('./pages/admin/QuestionForm'));
 const AddCounsellor = lazy(() => import('./pages/admin/AddCounsellor'));
 const CounselorsList = lazy(() => import('./pages/admin/CounselorsList'));
+const Appointments = lazy(() => import('./pages/admin/Appointments'));
+const CounsellorAppointments = lazy(() => import('./pages/counsellor/Appointments'));
 const ResultPage = lazy(() => import('./pages/ResultPage'));
 
 function LoadingFallback() {
@@ -47,11 +49,11 @@ const queryClient = new QueryClient({
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <ThemeProvider>
-        <AuthProvider>
-          <Router>
-            <Suspense fallback={<LoadingFallback />}>
-              <Routes>
+    <ThemeProvider>
+      <AuthProvider>
+        <Router>
+          <Suspense fallback={<LoadingFallback />}>
+            <Routes>
               {/* Root path shows registration for students */}
               <Route path="/" element={<Login />} />
               {/* Student registration */}
@@ -83,6 +85,14 @@ function App() {
                 element={
                   <ProtectedRoute allowedRoles={['COUNSELLOR']}>
                     <CounsellorDashboard />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/counsellor/appointments"
+                element={
+                  <ProtectedRoute allowedRoles={['COUNSELLOR']}>
+                    <CounsellorAppointments />
                   </ProtectedRoute>
                 }
               />
@@ -155,6 +165,14 @@ function App() {
                 element={
                   <ProtectedRoute allowedRoles={['ADMIN']}>
                     <CounselorsList />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/appointments"
+                element={
+                  <ProtectedRoute allowedRoles={['ADMIN']}>
+                    <Appointments />
                   </ProtectedRoute>
                 }
               />

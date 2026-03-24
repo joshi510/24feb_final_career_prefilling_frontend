@@ -91,7 +91,7 @@ function RIASECRadarChart({ dimensions }) {
         marginBottom: '8px',
         marginTop: 0
       }}>
-        RIASEC Dimensions Overview
+        Your Personality Types
       </h3>
       
       {/* RIASEC Score Badges - Moved above chart */}
@@ -184,11 +184,11 @@ function RIASECRadarChart({ dimensions }) {
           margin: 0,
           lineHeight: '1.5'
         }}>
-          <span style={{ fontWeight: 600 }}>Dominant Types:</span> {dominantTypes}
+          <span style={{ fontWeight: 600 }}>Your Top Types:</span> {dominantTypes}
           {secondaryType && (
             <>
               <br style={{ marginTop: '8px' }} />
-              <span style={{ fontWeight: 600 }}>Secondary Influence:</span> {secondaryType}
+              <span style={{ fontWeight: 600 }}>Also Strong:</span> {secondaryType}
             </>
           )}
         </p>

@@ -1,0 +1,7242 @@
+{
+  "R-dominant-1": {
+    "valid": true,
+    "confidence": "High",
+    "edgeCase": null,
+    "dominantCode": "R",
+    "normalized": {
+      "R": 0.4535,
+      "I": 0.1279,
+      "A": 0.0698,
+      "S": 0.093,
+      "E": 0.1395,
+      "C": 0.1163
+    },
+    "topFields": [
+      "Engineering",
+      "Networking",
+      "Pure & Applied Science"
+    ],
+    "topCareerTitles": [
+      "Mechanical Engineer",
+      "Robotics Engineer",
+      "Civil Engineer",
+      "Network Engineer",
+      "IT Infrastructure Manager",
+      "Network Security Engineer",
+      "Systems Administrator",
+      "Lab Technician"
+    ],
+    "pathway": [
+      {
+        "code": "R",
+        "fields": [
+          "Engineering",
+          "Networking",
+          "Pure & Applied Science"
+        ],
+        "careers": [
+          [
+            "Mechanical Engineer",
+            "Robotics Engineer",
+            "Civil Engineer"
+          ],
+          [
+            "Network Engineer",
+            "IT Infrastructure Manager",
+            "Network Security Engineer"
+          ],
+          [
+            "Lab Technician",
+            "Geologist",
+            "Materials Scientist"
+          ]
+        ]
+      },
+      {
+        "code": "E",
+        "fields": [
+          "Law",
+          "Marketing",
+          "Business & Management"
+        ],
+        "careers": [
+          [
+            "Legal Consultant",
+            "Corporate Attorney",
+            "Paralegal"
+          ],
+          [
+            "Social Media Director",
+            "Digital Marketing Manager",
+            "Brand Strategist"
+          ],
+          [
+            "Operations Manager",
+            "Management Consultant",
+            "Project Manager"
+          ]
+        ]
+      },
+      {
+        "code": "I",
+        "fields": [
+          "Networking",
+          "Pure & Applied Science",
+          "Tech"
+        ],
+        "careers": [
+          [
+            "Network Engineer",
+            "IT Infrastructure Manager",
+            "Network Security Engineer"
+          ],
+          [
+            "Lab Technician",
+            "Geologist",
+            "Materials Scientist"
+          ],
+          [
+            "Cloud Architect",
+            "Software Developer",
+            "Cybersecurity Analyst"
+          ]
+        ]
+      },
+      {
+        "code": "C",
+        "fields": [
+          "Finance",
+          "Data Analytics",
+          "Accounting"
+        ],
+        "careers": [
+          [
+            "Portfolio Manager",
+            "Investment Banker",
+            "Financial Planner"
+          ],
+          [
+            "Business Intelligence Analyst",
+            "Market Research Analyst",
+            "Operations Analyst"
+          ],
+          [
+            "Certified Public Accountant",
+            "Forensic Accountant",
+            "Tax Auditor"
+          ]
+        ]
+      },
+      {
+        "code": "S",
+        "fields": [
+          "Hospitality",
+          "Medical & Health",
+          "Humanities"
+        ],
+        "careers": [
+          [
+            "Event Coordinator",
+            "Hotel Manager",
+            "Tourism Director"
+          ],
+          [
+            "Medical Doctor",
+            "Registered Nurse",
+            "Healthcare Administrator"
+          ],
+          [
+            "Psychologist",
+            "Policy Analyst",
+            "Technical Writer"
+          ]
+        ]
+      },
+      {
+        "code": "A",
+        "fields": [
+          "Media",
+          "Humanities",
+          "Design"
+        ],
+        "careers": [
+          [
+            "Public Relations Specialist",
+            "Content Producer",
+            "Digital Editor"
+          ],
+          [
+            "Psychologist",
+            "Policy Analyst",
+            "Technical Writer"
+          ],
+          [
+            "Industrial Designer",
+            "UX/UI Designer",
+            "Graphic Designer"
+          ]
+        ]
+      }
+    ]
+  },
+  "I-dominant-1": {
+    "valid": true,
+    "confidence": "High",
+    "edgeCase": null,
+    "dominantCode": "I",
+    "normalized": {
+      "R": 0.1222,
+      "I": 0.4556,
+      "A": 0.1111,
+      "S": 0.0778,
+      "E": 0.1,
+      "C": 0.1333
+    },
+    "topFields": [
+      "Data Science",
+      "Networking",
+      "Tech"
+    ],
+    "topCareerTitles": [
+      "Data Scientist",
+      "AI Research Scientist",
+      "Machine Learning Engineer",
+      "Cybersecurity Analyst",
+      "Cloud Architect",
+      "Software Developer",
+      "Network Engineer",
+      "Research Scientist"
+    ],
+    "pathway": [
+      {
+        "code": "I",
+        "fields": [
+          "Data Science",
+          "Networking",
+          "Tech"
+        ],
+        "careers": [
+          [
+            "Data Scientist",
+            "AI Research Scientist",
+            "Machine Learning Engineer"
+          ],
+          [
+            "Network Engineer",
+            "Solutions Architect",
+            "Systems Administrator"
+          ],
+          [
+            "Cybersecurity Analyst",
+            "Cloud Architect",
+            "Software Developer"
+          ]
+        ]
+      },
+      {
+        "code": "C",
+        "fields": [
+          "Data Analytics",
+          "Finance",
+          "Accounting"
+        ],
+        "careers": [
+          [
+            "Business Intelligence Analyst",
+            "Market Research Analyst",
+            "Operations Analyst"
+          ],
+          [
+            "Investment Banker",
+            "Portfolio Manager",
+            "Financial Planner"
+          ],
+          [
+            "Forensic Accountant",
+            "Tax Auditor",
+            "Certified Public Accountant"
+          ]
+        ]
+      },
+      {
+        "code": "R",
+        "fields": [
+          "Networking",
+          "Tech",
+          "Pure & Applied Science"
+        ],
+        "careers": [
+          [
+            "Network Engineer",
+            "Solutions Architect",
+            "Systems Administrator"
+          ],
+          [
+            "Cybersecurity Analyst",
+            "Cloud Architect",
+            "Software Developer"
+          ],
+          [
+            "Research Scientist",
+            "Biotechnologist",
+            "Environmental Consultant"
+          ]
+        ]
+      },
+      {
+        "code": "A",
+        "fields": [
+          "Humanities",
+          "Design",
+          "Media"
+        ],
+        "careers": [
+          [
+            "Psychologist",
+            "Policy Analyst",
+            "Technical Writer"
+          ],
+          [
+            "UX/UI Designer",
+            "Industrial Designer",
+            "Graphic Designer"
+          ],
+          [
+            "Public Relations Specialist",
+            "Content Producer",
+            "Digital Editor"
+          ]
+        ]
+      },
+      {
+        "code": "E",
+        "fields": [
+          "Law",
+          "Business & Management",
+          "Marketing"
+        ],
+        "careers": [
+          [
+            "Paralegal",
+            "Legal Consultant",
+            "Corporate Attorney"
+          ],
+          [
+            "Management Consultant",
+            "Project Manager",
+            "Operations Manager"
+          ],
+          [
+            "Brand Strategist",
+            "Social Media Director",
+            "Digital Marketing Manager"
+          ]
+        ]
+      },
+      {
+        "code": "S",
+        "fields": [
+          "Medical & Health",
+          "Humanities",
+          "Hospitality"
+        ],
+        "careers": [
+          [
+            "Medical Doctor",
+            "Registered Nurse",
+            "Healthcare Administrator"
+          ],
+          [
+            "Psychologist",
+            "Policy Analyst",
+            "Technical Writer"
+          ],
+          [
+            "Event Coordinator",
+            "Hotel Manager",
+            "Tourism Director"
+          ]
+        ]
+      }
+    ]
+  },
+  "A-dominant-1": {
+    "valid": true,
+    "confidence": "High",
+    "edgeCase": null,
+    "dominantCode": "A",
+    "normalized": {
+      "R": 0.0549,
+      "I": 0.1429,
+      "A": 0.4615,
+      "S": 0.1648,
+      "E": 0.0989,
+      "C": 0.0769
+    },
+    "topFields": [
+      "Design",
+      "Media",
+      "Humanities"
+    ],
+    "topCareerTitles": [
+      "Graphic Designer",
+      "UX/UI Designer",
+      "Industrial Designer",
+      "Policy Analyst",
+      "Technical Writer",
+      "Content Producer",
+      "Digital Editor",
+      "Public Relations Specialist"
+    ],
+    "pathway": [
+      {
+        "code": "A",
+        "fields": [
+          "Design",
+          "Media",
+          "Humanities"
+        ],
+        "careers": [
+          [
+            "Graphic Designer",
+            "UX/UI Designer",
+            "Industrial Designer"
+          ],
+          [
+            "Content Producer",
+            "Digital Editor",
+            "Public Relations Specialist"
+          ],
+          [
+            "Policy Analyst",
+            "Technical Writer",
+            "Psychologist"
+          ]
+        ]
+      },
+      {
+        "code": "S",
+        "fields": [
+          "Humanities",
+          "Hospitality",
+          "Medical & Health"
+        ],
+        "careers": [
+          [
+            "Policy Analyst",
+            "Technical Writer",
+            "Psychologist"
+          ],
+          [
+            "Event Coordinator",
+            "Hotel Manager",
+            "Tourism Director"
+          ],
+          [
+            "Medical Doctor",
+            "Registered Nurse",
+            "Healthcare Administrator"
+          ]
+        ]
+      },
+      {
+        "code": "I",
+        "fields": [
+          "Data Science",
+          "Tech",
+          "Networking"
+        ],
+        "careers": [
+          [
+            "Data Scientist",
+            "AI Research Scientist",
+            "Machine Learning Engineer"
+          ],
+          [
+            "Cybersecurity Analyst",
+            "Cloud Architect",
+            "Software Developer"
+          ],
+          [
+            "Solutions Architect",
+            "Network Engineer",
+            "Systems Administrator"
+          ]
+        ]
+      },
+      {
+        "code": "E",
+        "fields": [
+          "Marketing",
+          "Business & Management",
+          "Law"
+        ],
+        "careers": [
+          [
+            "Brand Strategist",
+            "Social Media Director",
+            "Digital Marketing Manager"
+          ],
+          [
+            "Management Consultant",
+            "Project Manager",
+            "Operations Manager"
+          ],
+          [
+            "Legal Consultant",
+            "Paralegal",
+            "Corporate Attorney"
+          ]
+        ]
+      },
+      {
+        "code": "C",
+        "fields": [
+          "Data Analytics",
+          "Finance",
+          "Accounting"
+        ],
+        "careers": [
+          [
+            "Business Intelligence Analyst",
+            "Market Research Analyst",
+            "Operations Analyst"
+          ],
+          [
+            "Financial Planner",
+            "Investment Banker",
+            "Portfolio Manager"
+          ],
+          [
+            "Forensic Accountant",
+            "Tax Auditor",
+            "Certified Public Accountant"
+          ]
+        ]
+      },
+      {
+        "code": "R",
+        "fields": [
+          "Tech",
+          "Computer Applications",
+          "Pure & Applied Science"
+        ],
+        "careers": [
+          [
+            "Cybersecurity Analyst",
+            "Cloud Architect",
+            "Software Developer"
+          ],
+          [
+            "Database Administrator",
+            "Mobile App Developer",
+            "Web Developer"
+          ],
+          [
+            "Materials Scientist",
+            "Research Scientist",
+            "Biotechnologist"
+          ]
+        ]
+      }
+    ]
+  },
+  "S-dominant-1": {
+    "valid": true,
+    "confidence": "High",
+    "edgeCase": null,
+    "dominantCode": "S",
+    "normalized": {
+      "R": 0.0645,
+      "I": 0.129,
+      "A": 0.1075,
+      "S": 0.4624,
+      "E": 0.1398,
+      "C": 0.0968
+    },
+    "topFields": [
+      "Hospitality",
+      "Humanities",
+      "Medical & Health"
+    ],
+    "topCareerTitles": [
+      "Event Coordinator",
+      "Hotel Manager",
+      "Tourism Director",
+      "Psychologist",
+      "Healthcare Administrator",
+      "Policy Analyst",
+      "Technical Writer",
+      "Medical Doctor"
+    ],
+    "pathway": [
+      {
+        "code": "S",
+        "fields": [
+          "Hospitality",
+          "Humanities",
+          "Medical & Health"
+        ],
+        "careers": [
+          [
+            "Event Coordinator",
+            "Hotel Manager",
+            "Tourism Director"
+          ],
+          [
+            "Psychologist",
+            "Policy Analyst",
+            "Technical Writer"
+          ],
+          [
+            "Healthcare Administrator",
+            "Medical Doctor",
+            "Registered Nurse"
+          ]
+        ]
+      },
+      {
+        "code": "E",
+        "fields": [
+          "Marketing",
+          "Business & Management",
+          "Law"
+        ],
+        "careers": [
+          [
+            "Digital Marketing Manager",
+            "Social Media Director",
+            "Brand Strategist"
+          ],
+          [
+            "Management Consultant",
+            "Project Manager",
+            "Operations Manager"
+          ],
+          [
+            "Legal Consultant",
+            "Corporate Attorney",
+            "Paralegal"
+          ]
+        ]
+      },
+      {
+        "code": "I",
+        "fields": [
+          "Data Analytics",
+          "Data Science",
+          "Networking"
+        ],
+        "careers": [
+          [
+            "Business Intelligence Analyst",
+            "Market Research Analyst",
+            "Operations Analyst"
+          ],
+          [
+            "Data Scientist",
+            "AI Research Scientist",
+            "Machine Learning Engineer"
+          ],
+          [
+            "Solutions Architect",
+            "Network Engineer",
+            "Systems Administrator"
+          ]
+        ]
+      },
+      {
+        "code": "A",
+        "fields": [
+          "Humanities",
+          "Media",
+          "Design"
+        ],
+        "careers": [
+          [
+            "Psychologist",
+            "Policy Analyst",
+            "Technical Writer"
+          ],
+          [
+            "Content Producer",
+            "Digital Editor",
+            "Public Relations Specialist"
+          ],
+          [
+            "UX/UI Designer",
+            "Graphic Designer",
+            "Industrial Designer"
+          ]
+        ]
+      },
+      {
+        "code": "C",
+        "fields": [
+          "Finance",
+          "Data Analytics",
+          "Accounting"
+        ],
+        "careers": [
+          [
+            "Financial Planner",
+            "Investment Banker",
+            "Portfolio Manager"
+          ],
+          [
+            "Business Intelligence Analyst",
+            "Market Research Analyst",
+            "Operations Analyst"
+          ],
+          [
+            "Certified Public Accountant",
+            "Forensic Accountant",
+            "Tax Auditor"
+          ]
+        ]
+      },
+      {
+        "code": "R",
+        "fields": [
+          "Tech",
+          "Computer Applications",
+          "Networking"
+        ],
+        "careers": [
+          [
+            "Cybersecurity Analyst",
+            "Cloud Architect",
+            "Software Developer"
+          ],
+          [
+            "Database Administrator",
+            "IT Support Technician",
+            "Systems Engineer"
+          ],
+          [
+            "Solutions Architect",
+            "Network Engineer",
+            "Systems Administrator"
+          ]
+        ]
+      }
+    ]
+  },
+  "E-dominant-1": {
+    "valid": true,
+    "confidence": "High",
+    "edgeCase": null,
+    "dominantCode": "E",
+    "normalized": {
+      "R": 0.07,
+      "I": 0.09,
+      "A": 0.11,
+      "S": 0.15,
+      "E": 0.44,
+      "C": 0.14
+    },
+    "topFields": [
+      "Business & Management",
+      "Marketing",
+      "Finance"
+    ],
+    "topCareerTitles": [
+      "Management Consultant",
+      "Project Manager",
+      "Portfolio Manager",
+      "Social Media Director",
+      "Operations Manager",
+      "Brand Strategist",
+      "Digital Marketing Manager",
+      "Investment Banker"
+    ],
+    "pathway": [
+      {
+        "code": "E",
+        "fields": [
+          "Business & Management",
+          "Marketing",
+          "Law"
+        ],
+        "careers": [
+          [
+            "Management Consultant",
+            "Project Manager",
+            "Operations Manager"
+          ],
+          [
+            "Social Media Director",
+            "Brand Strategist",
+            "Digital Marketing Manager"
+          ],
+          [
+            "Legal Consultant",
+            "Corporate Attorney",
+            "Paralegal"
+          ]
+        ]
+      },
+      {
+        "code": "S",
+        "fields": [
+          "Hospitality",
+          "Humanities",
+          "Medical & Health"
+        ],
+        "careers": [
+          [
+            "Event Coordinator",
+            "Hotel Manager",
+            "Tourism Director"
+          ],
+          [
+            "Psychologist",
+            "Policy Analyst",
+            "Technical Writer"
+          ],
+          [
+            "Healthcare Administrator",
+            "Medical Doctor",
+            "Registered Nurse"
+          ]
+        ]
+      },
+      {
+        "code": "C",
+        "fields": [
+          "Finance",
+          "Accounting",
+          "Data Analytics"
+        ],
+        "careers": [
+          [
+            "Portfolio Manager",
+            "Investment Banker",
+            "Financial Planner"
+          ],
+          [
+            "Certified Public Accountant",
+            "Forensic Accountant",
+            "Tax Auditor"
+          ],
+          [
+            "Operations Analyst",
+            "Business Intelligence Analyst",
+            "Market Research Analyst"
+          ]
+        ]
+      },
+      {
+        "code": "A",
+        "fields": [
+          "Media",
+          "Humanities",
+          "Design"
+        ],
+        "careers": [
+          [
+            "Content Producer",
+            "Digital Editor",
+            "Public Relations Specialist"
+          ],
+          [
+            "Psychologist",
+            "Policy Analyst",
+            "Technical Writer"
+          ],
+          [
+            "UX/UI Designer",
+            "Graphic Designer",
+            "Industrial Designer"
+          ]
+        ]
+      },
+      {
+        "code": "I",
+        "fields": [
+          "Data Analytics",
+          "Data Science",
+          "Networking"
+        ],
+        "careers": [
+          [
+            "Operations Analyst",
+            "Business Intelligence Analyst",
+            "Market Research Analyst"
+          ],
+          [
+            "AI Research Scientist",
+            "Data Scientist",
+            "Machine Learning Engineer"
+          ],
+          [
+            "Solutions Architect",
+            "Systems Administrator",
+            "IT Infrastructure Manager"
+          ]
+        ]
+      },
+      {
+        "code": "R",
+        "fields": [
+          "Networking",
+          "Tech",
+          "Computer Applications"
+        ],
+        "careers": [
+          [
+            "Solutions Architect",
+            "Systems Administrator",
+            "IT Infrastructure Manager"
+          ],
+          [
+            "Cybersecurity Analyst",
+            "Cloud Architect",
+            "Software Developer"
+          ],
+          [
+            "Database Administrator",
+            "Systems Engineer",
+            "IT Support Technician"
+          ]
+        ]
+      }
+    ]
+  },
+  "C-dominant-1": {
+    "valid": true,
+    "confidence": "High",
+    "edgeCase": null,
+    "dominantCode": "C",
+    "normalized": {
+      "R": 0.1064,
+      "I": 0.1277,
+      "A": 0.0532,
+      "S": 0.0957,
+      "E": 0.1383,
+      "C": 0.4787
+    },
+    "topFields": [
+      "Accounting",
+      "Finance",
+      "Data Analytics"
+    ],
+    "topCareerTitles": [
+      "Forensic Accountant",
+      "Tax Auditor",
+      "Certified Public Accountant",
+      "Financial Planner",
+      "Operations Analyst",
+      "Portfolio Manager",
+      "Business Intelligence Analyst",
+      "Market Research Analyst"
+    ],
+    "pathway": [
+      {
+        "code": "C",
+        "fields": [
+          "Accounting",
+          "Finance",
+          "Data Analytics"
+        ],
+        "careers": [
+          [
+            "Forensic Accountant",
+            "Tax Auditor",
+            "Certified Public Accountant"
+          ],
+          [
+            "Financial Planner",
+            "Portfolio Manager",
+            "Investment Banker"
+          ],
+          [
+            "Operations Analyst",
+            "Business Intelligence Analyst",
+            "Market Research Analyst"
+          ]
+        ]
+      },
+      {
+        "code": "E",
+        "fields": [
+          "Business & Management",
+          "Law",
+          "Marketing"
+        ],
+        "careers": [
+          [
+            "Operations Manager",
+            "Management Consultant",
+            "Project Manager"
+          ],
+          [
+            "Paralegal",
+            "Corporate Attorney",
+            "Legal Consultant"
+          ],
+          [
+            "Social Media Director",
+            "Digital Marketing Manager",
+            "Brand Strategist"
+          ]
+        ]
+      },
+      {
+        "code": "I",
+        "fields": [
+          "Data Analytics",
+          "Networking",
+          "Data Science"
+        ],
+        "careers": [
+          [
+            "Operations Analyst",
+            "Business Intelligence Analyst",
+            "Market Research Analyst"
+          ],
+          [
+            "Systems Administrator",
+            "IT Infrastructure Manager",
+            "Network Security Engineer"
+          ],
+          [
+            "AI Research Scientist",
+            "Data Scientist",
+            "Machine Learning Engineer"
+          ]
+        ]
+      },
+      {
+        "code": "R",
+        "fields": [
+          "Networking",
+          "Engineering",
+          "Tech"
+        ],
+        "careers": [
+          [
+            "Systems Administrator",
+            "IT Infrastructure Manager",
+            "Network Security Engineer"
+          ],
+          [
+            "Civil Engineer",
+            "Mechanical Engineer",
+            "Robotics Engineer"
+          ],
+          [
+            "Cybersecurity Analyst",
+            "Cloud Architect",
+            "Software Developer"
+          ]
+        ]
+      },
+      {
+        "code": "S",
+        "fields": [
+          "Hospitality",
+          "Medical & Health",
+          "Humanities"
+        ],
+        "careers": [
+          [
+            "Event Coordinator",
+            "Hotel Manager",
+            "Tourism Director"
+          ],
+          [
+            "Healthcare Administrator",
+            "Medical Doctor",
+            "Registered Nurse"
+          ],
+          [
+            "Psychologist",
+            "Policy Analyst",
+            "Technical Writer"
+          ]
+        ]
+      },
+      {
+        "code": "A",
+        "fields": [
+          "Media",
+          "Humanities",
+          "Design"
+        ],
+        "careers": [
+          [
+            "Public Relations Specialist",
+            "Content Producer",
+            "Digital Editor"
+          ],
+          [
+            "Psychologist",
+            "Policy Analyst",
+            "Technical Writer"
+          ],
+          [
+            "UX/UI Designer",
+            "Industrial Designer",
+            "Graphic Designer"
+          ]
+        ]
+      }
+    ]
+  },
+  "R-I-pair-1": {
+    "valid": true,
+    "confidence": "Moderate",
+    "edgeCase": null,
+    "dominantCode": "R",
+    "normalized": {
+      "R": 0.3238,
+      "I": 0.3143,
+      "A": 0.0667,
+      "S": 0.0571,
+      "E": 0.0952,
+      "C": 0.1429
+    },
+    "topFields": [
+      "Engineering",
+      "Networking",
+      "Pure & Applied Science"
+    ],
+    "topCareerTitles": [
+      "Mechanical Engineer",
+      "Robotics Engineer",
+      "Civil Engineer",
+      "Network Engineer",
+      "IT Infrastructure Manager",
+      "Network Security Engineer",
+      "Systems Administrator",
+      "Research Scientist"
+    ],
+    "pathway": [
+      {
+        "code": "R",
+        "fields": [
+          "Engineering",
+          "Networking",
+          "Pure & Applied Science"
+        ],
+        "careers": [
+          [
+            "Mechanical Engineer",
+            "Robotics Engineer",
+            "Civil Engineer"
+          ],
+          [
+            "Network Engineer",
+            "IT Infrastructure Manager",
+            "Network Security Engineer"
+          ],
+          [
+            "Research Scientist",
+            "Biotechnologist",
+            "Geologist"
+          ]
+        ]
+      },
+      {
+        "code": "I",
+        "fields": [
+          "Networking",
+          "Pure & Applied Science",
+          "Tech"
+        ],
+        "careers": [
+          [
+            "Network Engineer",
+            "IT Infrastructure Manager",
+            "Network Security Engineer"
+          ],
+          [
+            "Research Scientist",
+            "Biotechnologist",
+            "Geologist"
+          ],
+          [
+            "Cloud Architect",
+            "Software Developer",
+            "Cybersecurity Analyst"
+          ]
+        ]
+      },
+      {
+        "code": "C",
+        "fields": [
+          "Data Analytics",
+          "Finance",
+          "Accounting"
+        ],
+        "careers": [
+          [
+            "Business Intelligence Analyst",
+            "Market Research Analyst",
+            "Operations Analyst"
+          ],
+          [
+            "Investment Banker",
+            "Portfolio Manager",
+            "Financial Planner"
+          ],
+          [
+            "Forensic Accountant",
+            "Tax Auditor",
+            "Certified Public Accountant"
+          ]
+        ]
+      },
+      {
+        "code": "E",
+        "fields": [
+          "Law",
+          "Business & Management",
+          "Marketing"
+        ],
+        "careers": [
+          [
+            "Paralegal",
+            "Legal Consultant",
+            "Corporate Attorney"
+          ],
+          [
+            "Operations Manager",
+            "Management Consultant",
+            "Project Manager"
+          ],
+          [
+            "Social Media Director",
+            "Brand Strategist",
+            "Digital Marketing Manager"
+          ]
+        ]
+      },
+      {
+        "code": "A",
+        "fields": [
+          "Humanities",
+          "Design",
+          "Media"
+        ],
+        "careers": [
+          [
+            "Psychologist",
+            "Policy Analyst",
+            "Technical Writer"
+          ],
+          [
+            "Industrial Designer",
+            "UX/UI Designer",
+            "Graphic Designer"
+          ],
+          [
+            "Public Relations Specialist",
+            "Content Producer",
+            "Digital Editor"
+          ]
+        ]
+      },
+      {
+        "code": "S",
+        "fields": [
+          "Medical & Health",
+          "Humanities",
+          "Hospitality"
+        ],
+        "careers": [
+          [
+            "Medical Doctor",
+            "Registered Nurse",
+            "Healthcare Administrator"
+          ],
+          [
+            "Psychologist",
+            "Policy Analyst",
+            "Technical Writer"
+          ],
+          [
+            "Event Coordinator",
+            "Hotel Manager",
+            "Tourism Director"
+          ]
+        ]
+      }
+    ]
+  },
+  "R-I-pair-2": {
+    "valid": true,
+    "confidence": "Moderate",
+    "edgeCase": null,
+    "dominantCode": "R",
+    "normalized": {
+      "R": 0.2976,
+      "I": 0.2829,
+      "A": 0.0585,
+      "S": 0.0878,
+      "E": 0.1073,
+      "C": 0.1659
+    },
+    "topFields": [
+      "Engineering",
+      "Networking",
+      "Pure & Applied Science"
+    ],
+    "topCareerTitles": [
+      "Mechanical Engineer",
+      "Robotics Engineer",
+      "Civil Engineer",
+      "Network Engineer",
+      "IT Infrastructure Manager",
+      "Network Security Engineer",
+      "Systems Administrator",
+      "Solutions Architect"
+    ],
+    "pathway": [
+      {
+        "code": "R",
+        "fields": [
+          "Engineering",
+          "Networking",
+          "Pure & Applied Science"
+        ],
+        "careers": [
+          [
+            "Mechanical Engineer",
+            "Robotics Engineer",
+            "Civil Engineer"
+          ],
+          [
+            "Network Engineer",
+            "IT Infrastructure Manager",
+            "Network Security Engineer"
+          ],
+          [
+            "Research Scientist",
+            "Biotechnologist",
+            "Geologist"
+          ]
+        ]
+      },
+      {
+        "code": "I",
+        "fields": [
+          "Networking",
+          "Pure & Applied Science",
+          "Tech"
+        ],
+        "careers": [
+          [
+            "Network Engineer",
+            "IT Infrastructure Manager",
+            "Network Security Engineer"
+          ],
+          [
+            "Research Scientist",
+            "Biotechnologist",
+            "Geologist"
+          ],
+          [
+            "Cloud Architect",
+            "Software Developer",
+            "Cybersecurity Analyst"
+          ]
+        ]
+      },
+      {
+        "code": "C",
+        "fields": [
+          "Data Analytics",
+          "Finance",
+          "Accounting"
+        ],
+        "careers": [
+          [
+            "Business Intelligence Analyst",
+            "Market Research Analyst",
+            "Operations Analyst"
+          ],
+          [
+            "Investment Banker",
+            "Portfolio Manager",
+            "Financial Planner"
+          ],
+          [
+            "Forensic Accountant",
+            "Tax Auditor",
+            "Certified Public Accountant"
+          ]
+        ]
+      },
+      {
+        "code": "E",
+        "fields": [
+          "Law",
+          "Business & Management",
+          "Marketing"
+        ],
+        "careers": [
+          [
+            "Paralegal",
+            "Legal Consultant",
+            "Corporate Attorney"
+          ],
+          [
+            "Operations Manager",
+            "Management Consultant",
+            "Project Manager"
+          ],
+          [
+            "Digital Marketing Manager",
+            "Social Media Director",
+            "Brand Strategist"
+          ]
+        ]
+      },
+      {
+        "code": "S",
+        "fields": [
+          "Medical & Health",
+          "Humanities",
+          "Hospitality"
+        ],
+        "careers": [
+          [
+            "Medical Doctor",
+            "Registered Nurse",
+            "Healthcare Administrator"
+          ],
+          [
+            "Psychologist",
+            "Policy Analyst",
+            "Technical Writer"
+          ],
+          [
+            "Event Coordinator",
+            "Hotel Manager",
+            "Tourism Director"
+          ]
+        ]
+      },
+      {
+        "code": "A",
+        "fields": [
+          "Humanities",
+          "Media",
+          "Design"
+        ],
+        "careers": [
+          [
+            "Psychologist",
+            "Policy Analyst",
+            "Technical Writer"
+          ],
+          [
+            "Public Relations Specialist",
+            "Content Producer",
+            "Digital Editor"
+          ],
+          [
+            "Industrial Designer",
+            "UX/UI Designer",
+            "Graphic Designer"
+          ]
+        ]
+      }
+    ]
+  },
+  "R-C-pair-1": {
+    "valid": true,
+    "confidence": "Moderate",
+    "edgeCase": null,
+    "dominantCode": "R",
+    "normalized": {
+      "R": 0.3333,
+      "I": 0.1313,
+      "A": 0.0404,
+      "S": 0.0707,
+      "E": 0.101,
+      "C": 0.3232
+    },
+    "topFields": [
+      "Engineering",
+      "Pure & Applied Science",
+      "Networking"
+    ],
+    "topCareerTitles": [
+      "Civil Engineer",
+      "Mechanical Engineer",
+      "Robotics Engineer",
+      "IT Infrastructure Manager",
+      "Network Security Engineer",
+      "Systems Administrator",
+      "Lab Technician",
+      "IT Support Technician"
+    ],
+    "pathway": [
+      {
+        "code": "R",
+        "fields": [
+          "Engineering",
+          "Pure & Applied Science",
+          "Networking"
+        ],
+        "careers": [
+          [
+            "Civil Engineer",
+            "Mechanical Engineer",
+            "Robotics Engineer"
+          ],
+          [
+            "Lab Technician",
+            "Geologist",
+            "Biotechnologist"
+          ],
+          [
+            "IT Infrastructure Manager",
+            "Network Security Engineer",
+            "Systems Administrator"
+          ]
+        ]
+      },
+      {
+        "code": "C",
+        "fields": [
+          "Data Analytics",
+          "Finance",
+          "Accounting"
+        ],
+        "careers": [
+          [
+            "Operations Analyst",
+            "Business Intelligence Analyst",
+            "Market Research Analyst"
+          ],
+          [
+            "Financial Planner",
+            "Portfolio Manager",
+            "Investment Banker"
+          ],
+          [
+            "Forensic Accountant",
+            "Tax Auditor",
+            "Certified Public Accountant"
+          ]
+        ]
+      },
+      {
+        "code": "I",
+        "fields": [
+          "Pure & Applied Science",
+          "Networking",
+          "Computer Applications"
+        ],
+        "careers": [
+          [
+            "Lab Technician",
+            "Geologist",
+            "Biotechnologist"
+          ],
+          [
+            "IT Infrastructure Manager",
+            "Network Security Engineer",
+            "Systems Administrator"
+          ],
+          [
+            "IT Support Technician",
+            "Hardware Engineer",
+            "Systems Engineer"
+          ]
+        ]
+      },
+      {
+        "code": "E",
+        "fields": [
+          "Law",
+          "Business & Management",
+          "Marketing"
+        ],
+        "careers": [
+          [
+            "Paralegal",
+            "Corporate Attorney",
+            "Legal Consultant"
+          ],
+          [
+            "Operations Manager",
+            "Management Consultant",
+            "Project Manager"
+          ],
+          [
+            "Social Media Director",
+            "Digital Marketing Manager",
+            "Brand Strategist"
+          ]
+        ]
+      },
+      {
+        "code": "S",
+        "fields": [
+          "Medical & Health",
+          "Hospitality",
+          "Humanities"
+        ],
+        "careers": [
+          [
+            "Healthcare Administrator",
+            "Medical Doctor",
+            "Registered Nurse"
+          ],
+          [
+            "Event Coordinator",
+            "Hotel Manager",
+            "Tourism Director"
+          ],
+          [
+            "Psychologist",
+            "Policy Analyst",
+            "Technical Writer"
+          ]
+        ]
+      },
+      {
+        "code": "A",
+        "fields": [
+          "Media",
+          "Humanities",
+          "Design"
+        ],
+        "careers": [
+          [
+            "Public Relations Specialist",
+            "Content Producer",
+            "Digital Editor"
+          ],
+          [
+            "Psychologist",
+            "Policy Analyst",
+            "Technical Writer"
+          ],
+          [
+            "Industrial Designer",
+            "UX/UI Designer",
+            "Graphic Designer"
+          ]
+        ]
+      }
+    ]
+  },
+  "R-C-pair-2": {
+    "valid": true,
+    "confidence": "Moderate",
+    "edgeCase": null,
+    "dominantCode": "C",
+    "normalized": {
+      "R": 0.3093,
+      "I": 0.1134,
+      "A": 0.0619,
+      "S": 0.0825,
+      "E": 0.1134,
+      "C": 0.3196
+    },
+    "topFields": [
+      "Engineering",
+      "Accounting",
+      "Networking"
+    ],
+    "topCareerTitles": [
+      "Civil Engineer",
+      "Forensic Accountant",
+      "Tax Auditor",
+      "Mechanical Engineer",
+      "Robotics Engineer",
+      "IT Infrastructure Manager",
+      "Network Security Engineer",
+      "Certified Public Accountant"
+    ],
+    "pathway": [
+      {
+        "code": "C",
+        "fields": [
+          "Accounting",
+          "Data Analytics",
+          "Finance"
+        ],
+        "careers": [
+          [
+            "Forensic Accountant",
+            "Tax Auditor",
+            "Certified Public Accountant"
+          ],
+          [
+            "Operations Analyst",
+            "Business Intelligence Analyst",
+            "Market Research Analyst"
+          ],
+          [
+            "Financial Planner",
+            "Portfolio Manager",
+            "Investment Banker"
+          ]
+        ]
+      },
+      {
+        "code": "R",
+        "fields": [
+          "Engineering",
+          "Networking",
+          "Pure & Applied Science"
+        ],
+        "careers": [
+          [
+            "Civil Engineer",
+            "Mechanical Engineer",
+            "Robotics Engineer"
+          ],
+          [
+            "IT Infrastructure Manager",
+            "Network Security Engineer",
+            "Systems Administrator"
+          ],
+          [
+            "Lab Technician",
+            "Geologist",
+            "Materials Scientist"
+          ]
+        ]
+      },
+      {
+        "code": "E",
+        "fields": [
+          "Business & Management",
+          "Law",
+          "Marketing"
+        ],
+        "careers": [
+          [
+            "Operations Manager",
+            "Management Consultant",
+            "Project Manager"
+          ],
+          [
+            "Paralegal",
+            "Corporate Attorney",
+            "Legal Consultant"
+          ],
+          [
+            "Social Media Director",
+            "Digital Marketing Manager",
+            "Brand Strategist"
+          ]
+        ]
+      },
+      {
+        "code": "I",
+        "fields": [
+          "Networking",
+          "Pure & Applied Science",
+          "Computer Applications"
+        ],
+        "careers": [
+          [
+            "IT Infrastructure Manager",
+            "Network Security Engineer",
+            "Systems Administrator"
+          ],
+          [
+            "Lab Technician",
+            "Geologist",
+            "Materials Scientist"
+          ],
+          [
+            "IT Support Technician",
+            "Hardware Engineer",
+            "Systems Engineer"
+          ]
+        ]
+      },
+      {
+        "code": "S",
+        "fields": [
+          "Hospitality",
+          "Medical & Health",
+          "Humanities"
+        ],
+        "careers": [
+          [
+            "Event Coordinator",
+            "Hotel Manager",
+            "Tourism Director"
+          ],
+          [
+            "Healthcare Administrator",
+            "Medical Doctor",
+            "Registered Nurse"
+          ],
+          [
+            "Psychologist",
+            "Policy Analyst",
+            "Technical Writer"
+          ]
+        ]
+      },
+      {
+        "code": "A",
+        "fields": [
+          "Media",
+          "Humanities",
+          "Design"
+        ],
+        "careers": [
+          [
+            "Public Relations Specialist",
+            "Content Producer",
+            "Digital Editor"
+          ],
+          [
+            "Psychologist",
+            "Policy Analyst",
+            "Technical Writer"
+          ],
+          [
+            "Industrial Designer",
+            "UX/UI Designer",
+            "Graphic Designer"
+          ]
+        ]
+      }
+    ]
+  },
+  "I-C-pair-1": {
+    "valid": true,
+    "confidence": "Moderate",
+    "edgeCase": null,
+    "dominantCode": "I",
+    "normalized": {
+      "R": 0.0935,
+      "I": 0.3364,
+      "A": 0.0748,
+      "S": 0.0654,
+      "E": 0.1121,
+      "C": 0.3178
+    },
+    "topFields": [
+      "Data Science",
+      "Accounting",
+      "Data Analytics"
+    ],
+    "topCareerTitles": [
+      "Data Scientist",
+      "AI Research Scientist",
+      "Forensic Accountant",
+      "Tax Auditor",
+      "Business Intelligence Analyst",
+      "Market Research Analyst",
+      "Operations Analyst",
+      "Database Administrator"
+    ],
+    "pathway": [
+      {
+        "code": "I",
+        "fields": [
+          "Data Science",
+          "Data Analytics",
+          "Networking"
+        ],
+        "careers": [
+          [
+            "Data Scientist",
+            "AI Research Scientist",
+            "Machine Learning Engineer"
+          ],
+          [
+            "Business Intelligence Analyst",
+            "Market Research Analyst",
+            "Operations Analyst"
+          ],
+          [
+            "Solutions Architect",
+            "Systems Administrator",
+            "Network Engineer"
+          ]
+        ]
+      },
+      {
+        "code": "C",
+        "fields": [
+          "Accounting",
+          "Data Analytics",
+          "Finance"
+        ],
+        "careers": [
+          [
+            "Forensic Accountant",
+            "Tax Auditor",
+            "Certified Public Accountant"
+          ],
+          [
+            "Business Intelligence Analyst",
+            "Market Research Analyst",
+            "Operations Analyst"
+          ],
+          [
+            "Investment Banker",
+            "Portfolio Manager",
+            "Financial Planner"
+          ]
+        ]
+      },
+      {
+        "code": "E",
+        "fields": [
+          "Law",
+          "Business & Management",
+          "Marketing"
+        ],
+        "careers": [
+          [
+            "Paralegal",
+            "Corporate Attorney",
+            "Legal Consultant"
+          ],
+          [
+            "Management Consultant",
+            "Project Manager",
+            "Operations Manager"
+          ],
+          [
+            "Social Media Director",
+            "Brand Strategist",
+            "Digital Marketing Manager"
+          ]
+        ]
+      },
+      {
+        "code": "R",
+        "fields": [
+          "Computer Applications",
+          "Networking",
+          "Pure & Applied Science"
+        ],
+        "careers": [
+          [
+            "Database Administrator",
+            "Mobile App Developer",
+            "Web Developer"
+          ],
+          [
+            "Solutions Architect",
+            "Systems Administrator",
+            "Network Engineer"
+          ],
+          [
+            "Research Scientist",
+            "Biotechnologist",
+            "Environmental Consultant"
+          ]
+        ]
+      },
+      {
+        "code": "A",
+        "fields": [
+          "Media",
+          "Humanities",
+          "Design"
+        ],
+        "careers": [
+          [
+            "Public Relations Specialist",
+            "Content Producer",
+            "Digital Editor"
+          ],
+          [
+            "Psychologist",
+            "Policy Analyst",
+            "Technical Writer"
+          ],
+          [
+            "UX/UI Designer",
+            "Industrial Designer",
+            "Graphic Designer"
+          ]
+        ]
+      },
+      {
+        "code": "S",
+        "fields": [
+          "Medical & Health",
+          "Humanities",
+          "Hospitality"
+        ],
+        "careers": [
+          [
+            "Healthcare Administrator",
+            "Medical Doctor",
+            "Registered Nurse"
+          ],
+          [
+            "Psychologist",
+            "Policy Analyst",
+            "Technical Writer"
+          ],
+          [
+            "Event Coordinator",
+            "Hotel Manager",
+            "Tourism Director"
+          ]
+        ]
+      }
+    ]
+  },
+  "I-C-pair-2": {
+    "valid": true,
+    "confidence": "Moderate",
+    "edgeCase": null,
+    "dominantCode": "I",
+    "normalized": {
+      "R": 0.0887,
+      "I": 0.3251,
+      "A": 0.0985,
+      "S": 0.0788,
+      "E": 0.1084,
+      "C": 0.3005
+    },
+    "topFields": [
+      "Data Science",
+      "Accounting",
+      "Data Analytics"
+    ],
+    "topCareerTitles": [
+      "Data Scientist",
+      "AI Research Scientist",
+      "Forensic Accountant",
+      "Tax Auditor",
+      "Business Intelligence Analyst",
+      "Market Research Analyst",
+      "Operations Analyst",
+      "Database Administrator"
+    ],
+    "pathway": [
+      {
+        "code": "I",
+        "fields": [
+          "Data Science",
+          "Data Analytics",
+          "Networking"
+        ],
+        "careers": [
+          [
+            "Data Scientist",
+            "AI Research Scientist",
+            "Machine Learning Engineer"
+          ],
+          [
+            "Business Intelligence Analyst",
+            "Market Research Analyst",
+            "Operations Analyst"
+          ],
+          [
+            "Solutions Architect",
+            "Systems Administrator",
+            "Network Engineer"
+          ]
+        ]
+      },
+      {
+        "code": "C",
+        "fields": [
+          "Accounting",
+          "Data Analytics",
+          "Finance"
+        ],
+        "careers": [
+          [
+            "Forensic Accountant",
+            "Tax Auditor",
+            "Certified Public Accountant"
+          ],
+          [
+            "Business Intelligence Analyst",
+            "Market Research Analyst",
+            "Operations Analyst"
+          ],
+          [
+            "Investment Banker",
+            "Financial Planner",
+            "Portfolio Manager"
+          ]
+        ]
+      },
+      {
+        "code": "E",
+        "fields": [
+          "Law",
+          "Business & Management",
+          "Marketing"
+        ],
+        "careers": [
+          [
+            "Paralegal",
+            "Corporate Attorney",
+            "Legal Consultant"
+          ],
+          [
+            "Management Consultant",
+            "Project Manager",
+            "Operations Manager"
+          ],
+          [
+            "Social Media Director",
+            "Brand Strategist",
+            "Digital Marketing Manager"
+          ]
+        ]
+      },
+      {
+        "code": "A",
+        "fields": [
+          "Media",
+          "Humanities",
+          "Design"
+        ],
+        "careers": [
+          [
+            "Public Relations Specialist",
+            "Content Producer",
+            "Digital Editor"
+          ],
+          [
+            "Psychologist",
+            "Policy Analyst",
+            "Technical Writer"
+          ],
+          [
+            "UX/UI Designer",
+            "Graphic Designer",
+            "Industrial Designer"
+          ]
+        ]
+      },
+      {
+        "code": "R",
+        "fields": [
+          "Computer Applications",
+          "Networking",
+          "Pure & Applied Science"
+        ],
+        "careers": [
+          [
+            "Database Administrator",
+            "Mobile App Developer",
+            "Web Developer"
+          ],
+          [
+            "Solutions Architect",
+            "Systems Administrator",
+            "Network Engineer"
+          ],
+          [
+            "Research Scientist",
+            "Biotechnologist",
+            "Environmental Consultant"
+          ]
+        ]
+      },
+      {
+        "code": "S",
+        "fields": [
+          "Medical & Health",
+          "Humanities",
+          "Hospitality"
+        ],
+        "careers": [
+          [
+            "Healthcare Administrator",
+            "Medical Doctor",
+            "Registered Nurse"
+          ],
+          [
+            "Psychologist",
+            "Policy Analyst",
+            "Technical Writer"
+          ],
+          [
+            "Event Coordinator",
+            "Hotel Manager",
+            "Tourism Director"
+          ]
+        ]
+      }
+    ]
+  },
+  "I-A-pair-1": {
+    "valid": true,
+    "confidence": "Moderate",
+    "edgeCase": null,
+    "dominantCode": "I",
+    "normalized": {
+      "R": 0.068,
+      "I": 0.3398,
+      "A": 0.3301,
+      "S": 0.0874,
+      "E": 0.0971,
+      "C": 0.0777
+    },
+    "topFields": [
+      "Data Science",
+      "Design",
+      "Humanities"
+    ],
+    "topCareerTitles": [
+      "Graphic Designer",
+      "UX/UI Designer",
+      "Data Scientist",
+      "AI Research Scientist",
+      "Machine Learning Engineer",
+      "Industrial Designer",
+      "Policy Analyst",
+      "Technical Writer"
+    ],
+    "pathway": [
+      {
+        "code": "I",
+        "fields": [
+          "Data Science",
+          "Computer Applications",
+          "Networking"
+        ],
+        "careers": [
+          [
+            "Data Scientist",
+            "AI Research Scientist",
+            "Machine Learning Engineer"
+          ],
+          [
+            "Database Administrator",
+            "Mobile App Developer",
+            "Web Developer"
+          ],
+          [
+            "Network Engineer",
+            "Solutions Architect",
+            "Systems Administrator"
+          ]
+        ]
+      },
+      {
+        "code": "A",
+        "fields": [
+          "Design",
+          "Humanities",
+          "Media"
+        ],
+        "careers": [
+          [
+            "Graphic Designer",
+            "UX/UI Designer",
+            "Industrial Designer"
+          ],
+          [
+            "Policy Analyst",
+            "Technical Writer",
+            "Psychologist"
+          ],
+          [
+            "Public Relations Specialist",
+            "Content Producer",
+            "Digital Editor"
+          ]
+        ]
+      },
+      {
+        "code": "E",
+        "fields": [
+          "Marketing",
+          "Law",
+          "Business & Management"
+        ],
+        "careers": [
+          [
+            "Brand Strategist",
+            "Social Media Director",
+            "Digital Marketing Manager"
+          ],
+          [
+            "Paralegal",
+            "Legal Consultant",
+            "Corporate Attorney"
+          ],
+          [
+            "Management Consultant",
+            "Project Manager",
+            "Operations Manager"
+          ]
+        ]
+      },
+      {
+        "code": "S",
+        "fields": [
+          "Humanities",
+          "Medical & Health",
+          "Hospitality"
+        ],
+        "careers": [
+          [
+            "Policy Analyst",
+            "Technical Writer",
+            "Psychologist"
+          ],
+          [
+            "Medical Doctor",
+            "Registered Nurse",
+            "Healthcare Administrator"
+          ],
+          [
+            "Event Coordinator",
+            "Hotel Manager",
+            "Tourism Director"
+          ]
+        ]
+      },
+      {
+        "code": "C",
+        "fields": [
+          "Data Analytics",
+          "Finance",
+          "Accounting"
+        ],
+        "careers": [
+          [
+            "Business Intelligence Analyst",
+            "Market Research Analyst",
+            "Operations Analyst"
+          ],
+          [
+            "Investment Banker",
+            "Portfolio Manager",
+            "Financial Planner"
+          ],
+          [
+            "Forensic Accountant",
+            "Tax Auditor",
+            "Certified Public Accountant"
+          ]
+        ]
+      },
+      {
+        "code": "R",
+        "fields": [
+          "Computer Applications",
+          "Tech",
+          "Pure & Applied Science"
+        ],
+        "careers": [
+          [
+            "Database Administrator",
+            "Mobile App Developer",
+            "Web Developer"
+          ],
+          [
+            "Cybersecurity Analyst",
+            "Cloud Architect",
+            "Software Developer"
+          ],
+          [
+            "Research Scientist",
+            "Biotechnologist",
+            "Environmental Consultant"
+          ]
+        ]
+      }
+    ]
+  },
+  "I-A-pair-2": {
+    "valid": true,
+    "confidence": "Moderate",
+    "edgeCase": null,
+    "dominantCode": "I",
+    "normalized": {
+      "R": 0.0792,
+      "I": 0.3168,
+      "A": 0.3069,
+      "S": 0.099,
+      "E": 0.1089,
+      "C": 0.0891
+    },
+    "topFields": [
+      "Data Science",
+      "Design",
+      "Humanities"
+    ],
+    "topCareerTitles": [
+      "Graphic Designer",
+      "Data Scientist",
+      "AI Research Scientist",
+      "UX/UI Designer",
+      "Machine Learning Engineer",
+      "Industrial Designer",
+      "Policy Analyst",
+      "Technical Writer"
+    ],
+    "pathway": [
+      {
+        "code": "I",
+        "fields": [
+          "Data Science",
+          "Computer Applications",
+          "Networking"
+        ],
+        "careers": [
+          [
+            "Data Scientist",
+            "AI Research Scientist",
+            "Machine Learning Engineer"
+          ],
+          [
+            "Database Administrator",
+            "Mobile App Developer",
+            "Web Developer"
+          ],
+          [
+            "Network Engineer",
+            "Solutions Architect",
+            "Systems Administrator"
+          ]
+        ]
+      },
+      {
+        "code": "A",
+        "fields": [
+          "Design",
+          "Humanities",
+          "Media"
+        ],
+        "careers": [
+          [
+            "Graphic Designer",
+            "UX/UI Designer",
+            "Industrial Designer"
+          ],
+          [
+            "Policy Analyst",
+            "Technical Writer",
+            "Psychologist"
+          ],
+          [
+            "Public Relations Specialist",
+            "Content Producer",
+            "Digital Editor"
+          ]
+        ]
+      },
+      {
+        "code": "E",
+        "fields": [
+          "Marketing",
+          "Law",
+          "Business & Management"
+        ],
+        "careers": [
+          [
+            "Brand Strategist",
+            "Social Media Director",
+            "Digital Marketing Manager"
+          ],
+          [
+            "Paralegal",
+            "Legal Consultant",
+            "Corporate Attorney"
+          ],
+          [
+            "Management Consultant",
+            "Project Manager",
+            "Operations Manager"
+          ]
+        ]
+      },
+      {
+        "code": "S",
+        "fields": [
+          "Humanities",
+          "Medical & Health",
+          "Hospitality"
+        ],
+        "careers": [
+          [
+            "Policy Analyst",
+            "Technical Writer",
+            "Psychologist"
+          ],
+          [
+            "Medical Doctor",
+            "Registered Nurse",
+            "Healthcare Administrator"
+          ],
+          [
+            "Event Coordinator",
+            "Hotel Manager",
+            "Tourism Director"
+          ]
+        ]
+      },
+      {
+        "code": "C",
+        "fields": [
+          "Data Analytics",
+          "Finance",
+          "Accounting"
+        ],
+        "careers": [
+          [
+            "Business Intelligence Analyst",
+            "Market Research Analyst",
+            "Operations Analyst"
+          ],
+          [
+            "Investment Banker",
+            "Portfolio Manager",
+            "Financial Planner"
+          ],
+          [
+            "Forensic Accountant",
+            "Tax Auditor",
+            "Certified Public Accountant"
+          ]
+        ]
+      },
+      {
+        "code": "R",
+        "fields": [
+          "Computer Applications",
+          "Tech",
+          "Pure & Applied Science"
+        ],
+        "careers": [
+          [
+            "Database Administrator",
+            "Mobile App Developer",
+            "Web Developer"
+          ],
+          [
+            "Cybersecurity Analyst",
+            "Cloud Architect",
+            "Software Developer"
+          ],
+          [
+            "Research Scientist",
+            "Biotechnologist",
+            "Environmental Consultant"
+          ]
+        ]
+      }
+    ]
+  },
+  "A-E-pair-1": {
+    "valid": true,
+    "confidence": "Moderate",
+    "edgeCase": null,
+    "dominantCode": "A",
+    "normalized": {
+      "R": 0.055,
+      "I": 0.1101,
+      "A": 0.3303,
+      "S": 0.0917,
+      "E": 0.3119,
+      "C": 0.1009
+    },
+    "topFields": [
+      "Media",
+      "Marketing",
+      "Design"
+    ],
+    "topCareerTitles": [
+      "Brand Strategist",
+      "Social Media Director",
+      "Graphic Designer",
+      "Digital Marketing Manager",
+      "Content Producer",
+      "Digital Editor",
+      "Public Relations Specialist",
+      "UX/UI Designer"
+    ],
+    "pathway": [
+      {
+        "code": "A",
+        "fields": [
+          "Media",
+          "Design",
+          "Humanities"
+        ],
+        "careers": [
+          [
+            "Content Producer",
+            "Digital Editor",
+            "Public Relations Specialist"
+          ],
+          [
+            "Graphic Designer",
+            "UX/UI Designer",
+            "Industrial Designer"
+          ],
+          [
+            "Policy Analyst",
+            "Technical Writer",
+            "Psychologist"
+          ]
+        ]
+      },
+      {
+        "code": "E",
+        "fields": [
+          "Marketing",
+          "Business & Management",
+          "Law"
+        ],
+        "careers": [
+          [
+            "Brand Strategist",
+            "Social Media Director",
+            "Digital Marketing Manager"
+          ],
+          [
+            "Management Consultant",
+            "Project Manager",
+            "Operations Manager"
+          ],
+          [
+            "Legal Consultant",
+            "Corporate Attorney",
+            "Paralegal"
+          ]
+        ]
+      },
+      {
+        "code": "I",
+        "fields": [
+          "Data Science",
+          "Tech",
+          "Networking"
+        ],
+        "careers": [
+          [
+            "Data Scientist",
+            "AI Research Scientist",
+            "Machine Learning Engineer"
+          ],
+          [
+            "Cybersecurity Analyst",
+            "Cloud Architect",
+            "Software Developer"
+          ],
+          [
+            "Solutions Architect",
+            "Systems Administrator",
+            "Network Engineer"
+          ]
+        ]
+      },
+      {
+        "code": "C",
+        "fields": [
+          "Finance",
+          "Data Analytics",
+          "Accounting"
+        ],
+        "careers": [
+          [
+            "Portfolio Manager",
+            "Investment Banker",
+            "Financial Planner"
+          ],
+          [
+            "Business Intelligence Analyst",
+            "Market Research Analyst",
+            "Operations Analyst"
+          ],
+          [
+            "Certified Public Accountant",
+            "Forensic Accountant",
+            "Tax Auditor"
+          ]
+        ]
+      },
+      {
+        "code": "S",
+        "fields": [
+          "Hospitality",
+          "Humanities",
+          "Medical & Health"
+        ],
+        "careers": [
+          [
+            "Event Coordinator",
+            "Hotel Manager",
+            "Tourism Director"
+          ],
+          [
+            "Policy Analyst",
+            "Technical Writer",
+            "Psychologist"
+          ],
+          [
+            "Healthcare Administrator",
+            "Medical Doctor",
+            "Registered Nurse"
+          ]
+        ]
+      },
+      {
+        "code": "R",
+        "fields": [
+          "Tech",
+          "Computer Applications",
+          "Networking"
+        ],
+        "careers": [
+          [
+            "Cybersecurity Analyst",
+            "Cloud Architect",
+            "Software Developer"
+          ],
+          [
+            "Database Administrator",
+            "Systems Engineer",
+            "IT Support Technician"
+          ],
+          [
+            "Solutions Architect",
+            "Systems Administrator",
+            "Network Engineer"
+          ]
+        ]
+      }
+    ]
+  },
+  "A-E-pair-2": {
+    "valid": true,
+    "confidence": "Moderate",
+    "edgeCase": null,
+    "dominantCode": "A",
+    "normalized": {
+      "R": 0.0651,
+      "I": 0.1023,
+      "A": 0.307,
+      "S": 0.1116,
+      "E": 0.293,
+      "C": 0.1209
+    },
+    "topFields": [
+      "Media",
+      "Marketing",
+      "Design"
+    ],
+    "topCareerTitles": [
+      "Brand Strategist",
+      "Social Media Director",
+      "Graphic Designer",
+      "Digital Marketing Manager",
+      "Content Producer",
+      "Digital Editor",
+      "Public Relations Specialist",
+      "UX/UI Designer"
+    ],
+    "pathway": [
+      {
+        "code": "A",
+        "fields": [
+          "Media",
+          "Design",
+          "Humanities"
+        ],
+        "careers": [
+          [
+            "Content Producer",
+            "Digital Editor",
+            "Public Relations Specialist"
+          ],
+          [
+            "Graphic Designer",
+            "UX/UI Designer",
+            "Industrial Designer"
+          ],
+          [
+            "Policy Analyst",
+            "Technical Writer",
+            "Psychologist"
+          ]
+        ]
+      },
+      {
+        "code": "E",
+        "fields": [
+          "Marketing",
+          "Business & Management",
+          "Law"
+        ],
+        "careers": [
+          [
+            "Brand Strategist",
+            "Social Media Director",
+            "Digital Marketing Manager"
+          ],
+          [
+            "Management Consultant",
+            "Project Manager",
+            "Operations Manager"
+          ],
+          [
+            "Legal Consultant",
+            "Corporate Attorney",
+            "Paralegal"
+          ]
+        ]
+      },
+      {
+        "code": "C",
+        "fields": [
+          "Finance",
+          "Data Analytics",
+          "Accounting"
+        ],
+        "careers": [
+          [
+            "Portfolio Manager",
+            "Investment Banker",
+            "Financial Planner"
+          ],
+          [
+            "Operations Analyst",
+            "Business Intelligence Analyst",
+            "Market Research Analyst"
+          ],
+          [
+            "Certified Public Accountant",
+            "Forensic Accountant",
+            "Tax Auditor"
+          ]
+        ]
+      },
+      {
+        "code": "S",
+        "fields": [
+          "Hospitality",
+          "Humanities",
+          "Medical & Health"
+        ],
+        "careers": [
+          [
+            "Event Coordinator",
+            "Hotel Manager",
+            "Tourism Director"
+          ],
+          [
+            "Policy Analyst",
+            "Technical Writer",
+            "Psychologist"
+          ],
+          [
+            "Healthcare Administrator",
+            "Medical Doctor",
+            "Registered Nurse"
+          ]
+        ]
+      },
+      {
+        "code": "I",
+        "fields": [
+          "Data Science",
+          "Data Analytics",
+          "Networking"
+        ],
+        "careers": [
+          [
+            "AI Research Scientist",
+            "Data Scientist",
+            "Machine Learning Engineer"
+          ],
+          [
+            "Operations Analyst",
+            "Business Intelligence Analyst",
+            "Market Research Analyst"
+          ],
+          [
+            "Solutions Architect",
+            "Systems Administrator",
+            "IT Infrastructure Manager"
+          ]
+        ]
+      },
+      {
+        "code": "R",
+        "fields": [
+          "Networking",
+          "Tech",
+          "Computer Applications"
+        ],
+        "careers": [
+          [
+            "Solutions Architect",
+            "Systems Administrator",
+            "IT Infrastructure Manager"
+          ],
+          [
+            "Cybersecurity Analyst",
+            "Cloud Architect",
+            "Software Developer"
+          ],
+          [
+            "Database Administrator",
+            "Systems Engineer",
+            "IT Support Technician"
+          ]
+        ]
+      }
+    ]
+  },
+  "S-E-pair-1": {
+    "valid": true,
+    "confidence": "Moderate",
+    "edgeCase": null,
+    "dominantCode": "S",
+    "normalized": {
+      "R": 0.0734,
+      "I": 0.0826,
+      "A": 0.0917,
+      "S": 0.3257,
+      "E": 0.3165,
+      "C": 0.1101
+    },
+    "topFields": [
+      "Hospitality",
+      "Business & Management",
+      "Marketing"
+    ],
+    "topCareerTitles": [
+      "Event Coordinator",
+      "Hotel Manager",
+      "Tourism Director",
+      "Digital Marketing Manager",
+      "Management Consultant",
+      "Project Manager",
+      "Social Media Director",
+      "Operations Manager"
+    ],
+    "pathway": [
+      {
+        "code": "S",
+        "fields": [
+          "Hospitality",
+          "Humanities",
+          "Medical & Health"
+        ],
+        "careers": [
+          [
+            "Event Coordinator",
+            "Hotel Manager",
+            "Tourism Director"
+          ],
+          [
+            "Psychologist",
+            "Policy Analyst",
+            "Technical Writer"
+          ],
+          [
+            "Healthcare Administrator",
+            "Medical Doctor",
+            "Registered Nurse"
+          ]
+        ]
+      },
+      {
+        "code": "E",
+        "fields": [
+          "Business & Management",
+          "Marketing",
+          "Law"
+        ],
+        "careers": [
+          [
+            "Management Consultant",
+            "Project Manager",
+            "Operations Manager"
+          ],
+          [
+            "Digital Marketing Manager",
+            "Social Media Director",
+            "Brand Strategist"
+          ],
+          [
+            "Legal Consultant",
+            "Corporate Attorney",
+            "Paralegal"
+          ]
+        ]
+      },
+      {
+        "code": "C",
+        "fields": [
+          "Finance",
+          "Accounting",
+          "Data Analytics"
+        ],
+        "careers": [
+          [
+            "Portfolio Manager",
+            "Financial Planner",
+            "Investment Banker"
+          ],
+          [
+            "Certified Public Accountant",
+            "Forensic Accountant",
+            "Tax Auditor"
+          ],
+          [
+            "Operations Analyst",
+            "Business Intelligence Analyst",
+            "Market Research Analyst"
+          ]
+        ]
+      },
+      {
+        "code": "A",
+        "fields": [
+          "Media",
+          "Humanities",
+          "Design"
+        ],
+        "careers": [
+          [
+            "Content Producer",
+            "Digital Editor",
+            "Public Relations Specialist"
+          ],
+          [
+            "Psychologist",
+            "Policy Analyst",
+            "Technical Writer"
+          ],
+          [
+            "UX/UI Designer",
+            "Graphic Designer",
+            "Industrial Designer"
+          ]
+        ]
+      },
+      {
+        "code": "I",
+        "fields": [
+          "Data Analytics",
+          "Data Science",
+          "Networking"
+        ],
+        "careers": [
+          [
+            "Operations Analyst",
+            "Business Intelligence Analyst",
+            "Market Research Analyst"
+          ],
+          [
+            "AI Research Scientist",
+            "Data Scientist",
+            "Machine Learning Engineer"
+          ],
+          [
+            "Solutions Architect",
+            "Systems Administrator",
+            "IT Infrastructure Manager"
+          ]
+        ]
+      },
+      {
+        "code": "R",
+        "fields": [
+          "Networking",
+          "Tech",
+          "Computer Applications"
+        ],
+        "careers": [
+          [
+            "Solutions Architect",
+            "Systems Administrator",
+            "IT Infrastructure Manager"
+          ],
+          [
+            "Cybersecurity Analyst",
+            "Cloud Architect",
+            "Software Developer"
+          ],
+          [
+            "IT Support Technician",
+            "Systems Engineer",
+            "Database Administrator"
+          ]
+        ]
+      }
+    ]
+  },
+  "S-E-pair-2": {
+    "valid": true,
+    "confidence": "Moderate",
+    "edgeCase": null,
+    "dominantCode": "E",
+    "normalized": {
+      "R": 0.0642,
+      "I": 0.1009,
+      "A": 0.1101,
+      "S": 0.2936,
+      "E": 0.3028,
+      "C": 0.1284
+    },
+    "topFields": [
+      "Hospitality",
+      "Business & Management",
+      "Marketing"
+    ],
+    "topCareerTitles": [
+      "Event Coordinator",
+      "Hotel Manager",
+      "Tourism Director",
+      "Digital Marketing Manager",
+      "Management Consultant",
+      "Project Manager",
+      "Social Media Director",
+      "Operations Manager"
+    ],
+    "pathway": [
+      {
+        "code": "E",
+        "fields": [
+          "Business & Management",
+          "Marketing",
+          "Law"
+        ],
+        "careers": [
+          [
+            "Management Consultant",
+            "Project Manager",
+            "Operations Manager"
+          ],
+          [
+            "Digital Marketing Manager",
+            "Social Media Director",
+            "Brand Strategist"
+          ],
+          [
+            "Legal Consultant",
+            "Corporate Attorney",
+            "Paralegal"
+          ]
+        ]
+      },
+      {
+        "code": "S",
+        "fields": [
+          "Hospitality",
+          "Humanities",
+          "Medical & Health"
+        ],
+        "careers": [
+          [
+            "Event Coordinator",
+            "Hotel Manager",
+            "Tourism Director"
+          ],
+          [
+            "Psychologist",
+            "Policy Analyst",
+            "Technical Writer"
+          ],
+          [
+            "Healthcare Administrator",
+            "Medical Doctor",
+            "Registered Nurse"
+          ]
+        ]
+      },
+      {
+        "code": "C",
+        "fields": [
+          "Finance",
+          "Accounting",
+          "Data Analytics"
+        ],
+        "careers": [
+          [
+            "Portfolio Manager",
+            "Financial Planner",
+            "Investment Banker"
+          ],
+          [
+            "Certified Public Accountant",
+            "Forensic Accountant",
+            "Tax Auditor"
+          ],
+          [
+            "Operations Analyst",
+            "Business Intelligence Analyst",
+            "Market Research Analyst"
+          ]
+        ]
+      },
+      {
+        "code": "A",
+        "fields": [
+          "Media",
+          "Humanities",
+          "Design"
+        ],
+        "careers": [
+          [
+            "Content Producer",
+            "Digital Editor",
+            "Public Relations Specialist"
+          ],
+          [
+            "Psychologist",
+            "Policy Analyst",
+            "Technical Writer"
+          ],
+          [
+            "UX/UI Designer",
+            "Graphic Designer",
+            "Industrial Designer"
+          ]
+        ]
+      },
+      {
+        "code": "I",
+        "fields": [
+          "Data Analytics",
+          "Data Science",
+          "Networking"
+        ],
+        "careers": [
+          [
+            "Operations Analyst",
+            "Business Intelligence Analyst",
+            "Market Research Analyst"
+          ],
+          [
+            "AI Research Scientist",
+            "Data Scientist",
+            "Machine Learning Engineer"
+          ],
+          [
+            "Solutions Architect",
+            "Systems Administrator",
+            "IT Infrastructure Manager"
+          ]
+        ]
+      },
+      {
+        "code": "R",
+        "fields": [
+          "Networking",
+          "Tech",
+          "Computer Applications"
+        ],
+        "careers": [
+          [
+            "Solutions Architect",
+            "Systems Administrator",
+            "IT Infrastructure Manager"
+          ],
+          [
+            "Cybersecurity Analyst",
+            "Cloud Architect",
+            "Software Developer"
+          ],
+          [
+            "Database Administrator",
+            "IT Support Technician",
+            "Systems Engineer"
+          ]
+        ]
+      }
+    ]
+  },
+  "S-I-pair-1": {
+    "valid": true,
+    "confidence": "Moderate",
+    "edgeCase": null,
+    "dominantCode": "S",
+    "normalized": {
+      "R": 0.0826,
+      "I": 0.3028,
+      "A": 0.1009,
+      "S": 0.3119,
+      "E": 0.1101,
+      "C": 0.0917
+    },
+    "topFields": [
+      "Medical & Health",
+      "Humanities",
+      "Data Science"
+    ],
+    "topCareerTitles": [
+      "Medical Doctor",
+      "Registered Nurse",
+      "Psychologist",
+      "Healthcare Administrator",
+      "Policy Analyst",
+      "Technical Writer",
+      "Data Scientist",
+      "AI Research Scientist"
+    ],
+    "pathway": [
+      {
+        "code": "S",
+        "fields": [
+          "Medical & Health",
+          "Humanities",
+          "Hospitality"
+        ],
+        "careers": [
+          [
+            "Medical Doctor",
+            "Registered Nurse",
+            "Healthcare Administrator"
+          ],
+          [
+            "Psychologist",
+            "Policy Analyst",
+            "Technical Writer"
+          ],
+          [
+            "Event Coordinator",
+            "Hotel Manager",
+            "Tourism Director"
+          ]
+        ]
+      },
+      {
+        "code": "I",
+        "fields": [
+          "Data Science",
+          "Pure & Applied Science",
+          "Networking"
+        ],
+        "careers": [
+          [
+            "Data Scientist",
+            "AI Research Scientist",
+            "Machine Learning Engineer"
+          ],
+          [
+            "Research Scientist",
+            "Biotechnologist",
+            "Environmental Consultant"
+          ],
+          [
+            "Network Engineer",
+            "Solutions Architect",
+            "Systems Administrator"
+          ]
+        ]
+      },
+      {
+        "code": "E",
+        "fields": [
+          "Law",
+          "Marketing",
+          "Business & Management"
+        ],
+        "careers": [
+          [
+            "Paralegal",
+            "Legal Consultant",
+            "Corporate Attorney"
+          ],
+          [
+            "Digital Marketing Manager",
+            "Social Media Director",
+            "Brand Strategist"
+          ],
+          [
+            "Management Consultant",
+            "Project Manager",
+            "Operations Manager"
+          ]
+        ]
+      },
+      {
+        "code": "A",
+        "fields": [
+          "Humanities",
+          "Design",
+          "Media"
+        ],
+        "careers": [
+          [
+            "Psychologist",
+            "Policy Analyst",
+            "Technical Writer"
+          ],
+          [
+            "UX/UI Designer",
+            "Graphic Designer",
+            "Industrial Designer"
+          ],
+          [
+            "Content Producer",
+            "Digital Editor",
+            "Public Relations Specialist"
+          ]
+        ]
+      },
+      {
+        "code": "C",
+        "fields": [
+          "Data Analytics",
+          "Finance",
+          "Accounting"
+        ],
+        "careers": [
+          [
+            "Business Intelligence Analyst",
+            "Market Research Analyst",
+            "Operations Analyst"
+          ],
+          [
+            "Financial Planner",
+            "Investment Banker",
+            "Portfolio Manager"
+          ],
+          [
+            "Forensic Accountant",
+            "Tax Auditor",
+            "Certified Public Accountant"
+          ]
+        ]
+      },
+      {
+        "code": "R",
+        "fields": [
+          "Pure & Applied Science",
+          "Tech",
+          "Networking"
+        ],
+        "careers": [
+          [
+            "Research Scientist",
+            "Biotechnologist",
+            "Environmental Consultant"
+          ],
+          [
+            "Cybersecurity Analyst",
+            "Cloud Architect",
+            "Software Developer"
+          ],
+          [
+            "Network Engineer",
+            "Solutions Architect",
+            "Systems Administrator"
+          ]
+        ]
+      }
+    ]
+  },
+  "S-I-pair-2": {
+    "valid": true,
+    "confidence": "Moderate",
+    "edgeCase": null,
+    "dominantCode": "S",
+    "normalized": {
+      "R": 0.0935,
+      "I": 0.2804,
+      "A": 0.1121,
+      "S": 0.2897,
+      "E": 0.1215,
+      "C": 0.1028
+    },
+    "topFields": [
+      "Medical & Health",
+      "Humanities",
+      "Data Science"
+    ],
+    "topCareerTitles": [
+      "Medical Doctor",
+      "Registered Nurse",
+      "Psychologist",
+      "Healthcare Administrator",
+      "Policy Analyst",
+      "Technical Writer",
+      "Data Scientist",
+      "AI Research Scientist"
+    ],
+    "pathway": [
+      {
+        "code": "S",
+        "fields": [
+          "Medical & Health",
+          "Humanities",
+          "Hospitality"
+        ],
+        "careers": [
+          [
+            "Medical Doctor",
+            "Registered Nurse",
+            "Healthcare Administrator"
+          ],
+          [
+            "Psychologist",
+            "Policy Analyst",
+            "Technical Writer"
+          ],
+          [
+            "Event Coordinator",
+            "Hotel Manager",
+            "Tourism Director"
+          ]
+        ]
+      },
+      {
+        "code": "I",
+        "fields": [
+          "Data Science",
+          "Data Analytics",
+          "Networking"
+        ],
+        "careers": [
+          [
+            "Data Scientist",
+            "AI Research Scientist",
+            "Machine Learning Engineer"
+          ],
+          [
+            "Business Intelligence Analyst",
+            "Market Research Analyst",
+            "Operations Analyst"
+          ],
+          [
+            "Network Engineer",
+            "Solutions Architect",
+            "Systems Administrator"
+          ]
+        ]
+      },
+      {
+        "code": "E",
+        "fields": [
+          "Law",
+          "Marketing",
+          "Business & Management"
+        ],
+        "careers": [
+          [
+            "Paralegal",
+            "Legal Consultant",
+            "Corporate Attorney"
+          ],
+          [
+            "Digital Marketing Manager",
+            "Social Media Director",
+            "Brand Strategist"
+          ],
+          [
+            "Management Consultant",
+            "Project Manager",
+            "Operations Manager"
+          ]
+        ]
+      },
+      {
+        "code": "A",
+        "fields": [
+          "Humanities",
+          "Design",
+          "Media"
+        ],
+        "careers": [
+          [
+            "Psychologist",
+            "Policy Analyst",
+            "Technical Writer"
+          ],
+          [
+            "UX/UI Designer",
+            "Graphic Designer",
+            "Industrial Designer"
+          ],
+          [
+            "Content Producer",
+            "Digital Editor",
+            "Public Relations Specialist"
+          ]
+        ]
+      },
+      {
+        "code": "C",
+        "fields": [
+          "Data Analytics",
+          "Finance",
+          "Accounting"
+        ],
+        "careers": [
+          [
+            "Business Intelligence Analyst",
+            "Market Research Analyst",
+            "Operations Analyst"
+          ],
+          [
+            "Financial Planner",
+            "Investment Banker",
+            "Portfolio Manager"
+          ],
+          [
+            "Forensic Accountant",
+            "Tax Auditor",
+            "Certified Public Accountant"
+          ]
+        ]
+      },
+      {
+        "code": "R",
+        "fields": [
+          "Pure & Applied Science",
+          "Tech",
+          "Networking"
+        ],
+        "careers": [
+          [
+            "Research Scientist",
+            "Biotechnologist",
+            "Environmental Consultant"
+          ],
+          [
+            "Cybersecurity Analyst",
+            "Cloud Architect",
+            "Software Developer"
+          ],
+          [
+            "Network Engineer",
+            "Solutions Architect",
+            "Systems Administrator"
+          ]
+        ]
+      }
+    ]
+  },
+  "balanced-high-1": {
+    "valid": true,
+    "confidence": "Low",
+    "edgeCase": "flat_profile",
+    "dominantCode": "R",
+    "normalized": {
+      "R": 0.1758,
+      "I": 0.1722,
+      "A": 0.1685,
+      "S": 0.1648,
+      "E": 0.1612,
+      "C": 0.1575
+    },
+    "topFields": [
+      "Accounting",
+      "Business & Management",
+      "Computer Applications"
+    ],
+    "topCareerTitles": [
+      "Mechanical Engineer",
+      "Robotics Engineer",
+      "Civil Engineer",
+      "Geologist",
+      "Lab Technician",
+      "Materials Scientist",
+      "Research Scientist",
+      "Biotechnologist"
+    ],
+    "pathway": [
+      {
+        "code": "R",
+        "fields": [
+          "Engineering",
+          "Pure & Applied Science",
+          "Computer Applications"
+        ],
+        "careers": [
+          [
+            "Mechanical Engineer",
+            "Robotics Engineer",
+            "Civil Engineer"
+          ],
+          [
+            "Geologist",
+            "Lab Technician",
+            "Materials Scientist"
+          ],
+          [
+            "Mobile App Developer",
+            "Web Developer",
+            "Hardware Engineer"
+          ]
+        ]
+      },
+      {
+        "code": "I",
+        "fields": [
+          "Pure & Applied Science",
+          "Computer Applications",
+          "Networking"
+        ],
+        "careers": [
+          [
+            "Geologist",
+            "Lab Technician",
+            "Materials Scientist"
+          ],
+          [
+            "Mobile App Developer",
+            "Web Developer",
+            "Hardware Engineer"
+          ],
+          [
+            "Network Engineer",
+            "IT Infrastructure Manager",
+            "Network Security Engineer"
+          ]
+        ]
+      },
+      {
+        "code": "A",
+        "fields": [
+          "Design",
+          "Humanities",
+          "Media"
+        ],
+        "careers": [
+          [
+            "Industrial Designer",
+            "UX/UI Designer",
+            "Graphic Designer"
+          ],
+          [
+            "Psychologist",
+            "Policy Analyst",
+            "Technical Writer"
+          ],
+          [
+            "Public Relations Specialist",
+            "Content Producer",
+            "Digital Editor"
+          ]
+        ]
+      },
+      {
+        "code": "S",
+        "fields": [
+          "Humanities",
+          "Medical & Health",
+          "Hospitality"
+        ],
+        "careers": [
+          [
+            "Psychologist",
+            "Policy Analyst",
+            "Technical Writer"
+          ],
+          [
+            "Medical Doctor",
+            "Registered Nurse",
+            "Healthcare Administrator"
+          ],
+          [
+            "Event Coordinator",
+            "Hotel Manager",
+            "Tourism Director"
+          ]
+        ]
+      },
+      {
+        "code": "E",
+        "fields": [
+          "Marketing",
+          "Law",
+          "Business & Management"
+        ],
+        "careers": [
+          [
+            "Brand Strategist",
+            "Digital Marketing Manager",
+            "Social Media Director"
+          ],
+          [
+            "Legal Consultant",
+            "Paralegal",
+            "Corporate Attorney"
+          ],
+          [
+            "Operations Manager",
+            "Management Consultant",
+            "Project Manager"
+          ]
+        ]
+      },
+      {
+        "code": "C",
+        "fields": [
+          "Data Analytics",
+          "Finance",
+          "Accounting"
+        ],
+        "careers": [
+          [
+            "Business Intelligence Analyst",
+            "Market Research Analyst",
+            "Operations Analyst"
+          ],
+          [
+            "Investment Banker",
+            "Financial Planner",
+            "Portfolio Manager"
+          ],
+          [
+            "Forensic Accountant",
+            "Tax Auditor",
+            "Certified Public Accountant"
+          ]
+        ]
+      }
+    ]
+  },
+  "balanced-high-2": {
+    "valid": true,
+    "confidence": "Low",
+    "edgeCase": "flat_profile",
+    "dominantCode": "R",
+    "normalized": {
+      "R": 0.1751,
+      "I": 0.1717,
+      "A": 0.1684,
+      "S": 0.165,
+      "E": 0.1616,
+      "C": 0.1582
+    },
+    "topFields": [
+      "Accounting",
+      "Business & Management",
+      "Computer Applications"
+    ],
+    "topCareerTitles": [
+      "Mechanical Engineer",
+      "Robotics Engineer",
+      "Civil Engineer",
+      "Geologist",
+      "Lab Technician",
+      "Materials Scientist",
+      "Research Scientist",
+      "Biotechnologist"
+    ],
+    "pathway": [
+      {
+        "code": "R",
+        "fields": [
+          "Engineering",
+          "Pure & Applied Science",
+          "Computer Applications"
+        ],
+        "careers": [
+          [
+            "Mechanical Engineer",
+            "Robotics Engineer",
+            "Civil Engineer"
+          ],
+          [
+            "Geologist",
+            "Lab Technician",
+            "Materials Scientist"
+          ],
+          [
+            "Mobile App Developer",
+            "Web Developer",
+            "Hardware Engineer"
+          ]
+        ]
+      },
+      {
+        "code": "I",
+        "fields": [
+          "Pure & Applied Science",
+          "Computer Applications",
+          "Networking"
+        ],
+        "careers": [
+          [
+            "Geologist",
+            "Lab Technician",
+            "Materials Scientist"
+          ],
+          [
+            "Mobile App Developer",
+            "Web Developer",
+            "Hardware Engineer"
+          ],
+          [
+            "Network Engineer",
+            "IT Infrastructure Manager",
+            "Network Security Engineer"
+          ]
+        ]
+      },
+      {
+        "code": "A",
+        "fields": [
+          "Design",
+          "Humanities",
+          "Media"
+        ],
+        "careers": [
+          [
+            "Industrial Designer",
+            "UX/UI Designer",
+            "Graphic Designer"
+          ],
+          [
+            "Psychologist",
+            "Policy Analyst",
+            "Technical Writer"
+          ],
+          [
+            "Public Relations Specialist",
+            "Content Producer",
+            "Digital Editor"
+          ]
+        ]
+      },
+      {
+        "code": "S",
+        "fields": [
+          "Humanities",
+          "Medical & Health",
+          "Hospitality"
+        ],
+        "careers": [
+          [
+            "Psychologist",
+            "Policy Analyst",
+            "Technical Writer"
+          ],
+          [
+            "Medical Doctor",
+            "Registered Nurse",
+            "Healthcare Administrator"
+          ],
+          [
+            "Event Coordinator",
+            "Hotel Manager",
+            "Tourism Director"
+          ]
+        ]
+      },
+      {
+        "code": "E",
+        "fields": [
+          "Marketing",
+          "Law",
+          "Business & Management"
+        ],
+        "careers": [
+          [
+            "Brand Strategist",
+            "Digital Marketing Manager",
+            "Social Media Director"
+          ],
+          [
+            "Legal Consultant",
+            "Paralegal",
+            "Corporate Attorney"
+          ],
+          [
+            "Operations Manager",
+            "Management Consultant",
+            "Project Manager"
+          ]
+        ]
+      },
+      {
+        "code": "C",
+        "fields": [
+          "Data Analytics",
+          "Finance",
+          "Accounting"
+        ],
+        "careers": [
+          [
+            "Business Intelligence Analyst",
+            "Market Research Analyst",
+            "Operations Analyst"
+          ],
+          [
+            "Investment Banker",
+            "Financial Planner",
+            "Portfolio Manager"
+          ],
+          [
+            "Forensic Accountant",
+            "Tax Auditor",
+            "Certified Public Accountant"
+          ]
+        ]
+      }
+    ]
+  },
+  "balanced-mid-1": {
+    "valid": true,
+    "confidence": "Low",
+    "edgeCase": "flat_profile",
+    "dominantCode": "R",
+    "normalized": {
+      "R": 0.1799,
+      "I": 0.1746,
+      "A": 0.1693,
+      "S": 0.164,
+      "E": 0.1587,
+      "C": 0.1534
+    },
+    "topFields": [
+      "Accounting",
+      "Business & Management",
+      "Computer Applications"
+    ],
+    "topCareerTitles": [
+      "Mechanical Engineer",
+      "Robotics Engineer",
+      "Civil Engineer",
+      "Geologist",
+      "Lab Technician",
+      "Materials Scientist",
+      "Research Scientist",
+      "Biotechnologist"
+    ],
+    "pathway": [
+      {
+        "code": "R",
+        "fields": [
+          "Engineering",
+          "Pure & Applied Science",
+          "Computer Applications"
+        ],
+        "careers": [
+          [
+            "Mechanical Engineer",
+            "Robotics Engineer",
+            "Civil Engineer"
+          ],
+          [
+            "Geologist",
+            "Lab Technician",
+            "Materials Scientist"
+          ],
+          [
+            "Mobile App Developer",
+            "Web Developer",
+            "Hardware Engineer"
+          ]
+        ]
+      },
+      {
+        "code": "I",
+        "fields": [
+          "Pure & Applied Science",
+          "Computer Applications",
+          "Networking"
+        ],
+        "careers": [
+          [
+            "Geologist",
+            "Lab Technician",
+            "Materials Scientist"
+          ],
+          [
+            "Mobile App Developer",
+            "Web Developer",
+            "Hardware Engineer"
+          ],
+          [
+            "Network Engineer",
+            "IT Infrastructure Manager",
+            "Network Security Engineer"
+          ]
+        ]
+      },
+      {
+        "code": "A",
+        "fields": [
+          "Design",
+          "Humanities",
+          "Media"
+        ],
+        "careers": [
+          [
+            "Industrial Designer",
+            "UX/UI Designer",
+            "Graphic Designer"
+          ],
+          [
+            "Psychologist",
+            "Policy Analyst",
+            "Technical Writer"
+          ],
+          [
+            "Public Relations Specialist",
+            "Content Producer",
+            "Digital Editor"
+          ]
+        ]
+      },
+      {
+        "code": "S",
+        "fields": [
+          "Humanities",
+          "Medical & Health",
+          "Hospitality"
+        ],
+        "careers": [
+          [
+            "Psychologist",
+            "Policy Analyst",
+            "Technical Writer"
+          ],
+          [
+            "Medical Doctor",
+            "Registered Nurse",
+            "Healthcare Administrator"
+          ],
+          [
+            "Event Coordinator",
+            "Hotel Manager",
+            "Tourism Director"
+          ]
+        ]
+      },
+      {
+        "code": "E",
+        "fields": [
+          "Marketing",
+          "Law",
+          "Business & Management"
+        ],
+        "careers": [
+          [
+            "Brand Strategist",
+            "Digital Marketing Manager",
+            "Social Media Director"
+          ],
+          [
+            "Legal Consultant",
+            "Paralegal",
+            "Corporate Attorney"
+          ],
+          [
+            "Operations Manager",
+            "Management Consultant",
+            "Project Manager"
+          ]
+        ]
+      },
+      {
+        "code": "C",
+        "fields": [
+          "Data Analytics",
+          "Finance",
+          "Accounting"
+        ],
+        "careers": [
+          [
+            "Business Intelligence Analyst",
+            "Market Research Analyst",
+            "Operations Analyst"
+          ],
+          [
+            "Investment Banker",
+            "Financial Planner",
+            "Portfolio Manager"
+          ],
+          [
+            "Forensic Accountant",
+            "Tax Auditor",
+            "Certified Public Accountant"
+          ]
+        ]
+      }
+    ]
+  },
+  "balanced-mid-2": {
+    "valid": true,
+    "confidence": "Moderate",
+    "edgeCase": null,
+    "dominantCode": "R",
+    "normalized": {
+      "R": 0.1844,
+      "I": 0.1773,
+      "A": 0.1702,
+      "S": 0.1631,
+      "E": 0.156,
+      "C": 0.1489
+    },
+    "topFields": [
+      "Engineering",
+      "Pure & Applied Science",
+      "Computer Applications"
+    ],
+    "topCareerTitles": [
+      "Mechanical Engineer",
+      "Robotics Engineer",
+      "Civil Engineer",
+      "Geologist",
+      "Lab Technician",
+      "Materials Scientist",
+      "Research Scientist",
+      "Biotechnologist"
+    ],
+    "pathway": [
+      {
+        "code": "R",
+        "fields": [
+          "Engineering",
+          "Pure & Applied Science",
+          "Computer Applications"
+        ],
+        "careers": [
+          [
+            "Mechanical Engineer",
+            "Robotics Engineer",
+            "Civil Engineer"
+          ],
+          [
+            "Geologist",
+            "Lab Technician",
+            "Materials Scientist"
+          ],
+          [
+            "Mobile App Developer",
+            "Web Developer",
+            "Hardware Engineer"
+          ]
+        ]
+      },
+      {
+        "code": "I",
+        "fields": [
+          "Pure & Applied Science",
+          "Computer Applications",
+          "Networking"
+        ],
+        "careers": [
+          [
+            "Geologist",
+            "Lab Technician",
+            "Materials Scientist"
+          ],
+          [
+            "Mobile App Developer",
+            "Web Developer",
+            "Hardware Engineer"
+          ],
+          [
+            "Network Engineer",
+            "IT Infrastructure Manager",
+            "Network Security Engineer"
+          ]
+        ]
+      },
+      {
+        "code": "A",
+        "fields": [
+          "Design",
+          "Humanities",
+          "Media"
+        ],
+        "careers": [
+          [
+            "Industrial Designer",
+            "UX/UI Designer",
+            "Graphic Designer"
+          ],
+          [
+            "Psychologist",
+            "Policy Analyst",
+            "Technical Writer"
+          ],
+          [
+            "Public Relations Specialist",
+            "Content Producer",
+            "Digital Editor"
+          ]
+        ]
+      },
+      {
+        "code": "S",
+        "fields": [
+          "Humanities",
+          "Medical & Health",
+          "Hospitality"
+        ],
+        "careers": [
+          [
+            "Psychologist",
+            "Policy Analyst",
+            "Technical Writer"
+          ],
+          [
+            "Medical Doctor",
+            "Registered Nurse",
+            "Healthcare Administrator"
+          ],
+          [
+            "Event Coordinator",
+            "Hotel Manager",
+            "Tourism Director"
+          ]
+        ]
+      },
+      {
+        "code": "E",
+        "fields": [
+          "Marketing",
+          "Law",
+          "Business & Management"
+        ],
+        "careers": [
+          [
+            "Brand Strategist",
+            "Digital Marketing Manager",
+            "Social Media Director"
+          ],
+          [
+            "Legal Consultant",
+            "Paralegal",
+            "Corporate Attorney"
+          ],
+          [
+            "Operations Manager",
+            "Management Consultant",
+            "Project Manager"
+          ]
+        ]
+      },
+      {
+        "code": "C",
+        "fields": [
+          "Data Analytics",
+          "Finance",
+          "Accounting"
+        ],
+        "careers": [
+          [
+            "Business Intelligence Analyst",
+            "Market Research Analyst",
+            "Operations Analyst"
+          ],
+          [
+            "Investment Banker",
+            "Financial Planner",
+            "Portfolio Manager"
+          ],
+          [
+            "Forensic Accountant",
+            "Tax Auditor",
+            "Certified Public Accountant"
+          ]
+        ]
+      }
+    ]
+  },
+  "flat-edge-1": {
+    "valid": true,
+    "confidence": "Low",
+    "edgeCase": "flat_profile",
+    "dominantCode": "A",
+    "normalized": {
+      "R": 0.1667,
+      "I": 0.1667,
+      "A": 0.1667,
+      "S": 0.1667,
+      "E": 0.1667,
+      "C": 0.1667
+    },
+    "topFields": [
+      "Accounting",
+      "Business & Management",
+      "Computer Applications"
+    ],
+    "topCareerTitles": [
+      "AI Research Scientist",
+      "Biotechnologist",
+      "Brand Strategist",
+      "Business Intelligence Analyst",
+      "Civil Engineer",
+      "Cloud Architect",
+      "Content Producer",
+      "Corporate Attorney"
+    ],
+    "pathway": [
+      {
+        "code": "A",
+        "fields": [
+          "Humanities",
+          "Media",
+          "Design"
+        ],
+        "careers": [
+          [
+            "Policy Analyst",
+            "Psychologist",
+            "Technical Writer"
+          ],
+          [
+            "Content Producer",
+            "Digital Editor",
+            "Public Relations Specialist"
+          ],
+          [
+            "Graphic Designer",
+            "Industrial Designer",
+            "UX/UI Designer"
+          ]
+        ]
+      },
+      {
+        "code": "C",
+        "fields": [
+          "Data Analytics",
+          "Finance",
+          "Accounting"
+        ],
+        "careers": [
+          [
+            "Business Intelligence Analyst",
+            "Market Research Analyst",
+            "Operations Analyst"
+          ],
+          [
+            "Financial Planner",
+            "Investment Banker",
+            "Portfolio Manager"
+          ],
+          [
+            "Certified Public Accountant",
+            "Forensic Accountant",
+            "Tax Auditor"
+          ]
+        ]
+      },
+      {
+        "code": "E",
+        "fields": [
+          "Business & Management",
+          "Law",
+          "Marketing"
+        ],
+        "careers": [
+          [
+            "Management Consultant",
+            "Operations Manager",
+            "Project Manager"
+          ],
+          [
+            "Corporate Attorney",
+            "Legal Consultant",
+            "Paralegal"
+          ],
+          [
+            "Brand Strategist",
+            "Digital Marketing Manager",
+            "Social Media Director"
+          ]
+        ]
+      },
+      {
+        "code": "I",
+        "fields": [
+          "Computer Applications",
+          "Data Analytics",
+          "Networking"
+        ],
+        "careers": [
+          [
+            "Database Administrator",
+            "Hardware Engineer",
+            "IT Support Technician"
+          ],
+          [
+            "Business Intelligence Analyst",
+            "Market Research Analyst",
+            "Operations Analyst"
+          ],
+          [
+            "IT Infrastructure Manager",
+            "Network Engineer",
+            "Network Security Engineer"
+          ]
+        ]
+      },
+      {
+        "code": "R",
+        "fields": [
+          "Computer Applications",
+          "Engineering",
+          "Networking"
+        ],
+        "careers": [
+          [
+            "Database Administrator",
+            "Hardware Engineer",
+            "IT Support Technician"
+          ],
+          [
+            "Civil Engineer",
+            "Mechanical Engineer",
+            "Robotics Engineer"
+          ],
+          [
+            "IT Infrastructure Manager",
+            "Network Engineer",
+            "Network Security Engineer"
+          ]
+        ]
+      },
+      {
+        "code": "S",
+        "fields": [
+          "Hospitality",
+          "Humanities",
+          "Medical & Health"
+        ],
+        "careers": [
+          [
+            "Event Coordinator",
+            "Hotel Manager",
+            "Tourism Director"
+          ],
+          [
+            "Policy Analyst",
+            "Psychologist",
+            "Technical Writer"
+          ],
+          [
+            "Healthcare Administrator",
+            "Medical Doctor",
+            "Registered Nurse"
+          ]
+        ]
+      }
+    ]
+  },
+  "flat-edge-2": {
+    "valid": true,
+    "confidence": "Low",
+    "edgeCase": "flat_profile",
+    "dominantCode": "A",
+    "normalized": {
+      "R": 0.1667,
+      "I": 0.1667,
+      "A": 0.1667,
+      "S": 0.1667,
+      "E": 0.1667,
+      "C": 0.1667
+    },
+    "topFields": [
+      "Accounting",
+      "Business & Management",
+      "Computer Applications"
+    ],
+    "topCareerTitles": [
+      "AI Research Scientist",
+      "Biotechnologist",
+      "Brand Strategist",
+      "Business Intelligence Analyst",
+      "Civil Engineer",
+      "Cloud Architect",
+      "Content Producer",
+      "Corporate Attorney"
+    ],
+    "pathway": [
+      {
+        "code": "A",
+        "fields": [
+          "Humanities",
+          "Media",
+          "Design"
+        ],
+        "careers": [
+          [
+            "Policy Analyst",
+            "Psychologist",
+            "Technical Writer"
+          ],
+          [
+            "Content Producer",
+            "Digital Editor",
+            "Public Relations Specialist"
+          ],
+          [
+            "Graphic Designer",
+            "Industrial Designer",
+            "UX/UI Designer"
+          ]
+        ]
+      },
+      {
+        "code": "C",
+        "fields": [
+          "Data Analytics",
+          "Finance",
+          "Accounting"
+        ],
+        "careers": [
+          [
+            "Business Intelligence Analyst",
+            "Market Research Analyst",
+            "Operations Analyst"
+          ],
+          [
+            "Financial Planner",
+            "Investment Banker",
+            "Portfolio Manager"
+          ],
+          [
+            "Certified Public Accountant",
+            "Forensic Accountant",
+            "Tax Auditor"
+          ]
+        ]
+      },
+      {
+        "code": "E",
+        "fields": [
+          "Business & Management",
+          "Law",
+          "Marketing"
+        ],
+        "careers": [
+          [
+            "Management Consultant",
+            "Operations Manager",
+            "Project Manager"
+          ],
+          [
+            "Corporate Attorney",
+            "Legal Consultant",
+            "Paralegal"
+          ],
+          [
+            "Brand Strategist",
+            "Digital Marketing Manager",
+            "Social Media Director"
+          ]
+        ]
+      },
+      {
+        "code": "I",
+        "fields": [
+          "Computer Applications",
+          "Data Analytics",
+          "Networking"
+        ],
+        "careers": [
+          [
+            "Database Administrator",
+            "Hardware Engineer",
+            "IT Support Technician"
+          ],
+          [
+            "Business Intelligence Analyst",
+            "Market Research Analyst",
+            "Operations Analyst"
+          ],
+          [
+            "IT Infrastructure Manager",
+            "Network Engineer",
+            "Network Security Engineer"
+          ]
+        ]
+      },
+      {
+        "code": "R",
+        "fields": [
+          "Computer Applications",
+          "Engineering",
+          "Networking"
+        ],
+        "careers": [
+          [
+            "Database Administrator",
+            "Hardware Engineer",
+            "IT Support Technician"
+          ],
+          [
+            "Civil Engineer",
+            "Mechanical Engineer",
+            "Robotics Engineer"
+          ],
+          [
+            "IT Infrastructure Manager",
+            "Network Engineer",
+            "Network Security Engineer"
+          ]
+        ]
+      },
+      {
+        "code": "S",
+        "fields": [
+          "Hospitality",
+          "Humanities",
+          "Medical & Health"
+        ],
+        "careers": [
+          [
+            "Event Coordinator",
+            "Hotel Manager",
+            "Tourism Director"
+          ],
+          [
+            "Policy Analyst",
+            "Psychologist",
+            "Technical Writer"
+          ],
+          [
+            "Healthcare Administrator",
+            "Medical Doctor",
+            "Registered Nurse"
+          ]
+        ]
+      }
+    ]
+  },
+  "low-engagement-1": {
+    "valid": true,
+    "confidence": "Low",
+    "edgeCase": "low_engagement",
+    "dominantCode": "A",
+    "normalized": {
+      "R": 0.1667,
+      "I": 0.1667,
+      "A": 0.1667,
+      "S": 0.1667,
+      "E": 0.1667,
+      "C": 0.1667
+    },
+    "topFields": [
+      "Accounting",
+      "Business & Management",
+      "Computer Applications"
+    ],
+    "topCareerTitles": [
+      "AI Research Scientist",
+      "Biotechnologist",
+      "Brand Strategist",
+      "Business Intelligence Analyst",
+      "Civil Engineer",
+      "Cloud Architect",
+      "Content Producer",
+      "Corporate Attorney"
+    ],
+    "pathway": [
+      {
+        "code": "A",
+        "fields": [
+          "Humanities",
+          "Media",
+          "Design"
+        ],
+        "careers": [
+          [
+            "Policy Analyst",
+            "Psychologist",
+            "Technical Writer"
+          ],
+          [
+            "Content Producer",
+            "Digital Editor",
+            "Public Relations Specialist"
+          ],
+          [
+            "Graphic Designer",
+            "Industrial Designer",
+            "UX/UI Designer"
+          ]
+        ]
+      },
+      {
+        "code": "C",
+        "fields": [
+          "Data Analytics",
+          "Finance",
+          "Accounting"
+        ],
+        "careers": [
+          [
+            "Business Intelligence Analyst",
+            "Market Research Analyst",
+            "Operations Analyst"
+          ],
+          [
+            "Financial Planner",
+            "Investment Banker",
+            "Portfolio Manager"
+          ],
+          [
+            "Certified Public Accountant",
+            "Forensic Accountant",
+            "Tax Auditor"
+          ]
+        ]
+      },
+      {
+        "code": "E",
+        "fields": [
+          "Business & Management",
+          "Law",
+          "Marketing"
+        ],
+        "careers": [
+          [
+            "Management Consultant",
+            "Operations Manager",
+            "Project Manager"
+          ],
+          [
+            "Corporate Attorney",
+            "Legal Consultant",
+            "Paralegal"
+          ],
+          [
+            "Brand Strategist",
+            "Digital Marketing Manager",
+            "Social Media Director"
+          ]
+        ]
+      },
+      {
+        "code": "I",
+        "fields": [
+          "Computer Applications",
+          "Data Analytics",
+          "Networking"
+        ],
+        "careers": [
+          [
+            "Database Administrator",
+            "Hardware Engineer",
+            "IT Support Technician"
+          ],
+          [
+            "Business Intelligence Analyst",
+            "Market Research Analyst",
+            "Operations Analyst"
+          ],
+          [
+            "IT Infrastructure Manager",
+            "Network Engineer",
+            "Network Security Engineer"
+          ]
+        ]
+      },
+      {
+        "code": "R",
+        "fields": [
+          "Computer Applications",
+          "Engineering",
+          "Networking"
+        ],
+        "careers": [
+          [
+            "Database Administrator",
+            "Hardware Engineer",
+            "IT Support Technician"
+          ],
+          [
+            "Civil Engineer",
+            "Mechanical Engineer",
+            "Robotics Engineer"
+          ],
+          [
+            "IT Infrastructure Manager",
+            "Network Engineer",
+            "Network Security Engineer"
+          ]
+        ]
+      },
+      {
+        "code": "S",
+        "fields": [
+          "Hospitality",
+          "Humanities",
+          "Medical & Health"
+        ],
+        "careers": [
+          [
+            "Event Coordinator",
+            "Hotel Manager",
+            "Tourism Director"
+          ],
+          [
+            "Policy Analyst",
+            "Psychologist",
+            "Technical Writer"
+          ],
+          [
+            "Healthcare Administrator",
+            "Medical Doctor",
+            "Registered Nurse"
+          ]
+        ]
+      }
+    ]
+  },
+  "low-engagement-2": {
+    "valid": true,
+    "confidence": "Low",
+    "edgeCase": "low_engagement",
+    "dominantCode": "A",
+    "normalized": {
+      "R": 0,
+      "I": 0,
+      "A": 0,
+      "S": 0,
+      "E": 0,
+      "C": 0
+    },
+    "topFields": [
+      "Accounting",
+      "Business & Management",
+      "Computer Applications"
+    ],
+    "topCareerTitles": [
+      "AI Research Scientist",
+      "Biotechnologist",
+      "Brand Strategist",
+      "Business Intelligence Analyst",
+      "Certified Public Accountant",
+      "Civil Engineer",
+      "Cloud Architect",
+      "Content Producer"
+    ],
+    "pathway": [
+      {
+        "code": "A",
+        "fields": [
+          "Design",
+          "Humanities",
+          "Media"
+        ],
+        "careers": [
+          [
+            "Graphic Designer",
+            "Industrial Designer",
+            "UX/UI Designer"
+          ],
+          [
+            "Policy Analyst",
+            "Psychologist",
+            "Technical Writer"
+          ],
+          [
+            "Content Producer",
+            "Digital Editor",
+            "Public Relations Specialist"
+          ]
+        ]
+      },
+      {
+        "code": "C",
+        "fields": [
+          "Accounting",
+          "Data Analytics",
+          "Finance"
+        ],
+        "careers": [
+          [
+            "Certified Public Accountant",
+            "Forensic Accountant",
+            "Tax Auditor"
+          ],
+          [
+            "Business Intelligence Analyst",
+            "Market Research Analyst",
+            "Operations Analyst"
+          ],
+          [
+            "Financial Planner",
+            "Investment Banker",
+            "Portfolio Manager"
+          ]
+        ]
+      },
+      {
+        "code": "E",
+        "fields": [
+          "Business & Management",
+          "Law",
+          "Marketing"
+        ],
+        "careers": [
+          [
+            "Management Consultant",
+            "Operations Manager",
+            "Project Manager"
+          ],
+          [
+            "Corporate Attorney",
+            "Legal Consultant",
+            "Paralegal"
+          ],
+          [
+            "Brand Strategist",
+            "Digital Marketing Manager",
+            "Social Media Director"
+          ]
+        ]
+      },
+      {
+        "code": "I",
+        "fields": [
+          "Computer Applications",
+          "Data Analytics",
+          "Networking"
+        ],
+        "careers": [
+          [
+            "Database Administrator",
+            "Hardware Engineer",
+            "IT Support Technician"
+          ],
+          [
+            "Business Intelligence Analyst",
+            "Market Research Analyst",
+            "Operations Analyst"
+          ],
+          [
+            "IT Infrastructure Manager",
+            "Network Engineer",
+            "Network Security Engineer"
+          ]
+        ]
+      },
+      {
+        "code": "R",
+        "fields": [
+          "Computer Applications",
+          "Engineering",
+          "Networking"
+        ],
+        "careers": [
+          [
+            "Database Administrator",
+            "Hardware Engineer",
+            "IT Support Technician"
+          ],
+          [
+            "Civil Engineer",
+            "Mechanical Engineer",
+            "Robotics Engineer"
+          ],
+          [
+            "IT Infrastructure Manager",
+            "Network Engineer",
+            "Network Security Engineer"
+          ]
+        ]
+      },
+      {
+        "code": "S",
+        "fields": [
+          "Hospitality",
+          "Humanities",
+          "Medical & Health"
+        ],
+        "careers": [
+          [
+            "Event Coordinator",
+            "Hotel Manager",
+            "Tourism Director"
+          ],
+          [
+            "Policy Analyst",
+            "Psychologist",
+            "Technical Writer"
+          ],
+          [
+            "Healthcare Administrator",
+            "Medical Doctor",
+            "Registered Nurse"
+          ]
+        ]
+      }
+    ]
+  },
+  "low-engagement-3": {
+    "valid": true,
+    "confidence": "Low",
+    "edgeCase": "low_engagement",
+    "dominantCode": "R",
+    "normalized": {
+      "R": 0.2162,
+      "I": 0.1622,
+      "A": 0.1351,
+      "S": 0.1892,
+      "E": 0.1622,
+      "C": 0.1351
+    },
+    "topFields": [
+      "Engineering",
+      "Pure & Applied Science",
+      "Networking"
+    ],
+    "topCareerTitles": [
+      "Mechanical Engineer",
+      "Robotics Engineer",
+      "Civil Engineer",
+      "Lab Technician",
+      "Geologist",
+      "Materials Scientist",
+      "Environmental Consultant",
+      "Research Scientist"
+    ],
+    "pathway": [
+      {
+        "code": "R",
+        "fields": [
+          "Engineering",
+          "Pure & Applied Science",
+          "Networking"
+        ],
+        "careers": [
+          [
+            "Mechanical Engineer",
+            "Robotics Engineer",
+            "Civil Engineer"
+          ],
+          [
+            "Lab Technician",
+            "Geologist",
+            "Materials Scientist"
+          ],
+          [
+            "Network Engineer",
+            "IT Infrastructure Manager",
+            "Network Security Engineer"
+          ]
+        ]
+      },
+      {
+        "code": "S",
+        "fields": [
+          "Hospitality",
+          "Humanities",
+          "Medical & Health"
+        ],
+        "careers": [
+          [
+            "Event Coordinator",
+            "Hotel Manager",
+            "Tourism Director"
+          ],
+          [
+            "Psychologist",
+            "Policy Analyst",
+            "Technical Writer"
+          ],
+          [
+            "Medical Doctor",
+            "Registered Nurse",
+            "Healthcare Administrator"
+          ]
+        ]
+      },
+      {
+        "code": "E",
+        "fields": [
+          "Law",
+          "Marketing",
+          "Business & Management"
+        ],
+        "careers": [
+          [
+            "Legal Consultant",
+            "Corporate Attorney",
+            "Paralegal"
+          ],
+          [
+            "Digital Marketing Manager",
+            "Social Media Director",
+            "Brand Strategist"
+          ],
+          [
+            "Operations Manager",
+            "Management Consultant",
+            "Project Manager"
+          ]
+        ]
+      },
+      {
+        "code": "I",
+        "fields": [
+          "Pure & Applied Science",
+          "Networking",
+          "Computer Applications"
+        ],
+        "careers": [
+          [
+            "Lab Technician",
+            "Geologist",
+            "Materials Scientist"
+          ],
+          [
+            "Network Engineer",
+            "IT Infrastructure Manager",
+            "Network Security Engineer"
+          ],
+          [
+            "Hardware Engineer",
+            "Mobile App Developer",
+            "Web Developer"
+          ]
+        ]
+      },
+      {
+        "code": "A",
+        "fields": [
+          "Humanities",
+          "Media",
+          "Design"
+        ],
+        "careers": [
+          [
+            "Psychologist",
+            "Policy Analyst",
+            "Technical Writer"
+          ],
+          [
+            "Content Producer",
+            "Digital Editor",
+            "Public Relations Specialist"
+          ],
+          [
+            "Industrial Designer",
+            "UX/UI Designer",
+            "Graphic Designer"
+          ]
+        ]
+      },
+      {
+        "code": "C",
+        "fields": [
+          "Finance",
+          "Data Analytics",
+          "Accounting"
+        ],
+        "careers": [
+          [
+            "Financial Planner",
+            "Investment Banker",
+            "Portfolio Manager"
+          ],
+          [
+            "Business Intelligence Analyst",
+            "Market Research Analyst",
+            "Operations Analyst"
+          ],
+          [
+            "Certified Public Accountant",
+            "Forensic Accountant",
+            "Tax Auditor"
+          ]
+        ]
+      }
+    ]
+  },
+  "networking-heavy-1": {
+    "valid": true,
+    "confidence": "Moderate",
+    "edgeCase": null,
+    "dominantCode": "R",
+    "normalized": {
+      "R": 0.3118,
+      "I": 0.3011,
+      "A": 0.043,
+      "S": 0.0538,
+      "E": 0.1075,
+      "C": 0.1828
+    },
+    "topFields": [
+      "Engineering",
+      "Networking",
+      "Pure & Applied Science"
+    ],
+    "topCareerTitles": [
+      "Mechanical Engineer",
+      "Robotics Engineer",
+      "Civil Engineer",
+      "Network Engineer",
+      "IT Infrastructure Manager",
+      "Network Security Engineer",
+      "Systems Administrator",
+      "Solutions Architect"
+    ],
+    "pathway": [
+      {
+        "code": "R",
+        "fields": [
+          "Engineering",
+          "Networking",
+          "Pure & Applied Science"
+        ],
+        "careers": [
+          [
+            "Mechanical Engineer",
+            "Robotics Engineer",
+            "Civil Engineer"
+          ],
+          [
+            "Network Engineer",
+            "IT Infrastructure Manager",
+            "Network Security Engineer"
+          ],
+          [
+            "Research Scientist",
+            "Biotechnologist",
+            "Geologist"
+          ]
+        ]
+      },
+      {
+        "code": "I",
+        "fields": [
+          "Networking",
+          "Pure & Applied Science",
+          "Tech"
+        ],
+        "careers": [
+          [
+            "Network Engineer",
+            "IT Infrastructure Manager",
+            "Network Security Engineer"
+          ],
+          [
+            "Research Scientist",
+            "Biotechnologist",
+            "Geologist"
+          ],
+          [
+            "Cloud Architect",
+            "Software Developer",
+            "Cybersecurity Analyst"
+          ]
+        ]
+      },
+      {
+        "code": "C",
+        "fields": [
+          "Data Analytics",
+          "Finance",
+          "Accounting"
+        ],
+        "careers": [
+          [
+            "Business Intelligence Analyst",
+            "Market Research Analyst",
+            "Operations Analyst"
+          ],
+          [
+            "Investment Banker",
+            "Portfolio Manager",
+            "Financial Planner"
+          ],
+          [
+            "Forensic Accountant",
+            "Tax Auditor",
+            "Certified Public Accountant"
+          ]
+        ]
+      },
+      {
+        "code": "E",
+        "fields": [
+          "Law",
+          "Business & Management",
+          "Marketing"
+        ],
+        "careers": [
+          [
+            "Paralegal",
+            "Legal Consultant",
+            "Corporate Attorney"
+          ],
+          [
+            "Operations Manager",
+            "Management Consultant",
+            "Project Manager"
+          ],
+          [
+            "Social Media Director",
+            "Brand Strategist",
+            "Digital Marketing Manager"
+          ]
+        ]
+      },
+      {
+        "code": "S",
+        "fields": [
+          "Medical & Health",
+          "Humanities",
+          "Hospitality"
+        ],
+        "careers": [
+          [
+            "Medical Doctor",
+            "Registered Nurse",
+            "Healthcare Administrator"
+          ],
+          [
+            "Psychologist",
+            "Policy Analyst",
+            "Technical Writer"
+          ],
+          [
+            "Event Coordinator",
+            "Hotel Manager",
+            "Tourism Director"
+          ]
+        ]
+      },
+      {
+        "code": "A",
+        "fields": [
+          "Humanities",
+          "Design",
+          "Media"
+        ],
+        "careers": [
+          [
+            "Psychologist",
+            "Policy Analyst",
+            "Technical Writer"
+          ],
+          [
+            "Industrial Designer",
+            "UX/UI Designer",
+            "Graphic Designer"
+          ],
+          [
+            "Public Relations Specialist",
+            "Content Producer",
+            "Digital Editor"
+          ]
+        ]
+      }
+    ]
+  },
+  "networking-heavy-2": {
+    "valid": true,
+    "confidence": "Moderate",
+    "edgeCase": null,
+    "dominantCode": "I",
+    "normalized": {
+      "R": 0.2903,
+      "I": 0.3226,
+      "A": 0.0538,
+      "S": 0.0645,
+      "E": 0.0968,
+      "C": 0.172
+    },
+    "topFields": [
+      "Networking",
+      "Computer Applications",
+      "Pure & Applied Science"
+    ],
+    "topCareerTitles": [
+      "Network Engineer",
+      "Mobile App Developer",
+      "Web Developer",
+      "Systems Administrator",
+      "IT Infrastructure Manager",
+      "Network Security Engineer",
+      "Solutions Architect",
+      "Mechanical Engineer"
+    ],
+    "pathway": [
+      {
+        "code": "I",
+        "fields": [
+          "Networking",
+          "Computer Applications",
+          "Pure & Applied Science"
+        ],
+        "careers": [
+          [
+            "Network Engineer",
+            "Systems Administrator",
+            "IT Infrastructure Manager"
+          ],
+          [
+            "Mobile App Developer",
+            "Web Developer",
+            "Hardware Engineer"
+          ],
+          [
+            "Research Scientist",
+            "Biotechnologist",
+            "Geologist"
+          ]
+        ]
+      },
+      {
+        "code": "R",
+        "fields": [
+          "Networking",
+          "Computer Applications",
+          "Pure & Applied Science"
+        ],
+        "careers": [
+          [
+            "Network Engineer",
+            "Systems Administrator",
+            "IT Infrastructure Manager"
+          ],
+          [
+            "Mobile App Developer",
+            "Web Developer",
+            "Hardware Engineer"
+          ],
+          [
+            "Research Scientist",
+            "Biotechnologist",
+            "Geologist"
+          ]
+        ]
+      },
+      {
+        "code": "C",
+        "fields": [
+          "Data Analytics",
+          "Finance",
+          "Accounting"
+        ],
+        "careers": [
+          [
+            "Business Intelligence Analyst",
+            "Market Research Analyst",
+            "Operations Analyst"
+          ],
+          [
+            "Investment Banker",
+            "Portfolio Manager",
+            "Financial Planner"
+          ],
+          [
+            "Forensic Accountant",
+            "Tax Auditor",
+            "Certified Public Accountant"
+          ]
+        ]
+      },
+      {
+        "code": "E",
+        "fields": [
+          "Law",
+          "Business & Management",
+          "Marketing"
+        ],
+        "careers": [
+          [
+            "Paralegal",
+            "Legal Consultant",
+            "Corporate Attorney"
+          ],
+          [
+            "Management Consultant",
+            "Project Manager",
+            "Operations Manager"
+          ],
+          [
+            "Social Media Director",
+            "Digital Marketing Manager",
+            "Brand Strategist"
+          ]
+        ]
+      },
+      {
+        "code": "S",
+        "fields": [
+          "Medical & Health",
+          "Humanities",
+          "Hospitality"
+        ],
+        "careers": [
+          [
+            "Medical Doctor",
+            "Registered Nurse",
+            "Healthcare Administrator"
+          ],
+          [
+            "Psychologist",
+            "Policy Analyst",
+            "Technical Writer"
+          ],
+          [
+            "Event Coordinator",
+            "Hotel Manager",
+            "Tourism Director"
+          ]
+        ]
+      },
+      {
+        "code": "A",
+        "fields": [
+          "Humanities",
+          "Design",
+          "Media"
+        ],
+        "careers": [
+          [
+            "Psychologist",
+            "Policy Analyst",
+            "Technical Writer"
+          ],
+          [
+            "Industrial Designer",
+            "UX/UI Designer",
+            "Graphic Designer"
+          ],
+          [
+            "Public Relations Specialist",
+            "Content Producer",
+            "Digital Editor"
+          ]
+        ]
+      }
+    ]
+  },
+  "humanities-artistic-1": {
+    "valid": true,
+    "confidence": "Moderate",
+    "edgeCase": null,
+    "dominantCode": "A",
+    "normalized": {
+      "R": 0.0577,
+      "I": 0.1442,
+      "A": 0.2981,
+      "S": 0.2885,
+      "E": 0.1154,
+      "C": 0.0962
+    },
+    "topFields": [
+      "Humanities",
+      "Design",
+      "Media"
+    ],
+    "topCareerTitles": [
+      "Policy Analyst",
+      "Technical Writer",
+      "Psychologist",
+      "Graphic Designer",
+      "UX/UI Designer",
+      "Content Producer",
+      "Digital Editor",
+      "Industrial Designer"
+    ],
+    "pathway": [
+      {
+        "code": "A",
+        "fields": [
+          "Humanities",
+          "Design",
+          "Media"
+        ],
+        "careers": [
+          [
+            "Policy Analyst",
+            "Technical Writer",
+            "Psychologist"
+          ],
+          [
+            "Graphic Designer",
+            "UX/UI Designer",
+            "Industrial Designer"
+          ],
+          [
+            "Content Producer",
+            "Digital Editor",
+            "Public Relations Specialist"
+          ]
+        ]
+      },
+      {
+        "code": "S",
+        "fields": [
+          "Humanities",
+          "Hospitality",
+          "Medical & Health"
+        ],
+        "careers": [
+          [
+            "Policy Analyst",
+            "Technical Writer",
+            "Psychologist"
+          ],
+          [
+            "Event Coordinator",
+            "Hotel Manager",
+            "Tourism Director"
+          ],
+          [
+            "Healthcare Administrator",
+            "Medical Doctor",
+            "Registered Nurse"
+          ]
+        ]
+      },
+      {
+        "code": "I",
+        "fields": [
+          "Data Science",
+          "Tech",
+          "Networking"
+        ],
+        "careers": [
+          [
+            "Data Scientist",
+            "AI Research Scientist",
+            "Machine Learning Engineer"
+          ],
+          [
+            "Cybersecurity Analyst",
+            "Cloud Architect",
+            "Software Developer"
+          ],
+          [
+            "Solutions Architect",
+            "Network Engineer",
+            "Systems Administrator"
+          ]
+        ]
+      },
+      {
+        "code": "E",
+        "fields": [
+          "Marketing",
+          "Business & Management",
+          "Law"
+        ],
+        "careers": [
+          [
+            "Digital Marketing Manager",
+            "Brand Strategist",
+            "Social Media Director"
+          ],
+          [
+            "Management Consultant",
+            "Project Manager",
+            "Operations Manager"
+          ],
+          [
+            "Legal Consultant",
+            "Paralegal",
+            "Corporate Attorney"
+          ]
+        ]
+      },
+      {
+        "code": "C",
+        "fields": [
+          "Data Analytics",
+          "Finance",
+          "Accounting"
+        ],
+        "careers": [
+          [
+            "Business Intelligence Analyst",
+            "Market Research Analyst",
+            "Operations Analyst"
+          ],
+          [
+            "Financial Planner",
+            "Investment Banker",
+            "Portfolio Manager"
+          ],
+          [
+            "Forensic Accountant",
+            "Tax Auditor",
+            "Certified Public Accountant"
+          ]
+        ]
+      },
+      {
+        "code": "R",
+        "fields": [
+          "Tech",
+          "Computer Applications",
+          "Pure & Applied Science"
+        ],
+        "careers": [
+          [
+            "Cybersecurity Analyst",
+            "Cloud Architect",
+            "Software Developer"
+          ],
+          [
+            "Database Administrator",
+            "Mobile App Developer",
+            "Web Developer"
+          ],
+          [
+            "Research Scientist",
+            "Materials Scientist",
+            "Biotechnologist"
+          ]
+        ]
+      }
+    ]
+  },
+  "humanities-artistic-2": {
+    "valid": true,
+    "confidence": "Moderate",
+    "edgeCase": null,
+    "dominantCode": "A",
+    "normalized": {
+      "R": 0.0686,
+      "I": 0.1373,
+      "A": 0.2843,
+      "S": 0.2745,
+      "E": 0.1275,
+      "C": 0.1078
+    },
+    "topFields": [
+      "Humanities",
+      "Design",
+      "Media"
+    ],
+    "topCareerTitles": [
+      "Policy Analyst",
+      "Technical Writer",
+      "Graphic Designer",
+      "Psychologist",
+      "UX/UI Designer",
+      "Content Producer",
+      "Digital Editor",
+      "Public Relations Specialist"
+    ],
+    "pathway": [
+      {
+        "code": "A",
+        "fields": [
+          "Humanities",
+          "Design",
+          "Media"
+        ],
+        "careers": [
+          [
+            "Policy Analyst",
+            "Technical Writer",
+            "Psychologist"
+          ],
+          [
+            "Graphic Designer",
+            "UX/UI Designer",
+            "Industrial Designer"
+          ],
+          [
+            "Content Producer",
+            "Digital Editor",
+            "Public Relations Specialist"
+          ]
+        ]
+      },
+      {
+        "code": "S",
+        "fields": [
+          "Humanities",
+          "Hospitality",
+          "Medical & Health"
+        ],
+        "careers": [
+          [
+            "Policy Analyst",
+            "Technical Writer",
+            "Psychologist"
+          ],
+          [
+            "Event Coordinator",
+            "Hotel Manager",
+            "Tourism Director"
+          ],
+          [
+            "Healthcare Administrator",
+            "Medical Doctor",
+            "Registered Nurse"
+          ]
+        ]
+      },
+      {
+        "code": "I",
+        "fields": [
+          "Data Science",
+          "Tech",
+          "Networking"
+        ],
+        "careers": [
+          [
+            "Data Scientist",
+            "AI Research Scientist",
+            "Machine Learning Engineer"
+          ],
+          [
+            "Cybersecurity Analyst",
+            "Cloud Architect",
+            "Software Developer"
+          ],
+          [
+            "Solutions Architect",
+            "Network Engineer",
+            "Systems Administrator"
+          ]
+        ]
+      },
+      {
+        "code": "E",
+        "fields": [
+          "Marketing",
+          "Business & Management",
+          "Law"
+        ],
+        "careers": [
+          [
+            "Digital Marketing Manager",
+            "Brand Strategist",
+            "Social Media Director"
+          ],
+          [
+            "Management Consultant",
+            "Project Manager",
+            "Operations Manager"
+          ],
+          [
+            "Legal Consultant",
+            "Corporate Attorney",
+            "Paralegal"
+          ]
+        ]
+      },
+      {
+        "code": "C",
+        "fields": [
+          "Data Analytics",
+          "Finance",
+          "Accounting"
+        ],
+        "careers": [
+          [
+            "Business Intelligence Analyst",
+            "Market Research Analyst",
+            "Operations Analyst"
+          ],
+          [
+            "Financial Planner",
+            "Investment Banker",
+            "Portfolio Manager"
+          ],
+          [
+            "Certified Public Accountant",
+            "Forensic Accountant",
+            "Tax Auditor"
+          ]
+        ]
+      },
+      {
+        "code": "R",
+        "fields": [
+          "Tech",
+          "Computer Applications",
+          "Pure & Applied Science"
+        ],
+        "careers": [
+          [
+            "Cybersecurity Analyst",
+            "Cloud Architect",
+            "Software Developer"
+          ],
+          [
+            "Database Administrator",
+            "Systems Engineer",
+            "Mobile App Developer"
+          ],
+          [
+            "Materials Scientist",
+            "Research Scientist",
+            "Environmental Consultant"
+          ]
+        ]
+      }
+    ]
+  },
+  "analytics-finance-1": {
+    "valid": true,
+    "confidence": "Moderate",
+    "edgeCase": null,
+    "dominantCode": "C",
+    "normalized": {
+      "R": 0.1026,
+      "I": 0.2479,
+      "A": 0.0684,
+      "S": 0.0769,
+      "E": 0.2222,
+      "C": 0.2821
+    },
+    "topFields": [
+      "Accounting",
+      "Finance",
+      "Data Analytics"
+    ],
+    "topCareerTitles": [
+      "Forensic Accountant",
+      "Tax Auditor",
+      "Certified Public Accountant",
+      "Operations Analyst",
+      "Investment Banker",
+      "Portfolio Manager",
+      "Business Intelligence Analyst",
+      "Market Research Analyst"
+    ],
+    "pathway": [
+      {
+        "code": "C",
+        "fields": [
+          "Accounting",
+          "Finance",
+          "Data Analytics"
+        ],
+        "careers": [
+          [
+            "Forensic Accountant",
+            "Tax Auditor",
+            "Certified Public Accountant"
+          ],
+          [
+            "Investment Banker",
+            "Portfolio Manager",
+            "Financial Planner"
+          ],
+          [
+            "Operations Analyst",
+            "Business Intelligence Analyst",
+            "Market Research Analyst"
+          ]
+        ]
+      },
+      {
+        "code": "I",
+        "fields": [
+          "Data Analytics",
+          "Networking",
+          "Data Science"
+        ],
+        "careers": [
+          [
+            "Operations Analyst",
+            "Business Intelligence Analyst",
+            "Market Research Analyst"
+          ],
+          [
+            "Solutions Architect",
+            "Systems Administrator",
+            "IT Infrastructure Manager"
+          ],
+          [
+            "AI Research Scientist",
+            "Data Scientist",
+            "Machine Learning Engineer"
+          ]
+        ]
+      },
+      {
+        "code": "E",
+        "fields": [
+          "Law",
+          "Business & Management",
+          "Marketing"
+        ],
+        "careers": [
+          [
+            "Paralegal",
+            "Corporate Attorney",
+            "Legal Consultant"
+          ],
+          [
+            "Management Consultant",
+            "Project Manager",
+            "Operations Manager"
+          ],
+          [
+            "Social Media Director",
+            "Brand Strategist",
+            "Digital Marketing Manager"
+          ]
+        ]
+      },
+      {
+        "code": "R",
+        "fields": [
+          "Networking",
+          "Tech",
+          "Pure & Applied Science"
+        ],
+        "careers": [
+          [
+            "Solutions Architect",
+            "Systems Administrator",
+            "IT Infrastructure Manager"
+          ],
+          [
+            "Cybersecurity Analyst",
+            "Cloud Architect",
+            "Software Developer"
+          ],
+          [
+            "Biotechnologist",
+            "Research Scientist",
+            "Environmental Consultant"
+          ]
+        ]
+      },
+      {
+        "code": "S",
+        "fields": [
+          "Medical & Health",
+          "Hospitality",
+          "Humanities"
+        ],
+        "careers": [
+          [
+            "Healthcare Administrator",
+            "Medical Doctor",
+            "Registered Nurse"
+          ],
+          [
+            "Event Coordinator",
+            "Hotel Manager",
+            "Tourism Director"
+          ],
+          [
+            "Psychologist",
+            "Policy Analyst",
+            "Technical Writer"
+          ]
+        ]
+      },
+      {
+        "code": "A",
+        "fields": [
+          "Media",
+          "Humanities",
+          "Design"
+        ],
+        "careers": [
+          [
+            "Public Relations Specialist",
+            "Content Producer",
+            "Digital Editor"
+          ],
+          [
+            "Psychologist",
+            "Policy Analyst",
+            "Technical Writer"
+          ],
+          [
+            "UX/UI Designer",
+            "Industrial Designer",
+            "Graphic Designer"
+          ]
+        ]
+      }
+    ]
+  },
+  "analytics-finance-2": {
+    "valid": true,
+    "confidence": "Moderate",
+    "edgeCase": null,
+    "dominantCode": "C",
+    "normalized": {
+      "R": 0.0982,
+      "I": 0.2411,
+      "A": 0.0804,
+      "S": 0.0893,
+      "E": 0.2143,
+      "C": 0.2768
+    },
+    "topFields": [
+      "Accounting",
+      "Finance",
+      "Data Analytics"
+    ],
+    "topCareerTitles": [
+      "Forensic Accountant",
+      "Tax Auditor",
+      "Certified Public Accountant",
+      "Operations Analyst",
+      "Business Intelligence Analyst",
+      "Market Research Analyst",
+      "Investment Banker",
+      "Portfolio Manager"
+    ],
+    "pathway": [
+      {
+        "code": "C",
+        "fields": [
+          "Accounting",
+          "Finance",
+          "Data Analytics"
+        ],
+        "careers": [
+          [
+            "Forensic Accountant",
+            "Tax Auditor",
+            "Certified Public Accountant"
+          ],
+          [
+            "Investment Banker",
+            "Portfolio Manager",
+            "Financial Planner"
+          ],
+          [
+            "Operations Analyst",
+            "Business Intelligence Analyst",
+            "Market Research Analyst"
+          ]
+        ]
+      },
+      {
+        "code": "I",
+        "fields": [
+          "Data Analytics",
+          "Networking",
+          "Data Science"
+        ],
+        "careers": [
+          [
+            "Operations Analyst",
+            "Business Intelligence Analyst",
+            "Market Research Analyst"
+          ],
+          [
+            "Solutions Architect",
+            "Systems Administrator",
+            "IT Infrastructure Manager"
+          ],
+          [
+            "AI Research Scientist",
+            "Data Scientist",
+            "Machine Learning Engineer"
+          ]
+        ]
+      },
+      {
+        "code": "E",
+        "fields": [
+          "Law",
+          "Business & Management",
+          "Marketing"
+        ],
+        "careers": [
+          [
+            "Paralegal",
+            "Corporate Attorney",
+            "Legal Consultant"
+          ],
+          [
+            "Management Consultant",
+            "Project Manager",
+            "Operations Manager"
+          ],
+          [
+            "Social Media Director",
+            "Brand Strategist",
+            "Digital Marketing Manager"
+          ]
+        ]
+      },
+      {
+        "code": "R",
+        "fields": [
+          "Networking",
+          "Tech",
+          "Pure & Applied Science"
+        ],
+        "careers": [
+          [
+            "Solutions Architect",
+            "Systems Administrator",
+            "IT Infrastructure Manager"
+          ],
+          [
+            "Cybersecurity Analyst",
+            "Cloud Architect",
+            "Software Developer"
+          ],
+          [
+            "Biotechnologist",
+            "Research Scientist",
+            "Environmental Consultant"
+          ]
+        ]
+      },
+      {
+        "code": "S",
+        "fields": [
+          "Hospitality",
+          "Medical & Health",
+          "Humanities"
+        ],
+        "careers": [
+          [
+            "Event Coordinator",
+            "Hotel Manager",
+            "Tourism Director"
+          ],
+          [
+            "Healthcare Administrator",
+            "Medical Doctor",
+            "Registered Nurse"
+          ],
+          [
+            "Psychologist",
+            "Policy Analyst",
+            "Technical Writer"
+          ]
+        ]
+      },
+      {
+        "code": "A",
+        "fields": [
+          "Media",
+          "Humanities",
+          "Design"
+        ],
+        "careers": [
+          [
+            "Public Relations Specialist",
+            "Content Producer",
+            "Digital Editor"
+          ],
+          [
+            "Psychologist",
+            "Policy Analyst",
+            "Technical Writer"
+          ],
+          [
+            "UX/UI Designer",
+            "Industrial Designer",
+            "Graphic Designer"
+          ]
+        ]
+      }
+    ]
+  },
+  "health-social-1": {
+    "valid": true,
+    "confidence": "High",
+    "edgeCase": null,
+    "dominantCode": "S",
+    "normalized": {
+      "R": 0.102,
+      "I": 0.1837,
+      "A": 0.0918,
+      "S": 0.3571,
+      "E": 0.1224,
+      "C": 0.1429
+    },
+    "topFields": [
+      "Medical & Health",
+      "Hospitality",
+      "Humanities"
+    ],
+    "topCareerTitles": [
+      "Healthcare Administrator",
+      "Medical Doctor",
+      "Registered Nurse",
+      "Event Coordinator",
+      "Hotel Manager",
+      "Tourism Director",
+      "Psychologist",
+      "Policy Analyst"
+    ],
+    "pathway": [
+      {
+        "code": "S",
+        "fields": [
+          "Medical & Health",
+          "Hospitality",
+          "Humanities"
+        ],
+        "careers": [
+          [
+            "Healthcare Administrator",
+            "Medical Doctor",
+            "Registered Nurse"
+          ],
+          [
+            "Event Coordinator",
+            "Hotel Manager",
+            "Tourism Director"
+          ],
+          [
+            "Psychologist",
+            "Policy Analyst",
+            "Technical Writer"
+          ]
+        ]
+      },
+      {
+        "code": "I",
+        "fields": [
+          "Data Analytics",
+          "Data Science",
+          "Networking"
+        ],
+        "careers": [
+          [
+            "Business Intelligence Analyst",
+            "Market Research Analyst",
+            "Operations Analyst"
+          ],
+          [
+            "Data Scientist",
+            "AI Research Scientist",
+            "Machine Learning Engineer"
+          ],
+          [
+            "Solutions Architect",
+            "Network Engineer",
+            "Systems Administrator"
+          ]
+        ]
+      },
+      {
+        "code": "C",
+        "fields": [
+          "Finance",
+          "Data Analytics",
+          "Accounting"
+        ],
+        "careers": [
+          [
+            "Financial Planner",
+            "Investment Banker",
+            "Portfolio Manager"
+          ],
+          [
+            "Business Intelligence Analyst",
+            "Market Research Analyst",
+            "Operations Analyst"
+          ],
+          [
+            "Forensic Accountant",
+            "Tax Auditor",
+            "Certified Public Accountant"
+          ]
+        ]
+      },
+      {
+        "code": "E",
+        "fields": [
+          "Business & Management",
+          "Law",
+          "Marketing"
+        ],
+        "careers": [
+          [
+            "Management Consultant",
+            "Project Manager",
+            "Operations Manager"
+          ],
+          [
+            "Paralegal",
+            "Legal Consultant",
+            "Corporate Attorney"
+          ],
+          [
+            "Digital Marketing Manager",
+            "Social Media Director",
+            "Brand Strategist"
+          ]
+        ]
+      },
+      {
+        "code": "R",
+        "fields": [
+          "Tech",
+          "Pure & Applied Science",
+          "Computer Applications"
+        ],
+        "careers": [
+          [
+            "Cybersecurity Analyst",
+            "Cloud Architect",
+            "Software Developer"
+          ],
+          [
+            "Research Scientist",
+            "Biotechnologist",
+            "Materials Scientist"
+          ],
+          [
+            "Database Administrator",
+            "Mobile App Developer",
+            "Web Developer"
+          ]
+        ]
+      },
+      {
+        "code": "A",
+        "fields": [
+          "Humanities",
+          "Media",
+          "Design"
+        ],
+        "careers": [
+          [
+            "Psychologist",
+            "Policy Analyst",
+            "Technical Writer"
+          ],
+          [
+            "Content Producer",
+            "Digital Editor",
+            "Public Relations Specialist"
+          ],
+          [
+            "UX/UI Designer",
+            "Industrial Designer",
+            "Graphic Designer"
+          ]
+        ]
+      }
+    ]
+  },
+  "health-social-2": {
+    "valid": true,
+    "confidence": "High",
+    "edgeCase": null,
+    "dominantCode": "S",
+    "normalized": {
+      "R": 0.0989,
+      "I": 0.1868,
+      "A": 0.0879,
+      "S": 0.3626,
+      "E": 0.1209,
+      "C": 0.1429
+    },
+    "topFields": [
+      "Medical & Health",
+      "Hospitality",
+      "Humanities"
+    ],
+    "topCareerTitles": [
+      "Healthcare Administrator",
+      "Medical Doctor",
+      "Registered Nurse",
+      "Event Coordinator",
+      "Hotel Manager",
+      "Tourism Director",
+      "Psychologist",
+      "Policy Analyst"
+    ],
+    "pathway": [
+      {
+        "code": "S",
+        "fields": [
+          "Medical & Health",
+          "Hospitality",
+          "Humanities"
+        ],
+        "careers": [
+          [
+            "Healthcare Administrator",
+            "Medical Doctor",
+            "Registered Nurse"
+          ],
+          [
+            "Event Coordinator",
+            "Hotel Manager",
+            "Tourism Director"
+          ],
+          [
+            "Psychologist",
+            "Policy Analyst",
+            "Technical Writer"
+          ]
+        ]
+      },
+      {
+        "code": "I",
+        "fields": [
+          "Data Analytics",
+          "Data Science",
+          "Networking"
+        ],
+        "careers": [
+          [
+            "Business Intelligence Analyst",
+            "Market Research Analyst",
+            "Operations Analyst"
+          ],
+          [
+            "Data Scientist",
+            "AI Research Scientist",
+            "Machine Learning Engineer"
+          ],
+          [
+            "Solutions Architect",
+            "Network Engineer",
+            "Systems Administrator"
+          ]
+        ]
+      },
+      {
+        "code": "C",
+        "fields": [
+          "Finance",
+          "Data Analytics",
+          "Accounting"
+        ],
+        "careers": [
+          [
+            "Financial Planner",
+            "Investment Banker",
+            "Portfolio Manager"
+          ],
+          [
+            "Business Intelligence Analyst",
+            "Market Research Analyst",
+            "Operations Analyst"
+          ],
+          [
+            "Forensic Accountant",
+            "Tax Auditor",
+            "Certified Public Accountant"
+          ]
+        ]
+      },
+      {
+        "code": "E",
+        "fields": [
+          "Business & Management",
+          "Law",
+          "Marketing"
+        ],
+        "careers": [
+          [
+            "Management Consultant",
+            "Project Manager",
+            "Operations Manager"
+          ],
+          [
+            "Paralegal",
+            "Legal Consultant",
+            "Corporate Attorney"
+          ],
+          [
+            "Digital Marketing Manager",
+            "Social Media Director",
+            "Brand Strategist"
+          ]
+        ]
+      },
+      {
+        "code": "R",
+        "fields": [
+          "Tech",
+          "Pure & Applied Science",
+          "Computer Applications"
+        ],
+        "careers": [
+          [
+            "Cybersecurity Analyst",
+            "Cloud Architect",
+            "Software Developer"
+          ],
+          [
+            "Research Scientist",
+            "Biotechnologist",
+            "Materials Scientist"
+          ],
+          [
+            "Database Administrator",
+            "Mobile App Developer",
+            "Web Developer"
+          ]
+        ]
+      },
+      {
+        "code": "A",
+        "fields": [
+          "Humanities",
+          "Media",
+          "Design"
+        ],
+        "careers": [
+          [
+            "Psychologist",
+            "Policy Analyst",
+            "Technical Writer"
+          ],
+          [
+            "Content Producer",
+            "Digital Editor",
+            "Public Relations Specialist"
+          ],
+          [
+            "UX/UI Designer",
+            "Industrial Designer",
+            "Graphic Designer"
+          ]
+        ]
+      }
+    ]
+  },
+  "computer-apps-1": {
+    "valid": true,
+    "confidence": "Moderate",
+    "edgeCase": null,
+    "dominantCode": "I",
+    "normalized": {
+      "R": 0.2453,
+      "I": 0.2547,
+      "A": 0.1038,
+      "S": 0.0849,
+      "E": 0.1132,
+      "C": 0.1981
+    },
+    "topFields": [
+      "Computer Applications",
+      "Pure & Applied Science",
+      "Engineering"
+    ],
+    "topCareerTitles": [
+      "Mobile App Developer",
+      "Web Developer",
+      "Hardware Engineer",
+      "Database Administrator",
+      "Systems Engineer",
+      "IT Support Technician",
+      "Mechanical Engineer",
+      "Robotics Engineer"
+    ],
+    "pathway": [
+      {
+        "code": "I",
+        "fields": [
+          "Computer Applications",
+          "Pure & Applied Science",
+          "Networking"
+        ],
+        "careers": [
+          [
+            "Mobile App Developer",
+            "Web Developer",
+            "Hardware Engineer"
+          ],
+          [
+            "Research Scientist",
+            "Biotechnologist",
+            "Geologist"
+          ],
+          [
+            "Network Engineer",
+            "Systems Administrator",
+            "IT Infrastructure Manager"
+          ]
+        ]
+      },
+      {
+        "code": "R",
+        "fields": [
+          "Computer Applications",
+          "Pure & Applied Science",
+          "Engineering"
+        ],
+        "careers": [
+          [
+            "Mobile App Developer",
+            "Web Developer",
+            "Hardware Engineer"
+          ],
+          [
+            "Research Scientist",
+            "Biotechnologist",
+            "Geologist"
+          ],
+          [
+            "Mechanical Engineer",
+            "Robotics Engineer",
+            "Civil Engineer"
+          ]
+        ]
+      },
+      {
+        "code": "C",
+        "fields": [
+          "Data Analytics",
+          "Finance",
+          "Accounting"
+        ],
+        "careers": [
+          [
+            "Business Intelligence Analyst",
+            "Market Research Analyst",
+            "Operations Analyst"
+          ],
+          [
+            "Investment Banker",
+            "Portfolio Manager",
+            "Financial Planner"
+          ],
+          [
+            "Forensic Accountant",
+            "Tax Auditor",
+            "Certified Public Accountant"
+          ]
+        ]
+      },
+      {
+        "code": "E",
+        "fields": [
+          "Law",
+          "Business & Management",
+          "Marketing"
+        ],
+        "careers": [
+          [
+            "Paralegal",
+            "Corporate Attorney",
+            "Legal Consultant"
+          ],
+          [
+            "Operations Manager",
+            "Management Consultant",
+            "Project Manager"
+          ],
+          [
+            "Social Media Director",
+            "Brand Strategist",
+            "Digital Marketing Manager"
+          ]
+        ]
+      },
+      {
+        "code": "A",
+        "fields": [
+          "Humanities",
+          "Media",
+          "Design"
+        ],
+        "careers": [
+          [
+            "Psychologist",
+            "Policy Analyst",
+            "Technical Writer"
+          ],
+          [
+            "Public Relations Specialist",
+            "Content Producer",
+            "Digital Editor"
+          ],
+          [
+            "Industrial Designer",
+            "UX/UI Designer",
+            "Graphic Designer"
+          ]
+        ]
+      },
+      {
+        "code": "S",
+        "fields": [
+          "Medical & Health",
+          "Humanities",
+          "Hospitality"
+        ],
+        "careers": [
+          [
+            "Medical Doctor",
+            "Registered Nurse",
+            "Healthcare Administrator"
+          ],
+          [
+            "Psychologist",
+            "Policy Analyst",
+            "Technical Writer"
+          ],
+          [
+            "Event Coordinator",
+            "Hotel Manager",
+            "Tourism Director"
+          ]
+        ]
+      }
+    ]
+  },
+  "computer-apps-2": {
+    "valid": true,
+    "confidence": "Moderate",
+    "edgeCase": null,
+    "dominantCode": "I",
+    "normalized": {
+      "R": 0.2353,
+      "I": 0.2451,
+      "A": 0.1176,
+      "S": 0.098,
+      "E": 0.1078,
+      "C": 0.1961
+    },
+    "topFields": [
+      "Computer Applications",
+      "Pure & Applied Science",
+      "Engineering"
+    ],
+    "topCareerTitles": [
+      "Mobile App Developer",
+      "Web Developer",
+      "Hardware Engineer",
+      "Database Administrator",
+      "Systems Engineer",
+      "IT Support Technician",
+      "Mechanical Engineer",
+      "Robotics Engineer"
+    ],
+    "pathway": [
+      {
+        "code": "I",
+        "fields": [
+          "Computer Applications",
+          "Pure & Applied Science",
+          "Networking"
+        ],
+        "careers": [
+          [
+            "Mobile App Developer",
+            "Web Developer",
+            "Hardware Engineer"
+          ],
+          [
+            "Research Scientist",
+            "Biotechnologist",
+            "Geologist"
+          ],
+          [
+            "Network Engineer",
+            "Systems Administrator",
+            "IT Infrastructure Manager"
+          ]
+        ]
+      },
+      {
+        "code": "R",
+        "fields": [
+          "Computer Applications",
+          "Pure & Applied Science",
+          "Engineering"
+        ],
+        "careers": [
+          [
+            "Mobile App Developer",
+            "Web Developer",
+            "Hardware Engineer"
+          ],
+          [
+            "Research Scientist",
+            "Biotechnologist",
+            "Geologist"
+          ],
+          [
+            "Mechanical Engineer",
+            "Robotics Engineer",
+            "Civil Engineer"
+          ]
+        ]
+      },
+      {
+        "code": "C",
+        "fields": [
+          "Data Analytics",
+          "Finance",
+          "Accounting"
+        ],
+        "careers": [
+          [
+            "Business Intelligence Analyst",
+            "Market Research Analyst",
+            "Operations Analyst"
+          ],
+          [
+            "Investment Banker",
+            "Financial Planner",
+            "Portfolio Manager"
+          ],
+          [
+            "Forensic Accountant",
+            "Tax Auditor",
+            "Certified Public Accountant"
+          ]
+        ]
+      },
+      {
+        "code": "A",
+        "fields": [
+          "Humanities",
+          "Media",
+          "Design"
+        ],
+        "careers": [
+          [
+            "Psychologist",
+            "Policy Analyst",
+            "Technical Writer"
+          ],
+          [
+            "Public Relations Specialist",
+            "Content Producer",
+            "Digital Editor"
+          ],
+          [
+            "Industrial Designer",
+            "UX/UI Designer",
+            "Graphic Designer"
+          ]
+        ]
+      },
+      {
+        "code": "E",
+        "fields": [
+          "Law",
+          "Business & Management",
+          "Marketing"
+        ],
+        "careers": [
+          [
+            "Paralegal",
+            "Corporate Attorney",
+            "Legal Consultant"
+          ],
+          [
+            "Operations Manager",
+            "Management Consultant",
+            "Project Manager"
+          ],
+          [
+            "Brand Strategist",
+            "Social Media Director",
+            "Digital Marketing Manager"
+          ]
+        ]
+      },
+      {
+        "code": "S",
+        "fields": [
+          "Medical & Health",
+          "Humanities",
+          "Hospitality"
+        ],
+        "careers": [
+          [
+            "Medical Doctor",
+            "Registered Nurse",
+            "Healthcare Administrator"
+          ],
+          [
+            "Psychologist",
+            "Policy Analyst",
+            "Technical Writer"
+          ],
+          [
+            "Event Coordinator",
+            "Hotel Manager",
+            "Tourism Director"
+          ]
+        ]
+      }
+    ]
+  },
+  "engineering-vs-business": {
+    "valid": true,
+    "confidence": "Moderate",
+    "edgeCase": null,
+    "dominantCode": "R",
+    "normalized": {
+      "R": 0.25,
+      "I": 0.1786,
+      "A": 0.0536,
+      "S": 0.0804,
+      "E": 0.2411,
+      "C": 0.1964
+    },
+    "topFields": [
+      "Engineering",
+      "Networking",
+      "Finance"
+    ],
+    "topCareerTitles": [
+      "Civil Engineer",
+      "Mechanical Engineer",
+      "Robotics Engineer",
+      "IT Infrastructure Manager",
+      "Network Security Engineer",
+      "Portfolio Manager",
+      "Network Engineer",
+      "Systems Administrator"
+    ],
+    "pathway": [
+      {
+        "code": "R",
+        "fields": [
+          "Engineering",
+          "Networking",
+          "Pure & Applied Science"
+        ],
+        "careers": [
+          [
+            "Civil Engineer",
+            "Mechanical Engineer",
+            "Robotics Engineer"
+          ],
+          [
+            "IT Infrastructure Manager",
+            "Network Security Engineer",
+            "Network Engineer"
+          ],
+          [
+            "Lab Technician",
+            "Environmental Consultant",
+            "Geologist"
+          ]
+        ]
+      },
+      {
+        "code": "E",
+        "fields": [
+          "Law",
+          "Marketing",
+          "Business & Management"
+        ],
+        "careers": [
+          [
+            "Legal Consultant",
+            "Corporate Attorney",
+            "Paralegal"
+          ],
+          [
+            "Social Media Director",
+            "Brand Strategist",
+            "Digital Marketing Manager"
+          ],
+          [
+            "Operations Manager",
+            "Management Consultant",
+            "Project Manager"
+          ]
+        ]
+      },
+      {
+        "code": "C",
+        "fields": [
+          "Finance",
+          "Data Analytics",
+          "Accounting"
+        ],
+        "careers": [
+          [
+            "Portfolio Manager",
+            "Investment Banker",
+            "Financial Planner"
+          ],
+          [
+            "Operations Analyst",
+            "Business Intelligence Analyst",
+            "Market Research Analyst"
+          ],
+          [
+            "Certified Public Accountant",
+            "Forensic Accountant",
+            "Tax Auditor"
+          ]
+        ]
+      },
+      {
+        "code": "I",
+        "fields": [
+          "Networking",
+          "Pure & Applied Science",
+          "Computer Applications"
+        ],
+        "careers": [
+          [
+            "IT Infrastructure Manager",
+            "Network Security Engineer",
+            "Network Engineer"
+          ],
+          [
+            "Lab Technician",
+            "Environmental Consultant",
+            "Geologist"
+          ],
+          [
+            "Hardware Engineer",
+            "IT Support Technician",
+            "Systems Engineer"
+          ]
+        ]
+      },
+      {
+        "code": "S",
+        "fields": [
+          "Hospitality",
+          "Medical & Health",
+          "Humanities"
+        ],
+        "careers": [
+          [
+            "Event Coordinator",
+            "Hotel Manager",
+            "Tourism Director"
+          ],
+          [
+            "Medical Doctor",
+            "Registered Nurse",
+            "Healthcare Administrator"
+          ],
+          [
+            "Psychologist",
+            "Policy Analyst",
+            "Technical Writer"
+          ]
+        ]
+      },
+      {
+        "code": "A",
+        "fields": [
+          "Media",
+          "Humanities",
+          "Design"
+        ],
+        "careers": [
+          [
+            "Public Relations Specialist",
+            "Content Producer",
+            "Digital Editor"
+          ],
+          [
+            "Psychologist",
+            "Policy Analyst",
+            "Technical Writer"
+          ],
+          [
+            "Industrial Designer",
+            "UX/UI Designer",
+            "Graphic Designer"
+          ]
+        ]
+      }
+    ]
+  }
+}

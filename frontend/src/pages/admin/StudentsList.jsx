@@ -79,7 +79,6 @@ function StudentsList() {
   // UI state
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
-  const [readinessFilter, setReadinessFilter] = useState('all');
   const [pageSize, setPageSize] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
   const [infiniteScroll, setInfiniteScroll] = useState(false);
@@ -95,8 +94,7 @@ function StudentsList() {
     refetch: refetchStudents
   } = useStudents(currentPage, pageSize, {
     search: searchQuery,
-    status: statusFilter,
-    readiness: readinessFilter
+    status: statusFilter
   });
 
   const allowRetakeMutation = useAllowRetake();
@@ -486,21 +484,6 @@ function StudentsList() {
                 <option value="not_started">Not Started</option>
               </select>
             </div>
-
-            {/* Readiness Filter */}
-            <div className="relative">
-              <IconFilter className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
-              <select
-                value={readinessFilter}
-                onChange={(e) => setReadinessFilter(e.target.value)}
-                className="w-full pl-10 pr-4 py-2.5 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent appearance-none cursor-pointer"
-              >
-                <option value="all">All Readiness</option>
-                <option value="ready">Ready</option>
-                <option value="partially_ready">Partially Ready</option>
-                <option value="not_ready">Not Ready</option>
-              </select>
-            </div>
           </div>
         </motion.div>
 
@@ -537,7 +520,7 @@ function StudentsList() {
                       <td colSpan="6" className="px-3 sm:px-4 lg:px-6 py-8 sm:py-12 text-center">
                         <div className="flex flex-col items-center gap-2">
                           <p className="text-sm sm:text-base text-slate-500 dark:text-slate-400">No students found</p>
-                          {(searchQuery || statusFilter !== 'all' || readinessFilter !== 'all') && (
+                          {(searchQuery || statusFilter !== 'all') && (
                             <p className="text-xs text-slate-400 dark:text-slate-500">Try adjusting your filters</p>
                           )}
                         </div>
@@ -641,7 +624,7 @@ function StudentsList() {
               <div className="px-3 sm:px-4 py-8 sm:py-12 text-center">
                 <div className="flex flex-col items-center gap-2">
                   <p className="text-sm sm:text-base text-slate-500 dark:text-slate-400">No students found</p>
-                  {(searchQuery || statusFilter !== 'all' || readinessFilter !== 'all') && (
+                  {(searchQuery || statusFilter !== 'all') && (
                     <p className="text-xs text-slate-400 dark:text-slate-500">Try adjusting your filters</p>
                   )}
                 </div>

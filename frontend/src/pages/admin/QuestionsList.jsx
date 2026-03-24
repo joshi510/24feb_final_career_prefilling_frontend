@@ -8,7 +8,6 @@ import Loading from '../../components/Loading';
 import Error from '../../components/Error';
 import ConfirmModal from '../../components/admin/ConfirmModal';
 import Toast from '../../components/admin/Toast';
-import AIQuestionGenerator from '../../components/admin/AIQuestionGenerator';
 
 // Icons
 const IconSearch = ({ className }) => (
@@ -155,7 +154,6 @@ function QuestionsList() {
   const [selectedQuestionIds, setSelectedQuestionIds] = useState(new Set());
   const [currentPage, setCurrentPage] = useState(1);
   const [toast, setToast] = useState({ visible: false, message: '', type: 'success' });
-  const [showAIGenerator, setShowAIGenerator] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
   const [focusedRowIndex, setFocusedRowIndex] = useState(-1);
   const [uploadingExcel, setUploadingExcel] = useState(false);
@@ -894,16 +892,6 @@ function QuestionsList() {
               )}
             </motion.button>
             <motion.button
-              onClick={() => setShowAIGenerator(true)}
-              className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 rounded-lg text-sm sm:text-base font-medium transition-all hover:bg-slate-50 dark:hover:bg-slate-700 shadow-sm touch-manipulation min-h-[44px]"
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-            >
-              <IconSparkles className="w-4 h-4" />
-              <span className="hidden sm:inline">Generate with AI</span>
-              <span className="sm:hidden">AI</span>
-            </motion.button>
-            <motion.button
               onClick={() => navigate('/admin/questions/new')}
               className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-lg text-sm sm:text-base font-medium transition-all hover:bg-slate-800 dark:hover:bg-slate-100 shadow-sm touch-manipulation min-h-[44px]"
               whileHover={{ scale: 1.02 }}
@@ -1439,16 +1427,6 @@ function QuestionsList() {
         onClose={() => setToast({ ...toast, visible: false })}
       />
 
-      {/* AI Question Generator Modal */}
-      {showAIGenerator && (
-        <AIQuestionGenerator
-          sections={sections}
-          onQuestionsGenerated={() => {
-            loadQuestions(currentPage);
-          }}
-          onClose={() => setShowAIGenerator(false)}
-        />
-      )}
     </AdminLayout>
   );
 }

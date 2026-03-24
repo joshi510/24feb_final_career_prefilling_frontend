@@ -9,6 +9,7 @@ import Error from '../../components/Error';
 import Toast from '../../components/admin/Toast';
 import RIASECProfile from '../../components/RIASECProfile';
 import RIASECCareerPathways from '../../components/RIASECCareerPathways';
+import CareerArchetypeSection from '../../components/CareerArchetypeSection';
 import RIASECDimensionCard from '../../components/RIASECDimensionCard';
 import RIASECDimensionsOverview from '../../components/RIASECDimensionsOverview';
 import ScoreSummary from '../../components/ScoreSummary';
@@ -149,25 +150,25 @@ function AdminStudentResult() {
       }
     } else if (finalResultId) {
       // Fetch RIASEC report if not in result
-      (async () => {
-        try {
-          setLoadingRIASEC(true);
-          setRiasecError(null);
-          const riasecData = await testAPI.getRIASECReport(finalResultId);
-          if (riasecData && riasecData.report) {
-            setRiasecReport(riasecData.report);
-          } else {
+        (async () => {
+          try {
+            setLoadingRIASEC(true);
+            setRiasecError(null);
+            const riasecData = await testAPI.getRIASECReport(finalResultId);
+            if (riasecData && riasecData.report) {
+              setRiasecReport(riasecData.report);
+            } else {
+              setRiasecReport(null);
+            }
+          } catch (e) {
+            console.error('❌ RIASEC report error:', e);
+            setRiasecError(e.message || 'Failed to load RIASEC report');
             setRiasecReport(null);
+          } finally {
+            setLoadingRIASEC(false);
           }
-        } catch (e) {
-          console.error('❌ RIASEC report error:', e);
-          setRiasecError(e.message || 'Failed to load RIASEC report');
-          setRiasecReport(null);
-        } finally {
-          setLoadingRIASEC(false);
-        }
       })();
-    }
+              }
   }, [result, finalResultId]);
 
   const handleSaveNote = async () => {
@@ -181,14 +182,14 @@ function AdminStudentResult() {
     }
 
     if (!finalStudentId || !result?.test_attempt_id) {
-      setToast({
-        visible: true,
+        setToast({
+          visible: true,
         message: 'Invalid student ID or test attempt ID',
-        type: 'error'
-      });
-      return;
-    }
-
+          type: 'error'
+        });
+        return;
+      }
+      
     try {
       await addNoteMutation.mutateAsync({
         studentId: finalStudentId,
@@ -309,6 +310,7 @@ function AdminStudentResult() {
             counsellorNote={counsellorNote}
             user={result?.student || {}}
             riasecReport={riasecReport}
+            showDiscussionForCounsellor={false}
           />
         </div>
 
@@ -341,7 +343,7 @@ function AdminStudentResult() {
               {riasecReport.dimensions && riasecReport.dimensions.length > 0 && (
                 <div>
                   <h2 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-slate-100 mb-4 sm:mb-6">
-                    Detailed Dimension Analysis
+                    What Each Type Means For You
                   </h2>
                   {riasecReport.dimensions.map((dimension, index) => (
                     <RIASECDimensionCard key={dimension.code} dimension={dimension} />
@@ -429,12 +431,16 @@ function AdminStudentResult() {
             />
           )}
 
-          {/* Potential Career Pathways - Before Counsellor Notes */}
+          {/* Career archetype + pathways */}
           {riasecReport && riasecReport.dimensions && riasecReport.dimensions.length > 0 && (
-            <RIASECCareerPathways 
-              careerPathways={riasecReport.careerPathways} 
-              dimensions={riasecReport.dimensions}
-            />
+            <>
+              <CareerArchetypeSection dimensions={riasecReport.dimensions} />
+              <RIASECCareerPathways
+                careerPathways={riasecReport.careerPathways}
+                dimensions={riasecReport.dimensions}
+                showDiscussionForCounsellor={false}
+              />
+            </>
           )}
 
         {/* Test Attempts Timeline */}
@@ -587,16 +593,19 @@ function AdminStudentResult() {
             </h3>
             <div className="space-y-2 sm:space-y-3 text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
               <p>
-                <strong>What this report means:</strong> This assessment provides insights into the student's current career exploration stage, strengths, and areas for development. The results are based on the student's responses and reflect their current level of readiness for career decision-making.
+                <strong>What this report means:</strong> This report shows the student&apos;s personality type, strengths,
+                and best-fit career areas based on their answers.
               </p>
               <p>
-                <strong>What this report does NOT mean:</strong> This is not a test of intelligence or ability. A lower score does not indicate failure or lack of potential. It simply means the student is in an earlier stage of career exploration and needs more time to develop clarity.
+                <strong>What this report does NOT mean:</strong> This is not an intelligence test. A lower score does not
+                mean failure. It just means the student needs more time to explore.
               </p>
               <p>
-                <strong>Next steps:</strong> The roadmap provided in this report offers a clear path forward. Work with a qualified career counsellor to understand these results better and create a personalized plan. Remember, career development is a journey, not a destination.
+                <strong>Next steps:</strong> Talk to a career counsellor to understand these results better and make a plan.
               </p>
               <p className="text-xs text-slate-500 dark:text-slate-400 italic mt-4">
-                This assessment is designed to provide general career guidance and insights. Results are intended for informational purposes only and should not be considered as definitive career decisions or professional diagnoses. We strongly recommend consulting with a qualified career counsellor to discuss these results in detail.
+                This report gives general career guidance only. Please talk to a qualified career counsellor for detailed
+                advice.
               </p>
             </div>
           </div>

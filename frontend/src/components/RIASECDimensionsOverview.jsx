@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Wrench, FlaskConical, Palette, Users, Megaphone, Folder } from 'lucide-react';
+import { matchTierToDisplayLabel } from '../utils/simplifiedReportCopy.js';
 
 function RIASECDimensionsOverview({ dimensions }) {
   if (!dimensions || !Array.isArray(dimensions) || dimensions.length === 0) {
@@ -135,11 +136,8 @@ function RIASECDimensionsOverview({ dimensions }) {
       {/* Header */}
       <div className="text-left -mb-2">
         <h2 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-slate-100 mb-0 leading-tight">
-          RIASEC Dimensions Overview
+          Your Personality Types
         </h2>
-        <p className="text-sm sm:text-base text-slate-600 dark:text-slate-400 mb-0 leading-tight -mt-1">
-          Your unique blend of vocational interests and personality traits
-        </p>
       </div>
 
       {/* Desktop: Hexagonal Layout */}
@@ -366,7 +364,7 @@ function RIASECDimensionsOverview({ dimensions }) {
                         {dim.score}%
                       </span>
                       <span className={`text-xs font-semibold px-2 py-1 rounded ${dim.bgLight} ${dim.text}`}>
-                        {dim.matchLevel} MATCH
+                        {matchTierToDisplayLabel(dim.matchLevel)}
                       </span>
                     </div>
                   </div>

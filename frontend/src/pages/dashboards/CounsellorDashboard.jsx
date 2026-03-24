@@ -2,15 +2,15 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { useTheme } from '../../context/ThemeContext';
 import { testAPI, counsellorAPI } from '../../services/api';
 import RIASECProfile from '../../components/RIASECProfile';
 import RIASECCareerPathways from '../../components/RIASECCareerPathways';
+import CareerArchetypeSection from '../../components/CareerArchetypeSection';
 import RIASECDimensionCard from '../../components/RIASECDimensionCard';
 import RIASECDimensionsOverview from '../../components/RIASECDimensionsOverview';
 import { generatePDF } from '../../utils/pdfGenerator';
 import ResultPDF from '../../components/ResultPDF';
-import Footer from '../../components/Footer';
+import CounsellorLayout from '../../components/counsellor/CounsellorLayout';
 
 // Stat Card Component
 const StatCard = ({ icon, title, value, subtitle, gradient, delay = 0 }) => {
@@ -21,24 +21,24 @@ const StatCard = ({ icon, title, value, subtitle, gradient, delay = 0 }) => {
     : icon;
   
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay }}
+  <motion.div
+    initial={{ opacity: 0, y: 20 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ delay }}
       className={`bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-4 sm:p-6 border border-slate-200 dark:border-slate-700 hover:shadow-xl transition-all ${gradient}`}
-    >
+  >
       <div className="flex items-center justify-between mb-3 sm:mb-4">
         <div className={`p-2 sm:p-3 rounded-xl ${gradient.includes('from-blue') ? 'bg-blue-100 dark:bg-blue-900/30' : gradient.includes('from-purple') ? 'bg-purple-100 dark:bg-purple-900/30' : gradient.includes('from-amber') ? 'bg-amber-100 dark:bg-amber-900/30' : 'bg-green-100 dark:bg-green-900/30'}`}>
           {iconWithSize}
-        </div>
       </div>
-      <div>
+    </div>
+    <div>
         <p className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-slate-100 mb-1">{value}</p>
         <p className="text-xs sm:text-sm font-medium text-slate-600 dark:text-slate-400">{title}</p>
-        {subtitle && <p className="text-xs text-slate-500 dark:text-slate-500 mt-1">{subtitle}</p>}
-      </div>
-    </motion.div>
-  );
+      {subtitle && <p className="text-xs text-slate-500 dark:text-slate-500 mt-1">{subtitle}</p>}
+    </div>
+  </motion.div>
+);
 };
 
 // Status Badge Component
@@ -58,11 +58,11 @@ const StatusBadge = ({ status, type = 'readiness' }) => {
     } else if (type === 'risk') {
       switch (status) {
         case 'HIGH':
-          return { bg: 'bg-red-100 dark:bg-red-900/30', text: 'text-red-700 dark:text-red-300', label: 'High Risk' };
+          return { bg: 'bg-red-100 dark:bg-red-900/30', text: 'text-red-700 dark:text-red-300', label: 'Needs Guidance' };
         case 'MEDIUM':
-          return { bg: 'bg-amber-100 dark:bg-amber-900/30', text: 'text-amber-700 dark:text-amber-300', label: 'Medium Risk' };
+          return { bg: 'bg-amber-100 dark:bg-amber-900/30', text: 'text-amber-700 dark:text-amber-300', label: 'Getting Clearer' };
         case 'LOW':
-          return { bg: 'bg-green-100 dark:bg-green-900/30', text: 'text-green-700 dark:text-green-300', label: 'Low Risk' };
+          return { bg: 'bg-green-100 dark:bg-green-900/30', text: 'text-green-700 dark:text-green-300', label: 'Career Clear' };
         default:
           return { bg: 'bg-slate-100 dark:bg-slate-700', text: 'text-slate-600 dark:text-slate-400', label: 'Unknown' };
       }
@@ -134,14 +134,19 @@ const InterpretationModal = ({ isOpen, onClose, student, attemptId, testStatus }
       // Handle interpretation data
       if (interpretationData.status === 'fulfilled') {
         const data = interpretationData.value;
-        const interpretationScore = data.score !== undefined && data.score !== null
-          ? Number(data.score)
-          : (data.overall_percentage !== undefined && data.overall_percentage !== null
-            ? Number(data.overall_percentage)
-            : null);
-        
+        const interpretationScoreRaw =
+          data.score !== undefined && data.score !== null
+            ? Number(data.score)
+            : data.overall_percentage !== undefined && data.overall_percentage !== null
+              ? Number(data.overall_percentage)
+              : null;
+        const interpretationScore =
+          interpretationScoreRaw !== null && Number.isFinite(interpretationScoreRaw)
+            ? Math.round(interpretationScoreRaw)
+            : null;
+
         console.log(`🔵 Interpretation for attempt ${attemptId}: Score = ${interpretationScore}`);
-        
+
         setInterpretation({
           ...data,
           score: interpretationScore
@@ -286,6 +291,7 @@ const InterpretationModal = ({ isOpen, onClose, student, attemptId, testStatus }
           } : null}
           user={student || {}}
           riasecReport={riasecReport}
+          showDiscussionForCounsellor={true}
         />
       </div>
 
@@ -361,7 +367,11 @@ const InterpretationModal = ({ isOpen, onClose, student, attemptId, testStatus }
                 <div className="grid grid-cols-1 gap-4">
                   <div className="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-xl p-4 border border-blue-200 dark:border-blue-800">
                     <p className="text-xs text-blue-600 dark:text-blue-400 font-medium mb-1">Score</p>
-                    <p className="text-2xl font-bold text-blue-700 dark:text-blue-300">{interpretation.score || 'N/A'}%</p>
+                    <p className="text-2xl font-bold text-blue-700 dark:text-blue-300">
+                      {interpretation.score != null && Number.isFinite(Number(interpretation.score))
+                        ? `${Math.round(Number(interpretation.score))}%`
+                        : 'N/A'}
+                    </p>
                   </div>
                 </div>
 
@@ -382,19 +392,23 @@ const InterpretationModal = ({ isOpen, onClose, student, attemptId, testStatus }
                       <RIASECDimensionsOverview dimensions={riasecReport.dimensions} />
                     )}
                     
-                    {/* RIASEC Career Pathways */}
+                    {/* Career archetype + pathways */}
                     {riasecReport && riasecReport.dimensions && riasecReport.dimensions.length > 0 && (
-                      <RIASECCareerPathways 
-                        careerPathways={riasecReport.careerPathways} 
-                        dimensions={riasecReport.dimensions}
-                      />
+                      <>
+                        <CareerArchetypeSection dimensions={riasecReport.dimensions} />
+                        <RIASECCareerPathways
+                          careerPathways={riasecReport.careerPathways}
+                          dimensions={riasecReport.dimensions}
+                          showDiscussionForCounsellor={true}
+                        />
+                      </>
                     )}
                     
                     {/* RIASEC Dimensions - Individual Cards */}
                     {riasecReport.dimensions && riasecReport.dimensions.length > 0 && (
                       <div>
                         <h3 className="text-xl font-bold text-slate-900 dark:text-slate-100 mb-4">
-                          Detailed Dimension Analysis
+                          What Each Type Means For You
                         </h3>
                         <div className="space-y-4">
                           {riasecReport.dimensions.map((dimension) => (
@@ -498,39 +512,15 @@ const InterpretationModal = ({ isOpen, onClose, student, attemptId, testStatus }
 };
 
 // Icon Components
-const IconLogout = ({ className }) => (
-  <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-  </svg>
-);
-
-const IconChevronDown = ({ className }) => (
-  <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-  </svg>
-);
-
-const IconSun = ({ className }) => (
-  <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
-  </svg>
-);
-
-const IconMoon = ({ className }) => (
-  <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
-  </svg>
-);
 
 // Main Dashboard Component
 function CounsellorDashboard() {
   const navigate = useNavigate();
   const { user, logout } = useAuth();
-  const { isDark, toggleTheme } = useTheme();
-  const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
   const [students, setStudents] = useState([]);
   const [allStudents, setAllStudents] = useState([]); // Store all students for stats
   const [loading, setLoading] = useState(true);
+  const [statsLoading, setStatsLoading] = useState(false); // Separate loading state for stats
   const [stats, setStats] = useState({
     totalAssigned: 0,
     testsCompleted: 0,
@@ -541,7 +531,6 @@ function CounsellorDashboard() {
   // Filters
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
-  const [readinessFilter, setReadinessFilter] = useState('all');
   const [riskFilter, setRiskFilter] = useState('all');
   const [debouncedSearch, setDebouncedSearch] = useState('');
   
@@ -560,7 +549,7 @@ function CounsellorDashboard() {
   const [showModal, setShowModal] = useState(false);
 
   // Helper function to build clean filters
-  const buildFilters = (search, status, readiness, risk) => {
+  const buildFilters = (search, status, risk) => {
     const filters = {};
 
     if (search && search.trim() !== '') {
@@ -569,10 +558,6 @@ function CounsellorDashboard() {
 
     if (status && status !== 'all') {
       filters.status = status;
-    }
-
-    if (readiness && readiness !== 'all') {
-      filters.readiness = readiness;
     }
 
     if (risk && risk !== 'all') {
@@ -598,8 +583,7 @@ function CounsellorDashboard() {
         setLoading(true);
       }
       
-      const filterParams = buildFilters(debouncedSearch, statusFilter, readinessFilter, riskFilter);
-      console.log('🔵 Loading students with filters:', filterParams);
+      const filterParams = buildFilters(debouncedSearch, statusFilter, riskFilter);
       
       // For stats, use max allowed limit (100), not 1000
       const limitForQuery = forStats ? 100 : pageSize;
@@ -608,20 +592,16 @@ function CounsellorDashboard() {
       const studentsList = response.students || [];
       
       // Ensure each student's score is properly extracted and not using a fallback
-      const studentsWithScores = studentsList.map(student => {
+      const studentsWithScores = studentsList.map((student) => {
         // Explicitly extract score from the student object, ensuring it's tied to test_attempt_id
-        const studentScore = student.score !== undefined && student.score !== null 
-          ? Number(student.score) 
-          : null;
-        
-        // Log for debugging (remove in production if needed)
-        if (student.test_attempt_id && studentScore !== null) {
-          console.log(`🔵 Student ${student.id} (Attempt ${student.test_attempt_id}): Score = ${studentScore}`);
-        }
-        
+        const raw =
+          student.score !== undefined && student.score !== null ? Number(student.score) : null;
+        const studentScore =
+          raw !== null && Number.isFinite(raw) ? Math.round(raw) : null;
+
         return {
           ...student,
-          score: studentScore // Ensure score is explicitly set per student
+          score: studentScore
         };
       });
       
@@ -651,106 +631,155 @@ function CounsellorDashboard() {
         setLoading(false);
       }
     }
-  }, [pageSize, debouncedSearch, statusFilter, readinessFilter, riskFilter]);
+  }, [pageSize, debouncedSearch, statusFilter, riskFilter]);
 
   // Load students for display
   useEffect(() => {
     loadStudents(1, false);
-  }, [debouncedSearch, statusFilter, readinessFilter, riskFilter, pageSize]);
+  }, [debouncedSearch, statusFilter, riskFilter, pageSize]);
 
-  // Load all students for stats (without filters, fetch all pages if needed)
+  // Load stats efficiently - only fetch summary data, not all students
+  const statsLoadingRef = useRef(false);
   useEffect(() => {
     const loadStats = async () => {
+      // Prevent duplicate calls
+      if (statsLoadingRef.current) return;
+      statsLoadingRef.current = true;
+      setStatsLoading(true);
+
       try {
-        // Use max allowed limit (100) per page
+        // Only fetch first page with max limit to get total count and calculate initial stats
+        // This is much faster than fetching all pages
         const limitPerPage = 100;
-        
-        // First, get the first page to know total count
         const firstPageResponse = await counsellorAPI.getStudents(1, limitPerPage, {});
         const totalRecords = firstPageResponse.pagination?.total_records || 0;
-        const totalPages = firstPageResponse.pagination?.total_pages || 1;
+        const firstPageStudents = firstPageResponse.students || [];
         
-        let allStudentsData = firstPageResponse.students || [];
+        // Calculate stats from first page only (for quick display)
+        let testsCompleted = 0;
+        let testsInProgress = 0;
+        let highRisk = 0;
         
-        // If there are more pages, fetch them all
-        if (totalPages > 1) {
-          const additionalPages = [];
-          for (let page = 2; page <= totalPages; page++) {
-            try {
-              const pageResponse = await counsellorAPI.getStudents(page, limitPerPage, {});
-              if (pageResponse.students) {
-                additionalPages.push(...pageResponse.students);
-              }
-            } catch (pageErr) {
-              console.error(`Failed to load page ${page} for stats:`, pageErr);
-            }
+        for (const student of firstPageStudents) {
+          if (student.test_status === 'COMPLETED' || student.has_completed_test === true) {
+            testsCompleted++;
           }
-          allStudentsData = [...allStudentsData, ...additionalPages];
+          if (student.test_status === 'IN_PROGRESS') {
+            testsInProgress++;
+          }
+          if (student.risk_level === 'HIGH') {
+            highRisk++;
+          }
         }
         
-        console.log('🔵 Loaded students for stats:', {
-          totalRecords,
-          totalPages,
-          studentsLoaded: allStudentsData.length
+        // Set initial stats from first page
+        setStats({
+          totalAssigned: totalRecords, // Use total from pagination
+          testsCompleted: testsCompleted, // Will be approximate from first page
+          testsInProgress: testsInProgress,
+          highRisk: highRisk
         });
         
-        setAllStudents(allStudentsData);
+        // Only fetch additional pages if there are more and we need accurate stats
+        // But do it in the background after initial render
+        if (firstPageResponse.pagination?.total_pages > 1 && totalRecords <= 500) {
+          // Only fetch all if reasonable number of students (<= 500)
+          setTimeout(async () => {
+            try {
+              const totalPages = firstPageResponse.pagination?.total_pages || 1;
+              const pageNumbers = Array.from({ length: totalPages - 1 }, (_, i) => i + 2);
+              
+              const pagePromises = pageNumbers.map(page => 
+                counsellorAPI.getStudents(page, limitPerPage, {}).catch(err => {
+                  console.error(`Failed to load page ${page} for stats:`, err);
+                  return { students: [] };
+                })
+              );
+              
+              const pageResponses = await Promise.all(pagePromises);
+              const additionalStudents = pageResponses.flatMap(response => response.students || []);
+              const allStudentsData = [...firstPageStudents, ...additionalStudents];
+              
+              // Recalculate accurate stats
+              let accurateTestsCompleted = 0;
+              let accurateTestsInProgress = 0;
+              let accurateHighRisk = 0;
+              
+              for (const student of allStudentsData) {
+                if (student.test_status === 'COMPLETED' || student.has_completed_test === true) {
+                  accurateTestsCompleted++;
+                }
+                if (student.test_status === 'IN_PROGRESS') {
+                  accurateTestsInProgress++;
+                }
+                if (student.risk_level === 'HIGH') {
+                  accurateHighRisk++;
+                }
+              }
+              
+              setStats({
+                totalAssigned: allStudentsData.length,
+                testsCompleted: accurateTestsCompleted,
+                testsInProgress: accurateTestsInProgress,
+                highRisk: accurateHighRisk
+              });
+              
+              setAllStudents(allStudentsData);
+            } catch (err) {
+              console.error('Failed to load additional stats:', err);
+            }
+          }, 2000); // Load full stats after 2 seconds (non-blocking)
+        } else {
+          // For large datasets, just use first page stats
+          setAllStudents(firstPageStudents);
+        }
       } catch (err) {
         console.error('Failed to load stats:', err);
         setAllStudents([]);
+      } finally {
+        setStatsLoading(false);
+        statsLoadingRef.current = false;
       }
     };
-    loadStats();
+    
+    // Load stats after a delay to not block initial render (increased delay)
+    const timer = setTimeout(() => {
+      loadStats();
+    }, 500); // Increased from 100ms to 500ms
+    
+    return () => clearTimeout(timer);
   }, []);
 
-  // Calculate stats from all students
+  // Stats are now calculated directly in the loadStats function
+  // This useEffect is no longer needed, but keeping it for backward compatibility
+  // if allStudents is updated from elsewhere
   useEffect(() => {
-    if (allStudents.length === 0) {
+    // Only recalculate if allStudents changes and we have data
+    // This is mainly for when filters change
+    if (allStudents.length > 0) {
+      let testsCompleted = 0;
+      let testsInProgress = 0;
+      let highRisk = 0;
+      
+      for (const student of allStudents) {
+        if (student.test_status === 'COMPLETED' || student.has_completed_test === true) {
+          testsCompleted++;
+        }
+        if (student.test_status === 'IN_PROGRESS') {
+          testsInProgress++;
+        }
+        if (student.risk_level === 'HIGH') {
+          highRisk++;
+        }
+      }
+
       setStats({
-        totalAssigned: 0,
-        testsCompleted: 0,
-        testsInProgress: 0,
-        highRisk: 0
+        totalAssigned: allStudents.length,
+        testsCompleted,
+        testsInProgress,
+        highRisk
       });
-      return;
     }
-
-    // Count total assigned students (all students returned by API)
-    const totalAssigned = allStudents.length;
-    
-    // Count completed tests - check both test_status and has_completed_test
-    const testsCompleted = allStudents.filter(s => {
-      return s.test_status === 'COMPLETED' || s.has_completed_test === true;
-    }).length;
-    
-    // Count in-progress tests - check test_status is IN_PROGRESS
-    const testsInProgress = allStudents.filter(s => {
-      return s.test_status === 'IN_PROGRESS';
-    }).length;
-    
-    // Count high-risk students - check risk_level is HIGH
-    const highRisk = allStudents.filter(s => {
-      return s.risk_level === 'HIGH';
-    }).length;
-
-    console.log('🔵 Calculated stats:', {
-      totalAssigned,
-      testsCompleted,
-      testsInProgress,
-      highRisk,
-      sampleStudent: allStudents[0] ? {
-        test_status: allStudents[0].test_status,
-        has_completed_test: allStudents[0].has_completed_test,
-        risk_level: allStudents[0].risk_level
-      } : null
-    });
-
-    setStats({
-      totalAssigned,
-      testsCompleted,
-      testsInProgress,
-      highRisk
-    });
   }, [allStudents]);
 
   const handleViewInterpretation = (student) => {
@@ -779,117 +808,10 @@ function CounsellorDashboard() {
     return student.test_status === 'COMPLETED' || student.has_completed_test;
   };
 
-  const handleLogout = () => {
-    logout();
-    navigate('/login');
-  };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-slate-900 dark:via-slate-800">
-      {/* Header */}
-      <header className="bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 sticky top-0 z-30 shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16 sm:h-20">
-            <div className="flex items-center gap-3 sm:gap-4">
-              <motion.div
-                whileHover={{ scale: 1.05 }}
-                transition={{ type: "spring", stiffness: 400, damping: 17 }}
-                className="flex items-center justify-center flex-shrink-0"
-              >
-                <img 
-                  src="/images/tops-logo.png" 
-                  alt="TOPS TECHNOLOGIES Logo" 
-                  className="h-8 sm:h-10 w-auto max-w-[150px] sm:max-w-[200px]"
-                  style={{ objectFit: 'contain' }}
-                  onError={(e) => {
-                    // Fallback if image doesn't exist
-                    e.target.style.display = 'none';
-                    if (e.target.nextSibling) {
-                      e.target.nextSibling.style.display = 'flex';
-                    }
-                  }}
-                />
-                <div style={{ display: 'none' }} className="flex items-center gap-2.5 flex-shrink-0">
-                  <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center">
-                    <span className="text-white font-bold text-sm">CP</span>
-                  </div>
-                  <span className="text-slate-900 dark:text-slate-100 font-semibold text-sm">Career Profiling</span>
-                </div>
-              </motion.div>
-            </div>
-            <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
-              {/* Theme Toggle */}
-              <motion.button
-                onClick={toggleTheme}
-                className="p-2 sm:p-2.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors touch-manipulation min-w-[44px] min-h-[44px] flex items-center justify-center"
-                whileTap={{ scale: 0.95 }}
-                aria-label="Toggle theme"
-              >
-                {isDark ? <IconSun className="w-5 h-5" /> : <IconMoon className="w-5 h-5" />}
-              </motion.button>
-
-              {/* Role Badge */}
-              <span className="hidden sm:inline-flex px-2.5 sm:px-3 py-1 rounded-full text-xs font-medium bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300">
-                COUNSELLOR
-              </span>
-
-              {/* Profile Dropdown */}
-              <div className="relative">
-                <motion.button
-                  onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
-                  className="flex items-center gap-1.5 sm:gap-2 p-1.5 sm:p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors touch-manipulation min-w-[44px] min-h-[44px]"
-                  whileTap={{ scale: 0.95 }}
-                >
-                  <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center text-white text-xs sm:text-sm font-semibold">
-                    {user?.full_name?.charAt(0).toUpperCase() || 'C'}
-                  </div>
-                  <IconChevronDown className="w-4 h-4 text-slate-600 dark:text-slate-400 hidden sm:block" />
-                </motion.button>
-
-                <AnimatePresence>
-                  {profileDropdownOpen && (
-                    <motion.div
-                      initial={{ opacity: 0, y: -10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -10 }}
-                      onClick={(e) => e.stopPropagation()}
-                      className="absolute right-0 mt-2 w-48 bg-white dark:bg-slate-800 rounded-lg shadow-lg border border-slate-200 dark:border-slate-700 overflow-hidden z-50"
-                    >
-                      <div className="p-3 border-b border-slate-200 dark:border-slate-700">
-                        <p className="text-sm font-medium text-slate-900 dark:text-slate-100">
-                          {user?.full_name || 'Counsellor'}
-                        </p>
-                        <p className="text-xs text-slate-500 dark:text-slate-400">{user?.email}</p>
-                      </div>
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleLogout();
-                        }}
-                        className="w-full flex items-center gap-2 px-3 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors touch-manipulation cursor-pointer relative z-50"
-                        type="button"
-                      >
-                        <IconLogout className="w-4 h-4" />
-                        Logout
-                      </button>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-            </div>
-          </div>
-        </div>
-      </header>
-
-      {/* Click outside to close dropdown */}
-      {profileDropdownOpen && (
-        <div
-          className="fixed inset-0 z-40"
-          onClick={() => setProfileDropdownOpen(false)}
-        />
-      )}
-
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+    <CounsellorLayout>
+      <div className="max-w-7xl mx-auto">
         {/* Welcome Section */}
         <div className="mb-6 sm:mb-8">
           <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-slate-100 mb-2">
@@ -944,9 +866,9 @@ function CounsellorDashboard() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
               </svg>
             }
-            title="High-Risk Students"
+            title="Needs Guidance"
             value={stats.highRisk}
-            subtitle="Need immediate attention"
+            subtitle="Career clarity — needs support"
             gradient="bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-900/20 dark:to-orange-900/20"
             delay={0.3}
           />
@@ -966,7 +888,7 @@ function CounsellorDashboard() {
                 </div>
                 <input
                   type="text"
-                  placeholder="Search by student name, email, or attempt ID..."
+                  placeholder="Search by student name or email..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="w-full pl-10 sm:pl-12 pr-3 sm:pr-4 py-2.5 sm:py-3 text-sm border border-slate-300 dark:border-slate-600 rounded-xl bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
@@ -989,19 +911,6 @@ function CounsellorDashboard() {
                   <option value="not_started">Not Started</option>
                 </select>
                 <select
-                  value={readinessFilter}
-                  onChange={(e) => {
-                    setReadinessFilter(e.target.value);
-                    setPage(1);
-                  }}
-                  className="px-3 sm:px-4 py-2.5 sm:py-3 text-sm border border-slate-300 dark:border-slate-600 rounded-xl bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
-                >
-                  <option value="all">All Readiness</option>
-                  <option value="ready">Ready</option>
-                  <option value="partially_ready">Partially Ready</option>
-                  <option value="not_ready">Not Ready</option>
-                </select>
-                <select
                   value={riskFilter}
                   onChange={(e) => {
                     setRiskFilter(e.target.value);
@@ -1009,10 +918,10 @@ function CounsellorDashboard() {
                   }}
                   className="px-3 sm:px-4 py-2.5 sm:py-3 text-sm border border-slate-300 dark:border-slate-600 rounded-xl bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
                 >
-                  <option value="all">All Risk Levels</option>
-                  <option value="high">High Risk</option>
-                  <option value="medium">Medium Risk</option>
-                  <option value="low">Low Risk</option>
+                  <option value="all">All career clarity</option>
+                  <option value="high">Needs Guidance</option>
+                  <option value="medium">Getting Clearer</option>
+                  <option value="low">Career Clear</option>
                 </select>
               </div>
             </div>
@@ -1056,11 +965,9 @@ function CounsellorDashboard() {
                   <thead className="bg-slate-50 dark:bg-slate-900/50 sticky top-0 z-10">
                     <tr>
                       <th className="px-4 sm:px-6 py-3 sm:py-4 text-left text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider">Student</th>
-                      <th className="px-4 sm:px-6 py-3 sm:py-4 text-left text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider">Attempt ID</th>
                       <th className="px-4 sm:px-6 py-3 sm:py-4 text-left text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider">Test Status</th>
                       <th className="px-4 sm:px-6 py-3 sm:py-4 text-left text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider">Score</th>
-                      <th className="px-4 sm:px-6 py-3 sm:py-4 text-left text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider">Readiness</th>
-                      <th className="px-4 sm:px-6 py-3 sm:py-4 text-left text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider">Risk Level</th>
+                      <th className="px-4 sm:px-6 py-3 sm:py-4 text-left text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider">Career Clarity</th>
                       <th className="px-4 sm:px-6 py-3 sm:py-4 text-right text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider">Actions</th>
                     </tr>
                   </thead>
@@ -1091,20 +998,12 @@ function CounsellorDashboard() {
                             </div>
                           </td>
                           <td className="px-4 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
-                            <div className="text-xs sm:text-sm text-slate-600 dark:text-slate-400">
-                              {student.test_attempt_id ? `#${student.test_attempt_id}` : '—'}
-                            </div>
-                          </td>
-                          <td className="px-4 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
                             <StatusBadge status={student.test_status || (isCompleted ? 'COMPLETED' : 'NOT_STARTED')} type="test_status" />
                           </td>
                           <td className="px-4 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
                             <div className="text-xs sm:text-sm font-medium text-slate-900 dark:text-slate-100">
                               {student.score !== null ? `${student.score}%` : '—'}
                             </div>
-                          </td>
-                          <td className="px-4 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
-                            <StatusBadge status={student.readiness_status} type="readiness" />
                           </td>
                           <td className="px-4 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
                             <StatusBadge status={student.risk_level} type="risk" />
@@ -1117,7 +1016,7 @@ function CounsellorDashboard() {
                                 onClick={() => handleViewInterpretation(student)}
                                 className="px-3 sm:px-4 py-2 text-xs sm:text-sm bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg font-medium shadow-lg hover:shadow-xl transition-all"
                               >
-                                View Interpretation
+                                View
                               </motion.button>
                             ) : (
                               <button
@@ -1162,23 +1061,14 @@ function CounsellorDashboard() {
                           </div>
                         </div>
                       </div>
-                      <div className="grid grid-cols-2 gap-2 sm:gap-3 mb-2 sm:mb-3">
-                        <div>
-                          <span className="text-xs text-slate-500 dark:text-slate-400">Attempt ID</span>
-                          <div className="text-xs sm:text-sm font-medium text-slate-900 dark:text-slate-100">
-                            {student.test_attempt_id ? `#${student.test_attempt_id}` : '—'}
-                          </div>
-                        </div>
-                        <div>
-                          <span className="text-xs text-slate-500 dark:text-slate-400">Score</span>
-                          <div className="text-xs sm:text-sm font-medium text-slate-900 dark:text-slate-100">
-                            {student.score !== null ? `${student.score}%` : '—'}
-                          </div>
+                      <div className="mb-2 sm:mb-3">
+                        <span className="text-xs text-slate-500 dark:text-slate-400">Score</span>
+                        <div className="text-xs sm:text-sm font-medium text-slate-900 dark:text-slate-100">
+                          {student.score !== null ? `${student.score}%` : '—'}
                         </div>
                       </div>
                       <div className="flex flex-wrap gap-2 mb-2 sm:mb-3">
                         <StatusBadge status={student.test_status || (isCompleted ? 'COMPLETED' : 'NOT_STARTED')} type="test_status" />
-                        <StatusBadge status={student.readiness_status} type="readiness" />
                         <StatusBadge status={student.risk_level} type="risk" />
                       </div>
                       {isCompleted ? (
@@ -1188,7 +1078,7 @@ function CounsellorDashboard() {
                           onClick={() => handleViewInterpretation(student)}
                           className="w-full px-3 sm:px-4 py-2 text-xs sm:text-sm bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg font-medium shadow-lg hover:shadow-xl transition-all"
                         >
-                          View Interpretation
+                          View
                         </motion.button>
                       ) : (
                         <button
@@ -1241,8 +1131,7 @@ function CounsellorDashboard() {
         attemptId={selectedStudent?.test_attempt_id}
         testStatus={selectedStudent?.test_status || (selectedStudent?.has_completed_test ? 'COMPLETED' : 'IN_PROGRESS')}
       />
-      <Footer />
-    </div>
+    </CounsellorLayout>
   );
 }
 

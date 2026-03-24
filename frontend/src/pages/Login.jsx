@@ -2,27 +2,21 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useAuth } from '../context/AuthContext';
-import { useTheme } from '../context/ThemeContext';
+import { Rocket, Sparkles, Clock, Lightbulb, User, GraduationCap, Target, BarChart3, BookOpen, TrendingUp } from 'lucide-react';
 import Footer from '../components/Footer';
+import CareerProfilingVideo from '../components/CareerProfilingVideo';
 
-// Theme Toggle Icons
-const IconSun = ({ className }) => (
-  <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
-  </svg>
-);
-
-const IconMoon = ({ className }) => (
-  <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
-  </svg>
-);
+/**
+ * Student login/register left panel:
+ * - Set to a path under `public/` (e.g. '/images/auth-sidebar-bg.jpg') for a photo + tinted overlay (white text).
+ * - Set to null for a soft transparent / glass look (no image).
+ */
+const STUDENT_AUTH_SIDEBAR_IMAGE_URL = null;
 
 function Login() {
   const navigate = useNavigate();
   const location = useLocation();
   const { login, register } = useAuth();
-  const { isDark, toggleTheme } = useTheme();
   
   // Determine mode based on URL path
   // Root path "/" and "/register" show registration (for students)
@@ -158,378 +152,580 @@ function Login() {
     setError('');
   };
 
+  // Check if this is student registration/login (not admin/counsellor)
+  const isStudentAuth = !isAdminLogin && !isCounsellorLogin;
+  const sidebarUsesPhoto = Boolean(STUDENT_AUTH_SIDEBAR_IMAGE_URL);
+  const side = {
+    heading: sidebarUsesPhoto ? 'text-white' : 'text-slate-900 dark:text-slate-50',
+    sub: sidebarUsesPhoto ? 'text-white/85' : 'text-slate-600 dark:text-slate-400',
+    iconBox: sidebarUsesPhoto ? 'bg-white/20' : 'bg-blue-100/90 dark:bg-blue-900/50',
+    icon: sidebarUsesPhoto ? 'text-white' : 'text-blue-600 dark:text-blue-300',
+    sparkle: sidebarUsesPhoto ? 'text-white' : 'text-blue-500 dark:text-blue-400'
+  };
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 flex flex-col transition-colors duration-300 relative">
-      {/* Theme Toggle Button - Top Right */}
-      <motion.button
-        onClick={toggleTheme}
-        className="absolute top-2 right-2 sm:top-3 sm:right-3 p-1.5 sm:p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-white/80 dark:hover:bg-slate-800/80 transition-colors z-10 shadow-lg"
-        whileTap={{ scale: 0.95 }}
-        aria-label="Toggle theme"
-      >
-        {isDark ? <IconSun className="w-4 h-4" /> : <IconMoon className="w-4 h-4" />}
-      </motion.button>
-
-      {/* Main Content - Scrollable */}
-      <div className="flex-1 flex items-start justify-center px-4 py-4 overflow-y-auto">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4 }}
-        className="w-full max-w-4xl my-auto"
-      >
-          <div className={`bg-white dark:bg-slate-800 rounded-xl shadow-xl border border-slate-200/60 dark:border-slate-700 transition-colors duration-300 flex flex-col ${isRegister ? 'p-5 sm:p-6' : 'px-4 pt-4 pb-3 sm:px-5 sm:pt-5 sm:pb-4'}`}>
-          {/* Logo Section */}
-          <div className={`flex justify-center flex-shrink-0 ${isRegister ? 'mb-4' : 'mb-3'}`}>
-            <img 
-              src="/images/tops-logo.png" 
-              alt="TOPS TECHNOLOGIES Logo" 
-              className={`w-auto max-w-[220px] sm:max-w-[280px] ${isRegister ? 'h-12 sm:h-14' : 'h-10 sm:h-12'}`}
-              style={{ objectFit: 'contain' }}
-              onError={(e) => {
-                e.target.style.display = 'none';
-              }}
-            />
-          </div>
-          <div className={`text-center flex-shrink-0 ${isRegister ? 'mb-4' : 'mb-3'}`}>
-            <h1 className={`font-semibold text-slate-900 dark:text-slate-100 ${isRegister ? 'text-xl sm:text-2xl mb-1' : 'text-lg sm:text-xl mb-0.5'}`}>
-              {isRegister 
-                ? 'Student Registration' 
-                : isAdminLogin 
-                  ? 'Admin Login' 
-                  : isCounsellorLogin 
-                    ? 'Counsellor Login' 
-                    : 'Welcome Back'}
-            </h1>
-            <p className={`text-slate-600 dark:text-slate-400 ${isRegister ? 'text-xs sm:text-sm' : 'text-xs sm:text-sm'}`}>
-              {isRegister 
-                ? 'Start your career profiling journey' 
-                : isAdminLogin
-                  ? 'Sign in to access admin dashboard'
-                  : isCounsellorLogin
-                    ? 'Sign in to access counsellor dashboard'
-                : 'Sign in to continue your assessment'}
-            </p>
-          </div>
-
-          <form onSubmit={handleSubmit} className="flex flex-col">
-            <div>
-              {error && (
-                <motion.div
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className={`p-2.5 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg text-red-700 dark:text-red-400 text-xs sm:text-sm ${isRegister ? 'mb-3' : 'mb-2'}`}
-                >
-                  {error}
-                </motion.div>
-              )}
-
-              <div className={isRegister ? "space-y-3" : ""}>
-                {isRegister ? (
-                  <>
-                    {/* Three-column layout for registration on large screens */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                      <motion.div
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: 'auto' }}
-                        transition={{ duration: 0.3 }}
-                      >
-                        <label className="block text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">
-                          First Name <span className="text-red-500">*</span>
-                        </label>
-                        <input
-                          type="text"
-                          name="firstName"
-                          value={formData.firstName}
-                          onChange={handleChange}
-                          className="w-full px-3 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none"
-                          placeholder="John"
-                          required
-                        />
-                      </motion.div>
-                      <motion.div
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: 'auto' }}
-                        transition={{ duration: 0.3, delay: 0.05 }}
-                      >
-                        <label className="block text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">
-                          Last Name <span className="text-red-500">*</span>
-                        </label>
-                        <input
-                          type="text"
-                          name="lastName"
-                          value={formData.lastName}
-                          onChange={handleChange}
-                          className="w-full px-3 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none"
-                          placeholder="Doe"
-                          required
-                        />
-                      </motion.div>
-                      <motion.div
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: 'auto' }}
-                        transition={{ duration: 0.3, delay: 0.1 }}
-                      >
-                        <label className="block text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">
-                          Contact Number <span className="text-red-500">*</span>
-                        </label>
-                        <input
-                          type="tel"
-                          name="contactNumber"
-                          value={formData.contactNumber}
-                          onChange={handleChange}
-                          className="w-full px-3 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none"
-                          placeholder="1234567890"
-                          pattern="[0-9]{10}"
-                          required
-                          minLength={10}
-                          maxLength={10}
-                        />
-                      </motion.div>
-                    </div>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                      <motion.div
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: 'auto' }}
-                        transition={{ duration: 0.3, delay: 0.15 }}
-                      >
-                        <label className="block text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">
-                          Parent's Contact <span className="text-red-500">*</span>
-                        </label>
-                        <input
-                          type="tel"
-                          name="parentContactNumber"
-                          value={formData.parentContactNumber}
-                          onChange={handleChange}
-                          className="w-full px-3 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none"
-                          placeholder="1234567890"
-                          pattern="[0-9]{10}"
-                          required
-                          minLength={10}
-                          maxLength={10}
-                        />
-                      </motion.div>
-                      <motion.div
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: 'auto' }}
-                        transition={{ duration: 0.3, delay: 0.2 }}
-                      >
-                        <label className="block text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">
-                          Email Address <span className="text-red-500">*</span>
-                        </label>
-                        <input
-                          type="email"
-                          name="email"
-                          value={formData.email}
-                          onChange={handleChange}
-                          className="w-full px-3 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none"
-                          placeholder="you@example.com"
-                          required
-                        />
-                      </motion.div>
-                      <motion.div
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: 'auto' }}
-                        transition={{ duration: 0.3, delay: 0.25 }}
-                      >
-                        <label className="block text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">
-                          School/Institute <span className="text-red-500">*</span>
-                        </label>
-                        <input
-                          type="text"
-                          name="schoolInstituteName"
-                          value={formData.schoolInstituteName}
-                          onChange={handleChange}
-                          className="w-full px-3 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none"
-                          placeholder="School name"
-                          required
-                        />
-                      </motion.div>
-                    </div>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                      <motion.div
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: 'auto' }}
-                        transition={{ duration: 0.3, delay: 0.3 }}
-                      >
-                        <label className="block text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">
-                          Current Education <span className="text-red-500">*</span>
-                        </label>
-                        <select
-                          name="currentEducation"
-                          value={formData.currentEducation}
-                          onChange={handleChange}
-                          className="w-full px-3 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none"
-                          required
-                        >
-                          <option value="">Select education</option>
-                          <option value="10th">10th</option>
-                          <option value="11th">11th</option>
-                          <option value="12th">12th</option>
-                          <option value="Diploma">Diploma</option>
-                          <option value="Under Graduate">Under Graduate</option>
-                          <option value="Post Graduate">Post Graduate</option>
-                        </select>
-                      </motion.div>
-                      <motion.div
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: 'auto' }}
-                        transition={{ duration: 0.3, delay: 0.35 }}
-                      >
-                        <label className="block text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">
-                          Stream <span className="text-red-500">*</span>
-                        </label>
-                        <select
-                          name="stream"
-                          value={formData.stream}
-                          onChange={handleChange}
-                          className="w-full px-3 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none"
-                          required
-                        >
-                          <option value="">Select stream</option>
-                          <option value="Science">Science</option>
-                          <option value="Commerce">Commerce</option>
-                          <option value="Arts">Arts</option>
-                        </select>
-                      </motion.div>
-                      <motion.div
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: 'auto' }}
-                        transition={{ duration: 0.3, delay: 0.4 }}
-                      >
-                        <label className="block text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">
-                          Annual Income <span className="text-red-500">*</span>
-                        </label>
-                        <select
-                          name="familyAnnualIncome"
-                          value={formData.familyAnnualIncome}
-                          onChange={handleChange}
-                          className="w-full px-3 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none"
-                          required
-                        >
-                          <option value="">Select income</option>
-                          <option value="<4 Lacs">&lt;4 Lacs</option>
-                          <option value="4 to 6 Lacs">4 to 6 Lacs</option>
-                          <option value="6 to 8 Lacs">6 to 8 Lacs</option>
-                          <option value="10 to 12 Lacs">10 to 12 Lacs</option>
-                          <option value="12 to 14 Lacs">12 to 14 Lacs</option>
-                          <option value=">14 Lacs">&gt;14 Lacs</option>
-                        </select>
-                      </motion.div>
-                    </div>
-                    <div>
-                      <label className="block text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">
-                        Password <span className="text-red-500">*</span>
-                      </label>
-                      <input
-                        type="password"
-                        name="password"
-                        value={formData.password}
-                        onChange={handleChange}
-                        className="w-full px-3 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none"
-                        placeholder="••••••••"
-                        required
-                      />
-                    </div>
-                  </>
-                ) : (
-                  <>
-                    <div className="mb-2.5">
-                      <label className="block text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-300 mb-1 sm:mb-1.5">
-                        Email
-                      </label>
-                      <input
-                        type="email"
-                        name="email"
-                        value={formData.email}
-                        onChange={handleChange}
-                        className="w-full px-3 sm:px-4 py-2.5 sm:py-3 text-xs sm:text-sm rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none"
-                        placeholder="you@example.com"
-                        required
-                      />
-                    </div>
-
-                    <div className="mb-0">
-                      <label className="block text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-300 mb-1 sm:mb-1.5">
-                        Password
-                      </label>
-                      <input
-                        type="password"
-                        name="password"
-                        value={formData.password}
-                        onChange={handleChange}
-                        className="w-full px-3 sm:px-4 py-2.5 sm:py-3 text-xs sm:text-sm rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none"
-                        placeholder="••••••••"
-                        required
-                      />
-                    </div>
-                    {!isRegister && (
-                      <>
-                        <motion.button
-                          whileHover={{ scale: 1.02 }}
-                          whileTap={{ scale: 0.98 }}
-                          type="submit"
-                          disabled={loading}
-                          className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-2.5 sm:py-3 text-sm sm:text-base rounded-lg font-medium shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40 transition-all disabled:opacity-50 disabled:cursor-not-allowed mt-5"
-                        >
-                          {loading ? 'Processing...' : 'Sign In'}
-                        </motion.button>
-                        {!isAdminLogin && !isCounsellorLogin && (
-                        <div className="mt-1.5 text-center mb-0">
-                          <button
-                            type="button"
-                            onClick={() => {
-                              setError('');
-                              navigate('/register');
-                            }}
-                            className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
-                          >
-                            Don't have an account? Sign up
-                          </button>
-                        </div>
-                        )}
-                      </>
-                    )}
-                  </>
+    <div className="min-h-screen bg-white dark:bg-slate-900 flex flex-col transition-colors duration-300">
+      {/* Header - Only for student auth */}
+      {isStudentAuth && (
+        <header className="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex justify-between items-center h-16">
+              {/* Logo */}
+              <div className="flex items-center gap-2">
+                <img 
+                  src="/images/tops-logo.png" 
+                  alt="TOPS TECHNOLOGIES Logo" 
+                  className="h-10 w-auto max-w-[200px]"
+                  style={{ objectFit: 'contain' }}
+                  onError={(e) => {
+                    e.target.style.display = 'none';
+                  }}
+                />
+              </div>
+              
+              {/* Right Side - Login Button */}
+              <div className="flex items-center gap-3">
+                {/* Login Button */}
+                {isRegister && (
+                  <motion.button
+                    onClick={() => {
+                      navigate('/login');
+                    }}
+                    className="px-4 py-2 text-sm font-medium text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    Login
+                  </motion.button>
                 )}
               </div>
             </div>
+          </div>
+        </header>
+      )}
 
-            {isRegister && (
-            <div className="flex-shrink-0 border-t border-slate-200 dark:border-slate-700 mt-3 pt-3 space-y-2.5">
-              <motion.button
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                type="submit"
-                disabled={loading}
-                className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-2.5 text-sm sm:text-base rounded-lg font-medium shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {loading ? 'Processing...' : 'Create Account'}
-              </motion.button>
-              {/* Only show toggle link for student registration/login, not for admin/counsellor */}
-              {!isAdminLogin && !isCounsellorLogin && (
-              <div className="mt-2.5 text-center">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setError('');
-                    navigate('/login');
-                  }}
-                  className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
-                >
-                  Already have an account? Sign in
-                </button>
-              </div>
+      {/* Main Content */}
+      <div className="flex-1 flex">
+        {/* Two-column layout for student auth, single column for admin/counsellor */}
+        {isStudentAuth ? (
+          <>
+            {/* Left Sidebar — optional image + overlay, or transparent glass (see STUDENT_AUTH_SIDEBAR_IMAGE_URL) */}
+            <div className="hidden lg:flex lg:w-1/3 relative overflow-hidden p-8 flex-col justify-between border-r border-slate-200/70 dark:border-slate-700/60">
+              {sidebarUsesPhoto ? (
+                <>
+                  <div
+                    className="absolute inset-0 bg-cover bg-center"
+                    style={{ backgroundImage: `url(${STUDENT_AUTH_SIDEBAR_IMAGE_URL})` }}
+                    aria-hidden
+                  />
+                  <div
+                    className="absolute inset-0 bg-gradient-to-br from-blue-900/70 via-blue-800/60 to-indigo-900/75 dark:from-blue-950/80 dark:via-indigo-950/70 dark:to-slate-950/80"
+                    aria-hidden
+                  />
+                </>
+              ) : (
+                <div
+                  className="absolute inset-0 bg-gradient-to-br from-slate-50/90 via-blue-50/35 to-indigo-100/45 dark:from-slate-900/85 dark:via-slate-900/75 dark:to-blue-950/40 backdrop-blur-md"
+                  aria-hidden
+                />
               )}
+              <div className="relative z-10 flex flex-col justify-between flex-1 min-h-0 overflow-y-auto">
+                {/* Top Section */}
+                <div>
+                  <div className="flex gap-2 mb-6">
+                    <Sparkles className={`w-6 h-6 ${side.sparkle}`} />
+                    <Sparkles className={`w-6 h-6 ${side.sparkle}`} />
+                  </div>
+
+                  <h2 className={`text-3xl font-bold mb-8 leading-tight ${side.heading}`}>
+                    Discover Your Perfect Career Match.
+                  </h2>
+
+                  <div className="w-full h-64 mb-8">
+                    <CareerProfilingVideo />
+                  </div>
+                </div>
+
+                <div className="space-y-6">
+                  <div className="flex items-start gap-4">
+                    <div className={`p-2 rounded-lg ${side.iconBox}`}>
+                      <Lightbulb className={`w-6 h-6 ${side.icon}`} />
+                    </div>
+                    <div>
+                      <h3 className={`font-semibold text-lg mb-1 ${side.heading}`}>Discover Your Career Path</h3>
+                      <p className={`text-sm ${side.sub}`}>
+                        Comprehensive RIASEC-based personality assessment to identify your ideal career fields.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-4">
+                    <div className={`p-2 rounded-lg ${side.iconBox}`}>
+                      <Sparkles className={`w-6 h-6 ${side.icon}`} />
+                    </div>
+                    <div>
+                      <h3 className={`font-semibold text-lg mb-1 ${side.heading}`}>Personalized Career Guidance</h3>
+                      <p className={`text-sm ${side.sub}`}>
+                        Get tailored recommendations based on your strengths, interests, and personality traits.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-4">
+                    <div className={`p-2 rounded-lg ${side.iconBox}`}>
+                      <Target className={`w-6 h-6 ${side.icon}`} />
+                    </div>
+                    <div>
+                      <h3 className={`font-semibold text-lg mb-1 ${side.heading}`}>Career Field Matching</h3>
+                      <p className={`text-sm ${side.sub}`}>
+                        Map your personality to specific career fields using Holland&apos;s vocational theory framework.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-4">
+                    <div className={`p-2 rounded-lg ${side.iconBox}`}>
+                      <BarChart3 className={`w-6 h-6 ${side.icon}`} />
+                    </div>
+                    <div>
+                      <h3 className={`font-semibold text-lg mb-1 ${side.heading}`}>Detailed Performance Analysis</h3>
+                      <p className={`text-sm ${side.sub}`}>
+                        Receive comprehensive insights on your cognitive reasoning, aptitude, and learning style.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-4">
+                    <div className={`p-2 rounded-lg ${side.iconBox}`}>
+                      <BookOpen className={`w-6 h-6 ${side.icon}`} />
+                    </div>
+                    <div>
+                      <h3 className={`font-semibold text-lg mb-1 ${side.heading}`}>Professional Development</h3>
+                      <p className={`text-sm ${side.sub}`}>
+                        Access resources and guidance to build your career roadmap and achieve your goals.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-4">
+                    <div className={`p-2 rounded-lg ${side.iconBox}`}>
+                      <TrendingUp className={`w-6 h-6 ${side.icon}`} />
+                    </div>
+                    <div>
+                      <h3 className={`font-semibold text-lg mb-1 ${side.heading}`}>Track Your Progress</h3>
+                      <p className={`text-sm ${side.sub}`}>
+                        Monitor your assessment results and career readiness scores over time.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
-            )}
-          </form>
-        </div>
-      </motion.div>
+
+            {/* Right Section - White Form (2/3 width) */}
+            <div className="flex-1 lg:w-2/3 bg-white dark:bg-slate-900 p-6 sm:p-8 lg:p-12 overflow-y-auto">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4 }}
+                className="max-w-2xl mx-auto"
+              >
+                {/* Page Title */}
+                <h1 className="text-3xl font-bold text-slate-900 dark:text-slate-100 mb-2">
+                  {isRegister ? 'Complete Your Professional Profile' : 'Welcome Back'}
+                </h1>
+                <p className="text-slate-600 dark:text-slate-400 mb-8">
+                  {isRegister 
+                    ? 'Start your career profiling journey with our comprehensive RIASEC-based assessment system.'
+                    : 'Sign in to continue your career journey and view your personalized results'}
+                </p>
+
+                <form onSubmit={handleSubmit} className="space-y-8">
+                  {error && (
+                    <motion.div
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg text-red-700 dark:text-red-400 text-sm"
+                    >
+                      {error}
+                    </motion.div>
+                  )}
+
+                  {isRegister ? (
+                    <>
+                      {/* Personal Information Section */}
+                      <div>
+                        <div className="flex items-center gap-3 mb-4">
+                          <User className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+                          <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100">Personal Information</h2>
+                        </div>
+                        <div className="border-b border-slate-200 dark:border-slate-700 mb-6"></div>
+                        
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+                          <div>
+                            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                              First Name <span className="text-red-500">*</span>
+                            </label>
+                            <input
+                              type="text"
+                              name="firstName"
+                              value={formData.firstName}
+                              onChange={handleChange}
+                              className="w-full px-4 py-2.5 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none"
+                              placeholder="Jane"
+                              required
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                              Last Name <span className="text-red-500">*</span>
+                            </label>
+                            <input
+                              type="text"
+                              name="lastName"
+                              value={formData.lastName}
+                              onChange={handleChange}
+                              className="w-full px-4 py-2.5 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none"
+                              placeholder="Doe"
+                              required
+                            />
+                          </div>
+                        </div>
+                        
+                        <div className="mb-4">
+                          <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                            Email Address <span className="text-red-500">*</span>
+                          </label>
+                          <input
+                            type="email"
+                            name="email"
+                            value={formData.email}
+                            onChange={handleChange}
+                            className="w-full px-4 py-2.5 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none"
+                            placeholder="jane.doe@university.edu"
+                            required
+                          />
+                        </div>
+                        
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                          <div>
+                            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                              Contact Number <span className="text-red-500">*</span>
+                            </label>
+                            <input
+                              type="tel"
+                              name="contactNumber"
+                              value={formData.contactNumber}
+                              onChange={handleChange}
+                              className="w-full px-4 py-2.5 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none"
+                              placeholder="1234567890"
+                              pattern="[0-9]{10}"
+                              required
+                              minLength={10}
+                              maxLength={10}
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                              Parent's Contact <span className="text-red-500">*</span>
+                            </label>
+                            <input
+                              type="tel"
+                              name="parentContactNumber"
+                              value={formData.parentContactNumber}
+                              onChange={handleChange}
+                              className="w-full px-4 py-2.5 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none"
+                              placeholder="1234567890"
+                              pattern="[0-9]{10}"
+                              required
+                              minLength={10}
+                              maxLength={10}
+                            />
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Educational Background Section */}
+                      <div>
+                        <div className="flex items-center gap-3 mb-4">
+                          <GraduationCap className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+                          <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100">Educational Background</h2>
+                        </div>
+                        <div className="border-b border-slate-200 dark:border-slate-700 mb-6"></div>
+                        
+                        <div className="mb-4">
+                          <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                            School/Institute <span className="text-red-500">*</span>
+                          </label>
+                          <input
+                            type="text"
+                            name="schoolInstituteName"
+                            value={formData.schoolInstituteName}
+                            onChange={handleChange}
+                            className="w-full px-4 py-2.5 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none"
+                            placeholder="School name"
+                            required
+                          />
+                        </div>
+                        
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                          <div>
+                            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                              Current Education <span className="text-red-500">*</span>
+                            </label>
+                            <select
+                              name="currentEducation"
+                              value={formData.currentEducation}
+                              onChange={handleChange}
+                              className="w-full px-4 py-2.5 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none"
+                              required
+                            >
+                              <option value="">Select education</option>
+                              <option value="10th">10th</option>
+                              <option value="11th">11th</option>
+                              <option value="12th">12th</option>
+                              <option value="Diploma">Diploma</option>
+                              <option value="Under Graduate">Under Graduate</option>
+                              <option value="Post Graduate">Post Graduate</option>
+                            </select>
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                              Stream <span className="text-red-500">*</span>
+                            </label>
+                            <select
+                              name="stream"
+                              value={formData.stream}
+                              onChange={handleChange}
+                              className="w-full px-4 py-2.5 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none"
+                              required
+                            >
+                              <option value="">Select stream</option>
+                              <option value="Science">Science</option>
+                              <option value="Commerce">Commerce</option>
+                              <option value="Arts">Arts</option>
+                            </select>
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                              Annual Income <span className="text-red-500">*</span>
+                            </label>
+                            <select
+                              name="familyAnnualIncome"
+                              value={formData.familyAnnualIncome}
+                              onChange={handleChange}
+                              className="w-full px-4 py-2.5 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none"
+                              required
+                            >
+                              <option value="">Select income</option>
+                              <option value="<4 Lacs">&lt;4 Lacs</option>
+                              <option value="4 to 6 Lacs">4 to 6 Lacs</option>
+                              <option value="6 to 8 Lacs">6 to 8 Lacs</option>
+                              <option value="10 to 12 Lacs">10 to 12 Lacs</option>
+                              <option value="12 to 14 Lacs">12 to 14 Lacs</option>
+                              <option value=">14 Lacs">&gt;14 Lacs</option>
+                            </select>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      {/* Password Section */}
+                      <div>
+                        <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                          Password <span className="text-red-500">*</span>
+                        </label>
+                        <input
+                          type="password"
+                          name="password"
+                          value={formData.password}
+                          onChange={handleChange}
+                          className="w-full px-4 py-2.5 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none"
+                          placeholder="••••••••"
+                          required
+                        />
+                      </div>
+                      
+                      {/* Submit Button */}
+                      <motion.button
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        type="submit"
+                        disabled={loading}
+                        className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-3 rounded-lg font-semibold shadow-lg hover:shadow-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        {loading ? 'Processing...' : 'Create Account'}
+                      </motion.button>
+                      
+                      {/* Login Link */}
+                      <div className="text-center">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setError('');
+                            navigate('/login');
+                          }}
+                          className="text-sm text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+                        >
+                          Already have an account? Sign in
+                        </button>
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      {/* Login Form */}
+                      <div className="space-y-4">
+                        <div>
+                          <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                            Email
+                          </label>
+                          <input
+                            type="email"
+                            name="email"
+                            value={formData.email}
+                            onChange={handleChange}
+                            className="w-full px-4 py-2.5 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none"
+                            placeholder="you@example.com"
+                            required
+                          />
+                        </div>
+                        
+                        <div>
+                          <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                            Password
+                          </label>
+                          <input
+                            type="password"
+                            name="password"
+                            value={formData.password}
+                            onChange={handleChange}
+                            className="w-full px-4 py-2.5 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none"
+                            placeholder="••••••••"
+                            required
+                          />
+                        </div>
+                      </div>
+                      
+                      <motion.button
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        type="submit"
+                        disabled={loading}
+                        className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-3 rounded-lg font-semibold shadow-lg hover:shadow-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        {loading ? 'Processing...' : 'Sign In'}
+                      </motion.button>
+                      
+                      <div className="text-center">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setError('');
+                            navigate('/register');
+                          }}
+                          className="text-sm text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+                        >
+                          Don't have an account? Sign up
+                        </button>
+                      </div>
+                    </>
+                  )}
+                </form>
+              </motion.div>
+            </div>
+          </>
+        ) : (
+          /* Admin/Counsellor Login - Simple centered form */
+          <div className="flex-1 flex items-center justify-center px-4 py-4 overflow-y-auto bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4 }}
+              className="w-full max-w-md"
+            >
+              <div className="bg-white dark:bg-slate-800 rounded-xl shadow-xl border border-slate-200/60 dark:border-slate-700 p-6 sm:p-8">
+                {/* Logo Section */}
+                <div className="flex justify-center flex-shrink-0 mb-4">
+                  <img 
+                    src="/images/tops-logo.png" 
+                    alt="TOPS TECHNOLOGIES Logo" 
+                    className="w-auto max-w-[220px] sm:max-w-[280px] h-12 sm:h-14"
+                    style={{ objectFit: 'contain' }}
+                    onError={(e) => {
+                      e.target.style.display = 'none';
+                    }}
+                  />
+                </div>
+                
+                <div className="text-center flex-shrink-0 mb-4">
+                  <h1 className="font-semibold text-slate-900 dark:text-slate-100 text-xl sm:text-2xl mb-1">
+                    {isAdminLogin ? 'Admin Login' : 'Counsellor Login'}
+                  </h1>
+                  <p className="text-slate-600 dark:text-slate-400 text-xs sm:text-sm">
+                    {isAdminLogin
+                      ? 'Sign in to access admin dashboard'
+                      : 'Sign in to access counsellor dashboard'}
+                  </p>
+                </div>
+
+                <form onSubmit={handleSubmit} className="space-y-4">
+                  {error && (
+                    <motion.div
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="p-2.5 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg text-red-700 dark:text-red-400 text-xs sm:text-sm"
+                    >
+                      {error}
+                    </motion.div>
+                  )}
+
+                  <div>
+                    <label className="block text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">
+                      Email
+                    </label>
+                    <input
+                      type="email"
+                      name="email"
+                      value={formData.email}
+                      onChange={handleChange}
+                      className="w-full px-3 sm:px-4 py-2.5 sm:py-3 text-xs sm:text-sm rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none"
+                      placeholder="you@example.com"
+                      required
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">
+                      Password
+                    </label>
+                    <input
+                      type="password"
+                      name="password"
+                      value={formData.password}
+                      onChange={handleChange}
+                      className="w-full px-3 sm:px-4 py-2.5 sm:py-3 text-xs sm:text-sm rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none"
+                      placeholder="••••••••"
+                      required
+                    />
+                  </div>
+
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    type="submit"
+                    disabled={loading}
+                    className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-2.5 sm:py-3 text-sm sm:text-base rounded-lg font-medium shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40 transition-all disabled:opacity-50 disabled:cursor-not-allowed mt-5"
+                  >
+                    {loading ? 'Processing...' : 'Sign In'}
+                  </motion.button>
+                </form>
+              </div>
+            </motion.div>
+          </div>
+        )}
       </div>
       
-      {/* Footer - Only show on login pages, not registration */}
-      {!isRegister && <Footer />}
+      {/* Footer - Show on all student auth pages */}
+      {isStudentAuth && <Footer />}
     </div>
   );
 }

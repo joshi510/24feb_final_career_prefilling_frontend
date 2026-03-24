@@ -29,12 +29,22 @@ export function AuthProvider({ children }) {
 
   const login = async (email, password) => {
     const data = await authService.login(email, password);
+    try {
+      sessionStorage.removeItem('currentResultAttemptId');
+    } catch {
+      /* ignore */
+    }
     setUser(data.user);
     return data;
   };
 
   const register = async (email, password, firstName, lastName, contactNumber, parentContactNumber, schoolInstituteName, currentEducation, stream, familyAnnualIncome) => {
     const data = await authService.register(email, password, firstName, lastName, contactNumber, parentContactNumber, schoolInstituteName, currentEducation, stream, familyAnnualIncome);
+    try {
+      sessionStorage.removeItem('currentResultAttemptId');
+    } catch {
+      /* ignore */
+    }
     setUser(data.user);
     return data;
   };

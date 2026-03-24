@@ -1,16 +1,9 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { keyTakeawayMessage } from '../utils/simplifiedReportCopy.js';
 
 function KeyTakeaway({ readinessStatus, overallPercentage }) {
-  const getTakeaway = () => {
-    if (readinessStatus === 'NOT READY') {
-      return "You are on the right path, but this is an exploration phase, not a final decision stage.";
-    } else if (readinessStatus === 'PARTIALLY READY') {
-      return "You are on the right path, but this is a preparation phase, not a final decision stage.";
-    } else {
-      return "You are on the right path, and this is a good time to explore specific career options with guidance.";
-    }
-  };
+  const getTakeaway = () => keyTakeawayMessage(readinessStatus);
 
   return (
     <motion.div

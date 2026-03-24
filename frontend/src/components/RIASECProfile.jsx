@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { CheckCircle2, Brain, FlaskConical, Lightbulb, Rocket, Wrench, Palette, Users, Megaphone, Folder, Sparkles } from 'lucide-react';
+import { mapDecisionRiskLevelDisplay, mapStabilityDisplay } from '../utils/simplifiedReportCopy.js';
 
 function RIASECProfile({ riasecReport }) {
   if (!riasecReport || !riasecReport.riasecProfile) {
@@ -102,24 +103,14 @@ function RIASECProfile({ riasecReport }) {
             <CheckCircle2 className="w-6 h-6 text-slate-700 dark:text-slate-300 flex-shrink-0" />
             <div>
               <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
-                DECISION RISK
+                CAREER READINESS
               </h3>
-              <p className="text-sm text-slate-600 dark:text-slate-400">
-                Profile Consistency Check.
-              </p>
             </div>
           </div>
-          
-          {/* Decision Risk Disclaimer */}
-          <div className="mb-3 -mt-1">
-            <p className="text-xs text-slate-600 dark:text-slate-400 italic">
-              Important: Decision Risk is a score dispersion indicator and does not represent psychological evaluation or diagnostic assessment.
-            </p>
-          </div>
-          
+
           <div className="mb-4">
             <div className="text-2xl font-bold text-slate-900 dark:text-slate-100 mb-2">
-              {decisionRisk?.level || 'Moderate Risk'}
+              {mapDecisionRiskLevelDisplay(decisionRisk?.level || 'Moderate Risk')}
             </div>
             
             {/* Stability Progress Bar */}
@@ -131,7 +122,7 @@ function RIASECProfile({ riasecReport }) {
             </div>
             <div className="flex justify-end mt-1">
               <span className={`text-sm font-medium ${riskColors.text}`}>
-                {decisionRisk?.stability || 'Moderately Stable'}
+                {mapStabilityDisplay(decisionRisk?.stability || 'Moderately Stable')}
               </span>
             </div>
           </div>
@@ -148,11 +139,8 @@ function RIASECProfile({ riasecReport }) {
             <Brain className="w-6 h-6 text-slate-700 dark:text-slate-300 flex-shrink-0" />
             <div>
               <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
-                TOP QUALITIES
+                YOUR STRONG POINTS
               </h3>
-              <p className="text-sm text-slate-600 dark:text-slate-400">
-                Behavioral Strengths.
-              </p>
             </div>
           </div>
 

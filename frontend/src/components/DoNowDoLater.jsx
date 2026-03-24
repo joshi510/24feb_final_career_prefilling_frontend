@@ -1,8 +1,11 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { filterSecondaryReportLinesRemovingCoreAdvice } from '../utils/simplifiedReportCopy.js';
 
 function DoNowDoLater({ doNowActions, doLaterActions }) {
-  if ((!doNowActions || doNowActions.length === 0) && (!doLaterActions || doLaterActions.length === 0)) {
+  const doNowFiltered = filterSecondaryReportLinesRemovingCoreAdvice(doNowActions || []);
+  const doLaterFiltered = filterSecondaryReportLinesRemovingCoreAdvice(doLaterActions || []);
+  if (doNowFiltered.length === 0 && doLaterFiltered.length === 0) {
     return null;
   }
 
@@ -14,7 +17,7 @@ function DoNowDoLater({ doNowActions, doLaterActions }) {
       className="mb-8"
     >
       <h2 className="text-2xl font-semibold text-slate-900 dark:text-slate-100 mb-6">
-        Do Now vs Do Later
+        Your Next Steps
       </h2>
       
       <div className="grid md:grid-cols-2 gap-6">
@@ -32,8 +35,8 @@ function DoNowDoLater({ doNowActions, doLaterActions }) {
             </h3>
           </div>
           <ul className="space-y-3">
-            {doNowActions && doNowActions.length > 0 ? (
-              doNowActions.map((action, idx) => (
+            {doNowFiltered.length > 0 ? (
+              doNowFiltered.map((action, idx) => (
                 <motion.li
                   key={idx}
                   initial={{ opacity: 0, x: -10 }}
@@ -67,8 +70,8 @@ function DoNowDoLater({ doNowActions, doLaterActions }) {
             </h3>
           </div>
           <ul className="space-y-3">
-            {doLaterActions && doLaterActions.length > 0 ? (
-              doLaterActions.map((action, idx) => (
+            {doLaterFiltered.length > 0 ? (
+              doLaterFiltered.map((action, idx) => (
                 <motion.li
                   key={idx}
                   initial={{ opacity: 0, x: 10 }}

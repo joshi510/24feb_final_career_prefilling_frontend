@@ -311,7 +311,7 @@ function SectionTestFlow({ attemptId, initialSection, onSectionComplete, onCompl
       // Update timer state - preserve current time if backend value is invalid
       setTimer({
         totalTime: remainingTime,
-        isPaused: true,
+          isPaused: true,
         currentTime: remainingTime
       });
       
@@ -357,7 +357,7 @@ function SectionTestFlow({ attemptId, initialSection, onSectionComplete, onCompl
         if (response.remaining_time_seconds !== undefined && response.remaining_time_seconds > 0) {
           remainingTime = response.remaining_time_seconds;
           console.log('📊 Using response remaining_time_seconds:', remainingTime);
-        } else {
+      } else {
           // Both backend and response are invalid - use preserved current time
           remainingTime = currentTimeBeforeResume > 0 ? currentTimeBeforeResume : 420;
           console.log('⚠️ Backend returned invalid time, using preserved current time:', remainingTime);
@@ -1038,11 +1038,11 @@ function SectionTestFlow({ attemptId, initialSection, onSectionComplete, onCompl
                   Pause
                 </button>
               )
-            )}
+              )}
             {timeUp && (
               <div className="px-3 py-1.5 text-xs font-medium bg-red-600 text-white rounded-lg shadow-sm mt-1">
                 Submitting...
-              </div>
+            </div>
             )}
             {/* Clock Display */}
             <div className="flex flex-col items-end">

@@ -20,6 +20,7 @@ import AdminLayout from '../../components/admin/AdminLayout';
 import Loading from '../../components/Loading';
 import Error from '../../components/Error';
 import AIInsights from '../../components/admin/AIInsights';
+import { readinessAnalyticsDisplayLabel } from '../../utils/simplifiedReportCopy.js';
 
 const COLORS = ['#3b82f6', '#10b981', '#f59e0b', '#8b5cf6', '#ef4444', '#06b6d4', '#ec4899'];
 
@@ -112,11 +113,23 @@ function Analytics() {
     );
   }
 
-  // Prepare readiness chart data
+  // Chart uses friendly labels; values still keyed by internal readiness codes in state
   const readinessChartData = [
-    { name: 'READY', value: readinessData['READY'] || 0, fill: '#10b981' },
-    { name: 'PARTIALLY READY', value: readinessData['PARTIALLY READY'] || 0, fill: '#f59e0b' },
-    { name: 'NOT READY', value: readinessData['NOT READY'] || 0, fill: '#ef4444' }
+    {
+      name: readinessAnalyticsDisplayLabel('READY'),
+      value: readinessData['READY'] || 0,
+      fill: '#10b981'
+    },
+    {
+      name: readinessAnalyticsDisplayLabel('PARTIALLY READY'),
+      value: readinessData['PARTIALLY READY'] || 0,
+      fill: '#f59e0b'
+    },
+    {
+      name: readinessAnalyticsDisplayLabel('NOT READY'),
+      value: readinessData['NOT READY'] || 0,
+      fill: '#ef4444'
+    }
   ];
 
   // Prepare career cluster data
@@ -148,7 +161,7 @@ function Analytics() {
         >
           <h1 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-slate-100">Analytics</h1>
           <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-1">
-            Comprehensive insights into student performance and trends
+            Comprehensive insights into student performance, Career Readiness, and trends
           </p>
         </motion.div>
 
@@ -221,7 +234,7 @@ function Analytics() {
             className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-4 sm:p-6 shadow-sm"
           >
             <h3 className="text-base sm:text-lg font-semibold text-slate-900 dark:text-slate-100 mb-3 sm:mb-4">
-              Readiness Distribution
+              Career Readiness Distribution
             </h3>
             {hasReadinessData ? (
               <div style={{ width: '100%', height: '280px', minHeight: '280px' }} className="sm:h-[320px]">

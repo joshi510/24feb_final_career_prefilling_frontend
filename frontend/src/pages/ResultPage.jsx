@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { testAPI, counsellorAPI } from '../services/api';
+import { testAPI, counsellorAPI, appointmentAPI } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
@@ -20,8 +20,10 @@ import { generatePDF } from '../utils/pdfGenerator';
 import ResultPDF from '../components/ResultPDF';
 import RIASECProfile from '../components/RIASECProfile';
 import RIASECCareerPathways from '../components/RIASECCareerPathways';
+import CareerArchetypeSection from '../components/CareerArchetypeSection';
 import RIASECDimensionCard from '../components/RIASECDimensionCard';
 import RIASECDimensionsOverview from '../components/RIASECDimensionsOverview';
+import AppointmentFormModal from '../components/AppointmentFormModal';
 
 function ResultPage() {
   const { attemptId } = useParams();
@@ -38,6 +40,8 @@ function ResultPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [downloading, setDownloading] = useState(false);
+  const [showAppointmentModal, setShowAppointmentModal] = useState(false);
+  const [studentData, setStudentData] = useState(null);
   const reportRef = useRef(null);
   const pdfRef = useRef(null);
   const { modalState, toastState, showModal, showToast, closeToast } = useAlert();
@@ -91,6 +95,18 @@ function ResultPage() {
         all_keys: Object.keys(data)
       });
       setInterpretation(data);
+      
+      // Extract student data for appointment form
+      if (data) {
+        setStudentData({
+          full_name: user?.full_name || data.student_name || '',
+          school_institute_name: data.student_school_institute_name || data.school_institute_name || '',
+          contact_number: data.student_contact_number || data.contact_number || '',
+          first_name: data.student_first_name || '',
+          last_name: data.student_last_name || ''
+        });
+      }
+      
       setLoading(false); // Show page immediately with interpretation
       
       // Load RIASEC report and counsellor note in parallel (non-blocking)
@@ -183,6 +199,17 @@ function ResultPage() {
       setError(err.message || 'Failed to save note');
     } finally {
       setSavingNote(false);
+    }
+  };
+
+  const handleBookAppointment = async (formData) => {
+    try {
+      await appointmentAPI.createAppointment(formData);
+      showToast('Appointment booked successfully!', 'success');
+      setShowAppointmentModal(false);
+    } catch (err) {
+      showToast(err.message || 'Failed to book appointment', 'error');
+      throw err;
     }
   };
 
@@ -300,6 +327,7 @@ function ResultPage() {
             counsellorNote={counsellorNote}
             user={user}
             riasecReport={riasecReport}
+            showDiscussionForCounsellor={false}
           />
         </div>
 
@@ -326,7 +354,7 @@ function ResultPage() {
               {riasecReport.dimensions && riasecReport.dimensions.length > 0 && (
                 <div>
                   <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100 mb-6">
-                    Detailed Dimension Analysis
+                    What Each Type Means For You
                   </h2>
                   {riasecReport.dimensions.map((dimension, index) => (
                     <RIASECDimensionCard key={dimension.code} dimension={dimension} />
@@ -425,12 +453,16 @@ function ResultPage() {
             />
           )}
 
-          {/* Potential Career Pathways - Before Counsellor Notes */}
+          {/* Career archetype + pathways (RIASEC) */}
           {riasecReport && riasecReport.dimensions && riasecReport.dimensions.length > 0 && (
-            <RIASECCareerPathways 
-              careerPathways={riasecReport.careerPathways} 
-              dimensions={riasecReport.dimensions}
-            />
+            <>
+              <CareerArchetypeSection dimensions={riasecReport.dimensions} />
+              <RIASECCareerPathways
+                careerPathways={riasecReport.careerPathways}
+                dimensions={riasecReport.dimensions}
+                showDiscussionForCounsellor={false}
+              />
+            </>
           )}
 
           {/* Counsellor Notes */}
@@ -498,7 +530,7 @@ function ResultPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.8 }}
-            className="mt-6 sm:mt-8 pt-6 sm:pt-8 border-t border-slate-200 dark:border-slate-700 hidden sm:block"
+            className="mt-6 sm:mt-8 pt-6 sm:pt-8 border-t border-slate-200 dark:border-slate-700"
           >
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
               <motion.button
@@ -506,7 +538,7 @@ function ResultPage() {
                 disabled={downloading}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="px-4 sm:px-6 py-2.5 sm:py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg font-semibold shadow-lg hover:shadow-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 text-sm sm:text-base"
+                className="w-full sm:w-auto px-4 sm:px-6 py-3 sm:py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg font-semibold shadow-lg hover:shadow-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 text-sm sm:text-base min-h-[48px] touch-manipulation"
               >
                 {downloading ? (
                   <>
@@ -515,27 +547,24 @@ function ResultPage() {
                   </>
                 ) : (
                   <>
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                     </svg>
-                    <span>Download PDF Report</span>
+                    <span className="whitespace-nowrap">Download PDF Report</span>
                   </>
                 )}
               </motion.button>
 
               <motion.button
-                onClick={() => {
-                  // Show toast notification for counselling booking
-                  showToast('Counselling booking feature coming soon! Please contact your counsellor directly.', 'info');
-                }}
+                onClick={() => setShowAppointmentModal(true)}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="px-4 sm:px-6 py-2.5 sm:py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg font-semibold shadow-lg hover:shadow-xl transition-all flex items-center justify-center gap-2 text-sm sm:text-base"
+                className="w-full sm:w-auto px-4 sm:px-6 py-3 sm:py-2.5 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg font-semibold shadow-lg hover:shadow-xl transition-all flex items-center justify-center gap-2 text-sm sm:text-base min-h-[48px] touch-manipulation"
               >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                 </svg>
-                <span>Book Counselling Session</span>
+                <span className="whitespace-nowrap">Book Counsellor Appointment</span>
               </motion.button>
 
               <motion.button
@@ -550,12 +579,12 @@ function ResultPage() {
                 }}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="px-4 sm:px-6 py-2.5 sm:py-3 bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-lg font-semibold hover:bg-slate-300 dark:hover:bg-slate-600 transition-all flex items-center justify-center gap-2 text-sm sm:text-base"
+                className="w-full sm:w-auto px-4 sm:px-6 py-3 sm:py-2.5 bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-lg font-semibold hover:bg-slate-300 dark:hover:bg-slate-600 transition-all flex items-center justify-center gap-2 text-sm sm:text-base min-h-[48px] touch-manipulation"
               >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                 </svg>
-                <span>Retake Test (After 3 Months)</span>
+                <span className="whitespace-nowrap">Retake Test (After 3 Months)</span>
               </motion.button>
             </div>
           </motion.div>
@@ -574,16 +603,19 @@ function ResultPage() {
               </h3>
               <div className="space-y-3 text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
                 <p>
-                  <strong>What this report means:</strong> This assessment provides insights into the student's current career exploration stage, strengths, and areas for development. The results are based on the student's responses and reflect their current level of readiness for career decision-making.
+                  <strong>What this report means:</strong> This report shows the student&apos;s personality type, strengths,
+                  and best-fit career areas based on their answers.
                 </p>
                 <p>
-                  <strong>What this report does NOT mean:</strong> This is not a test of intelligence or ability. A lower score does not indicate failure or lack of potential. It simply means the student is in an earlier stage of career exploration and needs more time to develop clarity.
+                  <strong>What this report does NOT mean:</strong> This is not an intelligence test. A lower score does not
+                  mean failure. It just means the student needs more time to explore.
                 </p>
                 <p>
-                  <strong>Next steps:</strong> The roadmap provided in this report offers a clear path forward. Work with a qualified career counsellor to understand these results better and create a personalized plan. Remember, career development is a journey, not a destination.
+                  <strong>Next steps:</strong> Talk to a career counsellor to understand these results better and make a plan.
                 </p>
                 <p className="text-xs text-slate-500 dark:text-slate-400 italic mt-4">
-                  This assessment is designed to provide general career guidance and insights. Results are intended for informational purposes only and should not be considered as definitive career decisions or professional diagnoses. We strongly recommend consulting with a qualified career counsellor to discuss these results in detail.
+                  This report gives general career guidance only. Please talk to a qualified career counsellor for detailed
+                  advice.
                 </p>
               </div>
             </div>
@@ -608,6 +640,15 @@ function ResultPage() {
         type={toastState.type}
         onClose={closeToast}
       />
+
+      {/* Appointment Form Modal */}
+      <AppointmentFormModal
+        isOpen={showAppointmentModal}
+        onClose={() => setShowAppointmentModal(false)}
+        onSubmit={handleBookAppointment}
+        studentData={studentData}
+      />
+
       <Footer />
     </div>
   );

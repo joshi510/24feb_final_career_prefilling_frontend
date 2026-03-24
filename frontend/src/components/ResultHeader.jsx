@@ -38,14 +38,13 @@ function ResultHeader({ user, interpretation, onDownloadPDF, downloading }) {
 
   const getFriendlyReadinessLabel = (status) => {
     if (status === 'READY') return 'Ready for Career Planning';
-    if (status === 'PARTIALLY READY') return 'Preparation Stage';
-    return 'Exploration Stage';
+    if (status === 'PARTIALLY READY') return 'Getting Ready';
+    return 'Still Exploring';
   };
 
   const getFriendlyRiskLabel = (risk) => {
-    if (risk === 'LOW') return 'Low Decision Risk';
-    if (risk === 'MEDIUM') return 'Requires Guided Decision-Making';
-    return 'Requires Guided Decision-Making';
+    if (risk === 'LOW') return 'Lower need for guidance';
+    return 'Needs Counsellor Help';
   };
 
   const getBadgeColor = (status) => {

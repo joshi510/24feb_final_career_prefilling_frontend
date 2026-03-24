@@ -119,7 +119,6 @@ export const adminAPI = {
     const params = new URLSearchParams({ page: page.toString(), limit: limit.toString() });
     if (filters.search) params.append('search', filters.search);
     if (filters.status && filters.status !== 'all') params.append('status', filters.status);
-    if (filters.readiness && filters.readiness !== 'all') params.append('readiness', filters.readiness);
     return apiRequest(`/admin/students?${params.toString()}`);
   },
   getStudentResult: (studentId, resultId) => {
@@ -292,9 +291,6 @@ export const counsellorAPI = {
     if (filters.status && filters.status !== 'all' && filters.status !== 'undefined') {
       params.append('status', filters.status);
     }
-    if (filters.readiness && filters.readiness !== 'all' && filters.readiness !== 'undefined') {
-      params.append('readiness', filters.readiness);
-    }
     if (filters.risk && filters.risk !== 'all' && filters.risk !== 'undefined') {
       params.append('risk', filters.risk);
     }
@@ -307,6 +303,27 @@ export const counsellorAPI = {
 
 export const careerPathwaysAPI = {
   getCareerPathways: () => apiRequest('/career-pathways')
+};
+
+export const appointmentAPI = {
+  createAppointment: (appointmentData) => apiRequest('/appointments', {
+    method: 'POST',
+    body: JSON.stringify(appointmentData)
+  }),
+  getAdminAppointments: (page = 1, limit = 25, status = 'all') => {
+    const params = new URLSearchParams({ page: page.toString(), limit: limit.toString() });
+    if (status && status !== 'all') params.append('status', status);
+    return apiRequest(`/appointments/admin?${params.toString()}`);
+  },
+  getCounsellorAppointments: (page = 1, limit = 25, status = 'all') => {
+    const params = new URLSearchParams({ page: page.toString(), limit: limit.toString() });
+    if (status && status !== 'all') params.append('status', status);
+    return apiRequest(`/appointments/counsellor?${params.toString()}`);
+  },
+  updateAppointmentStatus: (appointmentId, status) => apiRequest(`/appointments/${appointmentId}/status`, {
+    method: 'PATCH',
+    body: JSON.stringify({ status })
+  })
 };
 
 export default apiRequest;

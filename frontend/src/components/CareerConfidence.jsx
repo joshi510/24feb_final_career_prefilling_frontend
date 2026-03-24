@@ -1,5 +1,9 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import {
+  friendlyCareerDirectionHeadline,
+  removeCoreAdviceSentencesFromSecondaryText
+} from '../utils/simplifiedReportCopy.js';
 
 function CareerConfidence({ careerConfidenceLevel, careerConfidenceExplanation }) {
   if (!careerConfidenceLevel || !careerConfidenceExplanation) {
@@ -32,6 +36,7 @@ function CareerConfidence({ careerConfidenceLevel, careerConfidenceExplanation }
   };
 
   const colors = getConfidenceColor();
+  const explanationDisplay = removeCoreAdviceSentencesFromSecondaryText(careerConfidenceExplanation);
 
   return (
     <motion.div
@@ -43,13 +48,15 @@ function CareerConfidence({ careerConfidenceLevel, careerConfidenceExplanation }
       <div className="flex items-center gap-3 mb-3">
         <div className={`w-3 h-3 ${colors.badge} rounded-full`}></div>
         <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
-          Career Direction Confidence: 
-          <span className={`ml-2 ${colors.text} font-bold`}>{careerConfidenceLevel}</span>
+          How Clear Is Your Career Direction?
         </h3>
+        <p className={`mt-2 text-base font-bold ${colors.text}`}>
+          {friendlyCareerDirectionHeadline(careerConfidenceLevel)}
+        </p>
       </div>
-      <p className="text-slate-700 dark:text-slate-300 leading-relaxed">
-        {careerConfidenceExplanation}
-      </p>
+      {explanationDisplay ? (
+        <p className="text-slate-700 dark:text-slate-300 leading-relaxed">{explanationDisplay}</p>
+      ) : null}
     </motion.div>
   );
 }

@@ -18,6 +18,12 @@ class AuthService {
   clearAuth() {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
+    // Prevent next login from reusing another user's result URL (see StudentDashboard / ResultPage)
+    try {
+      sessionStorage.removeItem('currentResultAttemptId');
+    } catch {
+      /* ignore */
+    }
   }
 
   isAuthenticated() {

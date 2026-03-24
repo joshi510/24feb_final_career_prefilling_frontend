@@ -1,0 +1,9 @@
+Question,Section,Type,Difficulty,Status,Source,Options,Correct Answer
+I enjoy solving complex problems and puzzles,Section 1: Intelligence Test (Cognitive Reasoning),LIKERT_SCALE,Medium,approved,ADMIN,,
+I prefer working in a team environment,Section 2: Aptitude Test,LIKERT_SCALE,Easy,approved,ADMIN,,
+I maintain a consistent study schedule every day,Section 3: Study Habits,LIKERT_SCALE,Medium,pending,ADMIN,,
+I learn best by seeing visual aids and diagrams,Section 4: Learning Style,LIKERT_SCALE,Easy,approved,ADMIN,,
+I enjoy working with tools and machinery,Section 5: Career Interest (RIASEC),LIKERT_SCALE,Hard,approved,ADMIN,,
+Which work environment do you prefer?,Section 1: Intelligence Test (Cognitive Reasoning),MULTIPLE_CHOICE,Medium,approved,ADMIN,"A) Remote work, B) Office work, C) Hybrid work, D) Field work",C
+What is your preferred method of learning?,Section 4: Learning Style,MULTIPLE_CHOICE,Easy,approved,ADMIN,"A) Reading books, B) Watching videos, C) Hands-on practice, D) Group discussions",B
+How do you handle difficult problems?,Section 1: Intelligence Test (Cognitive Reasoning),MULTIPLE_CHOICE,Hard,approved,ADMIN,"A) Give up quickly, B) Ask for help immediately, C) Try different approaches, D) Avoid the problem",C
