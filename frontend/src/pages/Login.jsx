@@ -205,12 +205,12 @@ function Login() {
       )}
 
       {/* Main Content */}
-      <div className="flex-1 flex">
+      <div className="flex-1 flex flex-col lg:flex-row">
         {/* Two-column layout for student auth, single column for admin/counsellor */}
         {isStudentAuth ? (
           <>
             {/* Left Sidebar — optional image + overlay, or transparent glass (see STUDENT_AUTH_SIDEBAR_IMAGE_URL) */}
-            <div className="hidden lg:flex lg:w-1/3 relative overflow-hidden p-8 flex-col justify-between border-r border-slate-200/70 dark:border-slate-700/60">
+            <div className="flex w-full lg:w-1/3 relative overflow-hidden p-6 sm:p-8 flex-col justify-between border-b lg:border-b-0 lg:border-r border-slate-200/70 dark:border-slate-700/60">
               {sidebarUsesPhoto ? (
                 <>
                   <div
