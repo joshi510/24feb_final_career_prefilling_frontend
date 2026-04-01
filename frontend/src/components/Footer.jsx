@@ -17,6 +17,9 @@ function Footer() {
           <div className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 text-center md:text-right">
             <p className="font-medium">© {currentYear} TOPS TECHNOLOGIES. All rights reserved.</p>
             <p className="text-xs mt-1 text-slate-500 dark:text-slate-500">Career Profiling System</p>
+            <p className="text-xs mt-1 text-slate-500 dark:text-slate-500">
+              Powered by <span className="font-semibold text-slate-700 dark:text-slate-300">TOPS Technologies</span>
+            </p>
           </div>
         </div>
       </div>

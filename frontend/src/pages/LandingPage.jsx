@@ -68,11 +68,11 @@ function LandingPage() {
 
         <div className="hero-badge">
           <div className="badge-dot"></div>
-          Free · 12–15 minutes · Science-backed
+          Free · 12–15 minutes · AI Backed
         </div>
 
         <h1 className="hero-heading">
-          Find the degree<br />
+          Find the career<br />
           <span className="accent-line">
             <em>you were built for</em>
           </span>
@@ -391,7 +391,7 @@ function LandingPage() {
           <div className="cta-tag">✦ 100% Free · Takes 12–15 Minutes</div>
           <h2 className="cta-heading">
             Ready to discover your<br />
-            <em>perfect degree?</em>
+            <em>perfect career?</em>
           </h2>
           <p className="cta-sub">
             Join 50,000+ students who have found their path with TOPS. No payment. No spam. Just clarity.
@@ -423,6 +423,7 @@ function LandingPage() {
           <a href="#">LearnVern</a>
         </div>
         <div className="footer-copy">© 2026 TOPS Technologies. All rights reserved. Ahmedabad, India.</div>
+        <div className="footer-copy">Powered by TOPS Technologies</div>
       </footer>
     </>
   );

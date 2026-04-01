@@ -29,17 +29,17 @@ function Navbar() {
   return (
     <nav className="bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 shadow-sm sticky top-0 z-50 transition-colors duration-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-14 sm:h-16">
-          <div className="flex items-center gap-3 min-w-0">
+        <div className="flex justify-between items-center h-14 sm:h-16 gap-3">
+          <div className="flex items-center gap-3 min-w-0 flex-1">
             <motion.div
               whileHover={{ scale: 1.05 }}
               transition={{ type: "spring", stiffness: 400, damping: 17 }}
               className="flex items-center flex-shrink-0"
             >
-              <AppLogo height={38} className="max-w-[180px] sm:max-w-[220px] sm:h-[44px]" />
+              <AppLogo height={36} className="max-w-[140px] xs:max-w-[160px] sm:max-w-[220px]" />
             </motion.div>
           </div>
-          <div className="flex items-center gap-3 sm:gap-4">
+          <div className="flex items-center gap-2 sm:gap-4 flex-shrink-0">
             {user && (
               <>
                 <div className="hidden sm:flex items-center gap-3">
@@ -53,7 +53,7 @@ function Navbar() {
                 
                 <motion.button
                   onClick={handleLogout}
-                  className="px-3 sm:px-4 py-2 text-sm text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-colors btn-hover"
+                  className="px-3 sm:px-4 py-2 text-sm text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-colors btn-hover whitespace-nowrap"
                   whileTap={{ scale: 0.95 }}
                 >
                   Logout
