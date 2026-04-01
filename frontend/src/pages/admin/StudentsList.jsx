@@ -1,10 +1,9 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useStudents, useAllowRetake } from '../../hooks/useAdminAPI';
+import { useStudents } from '../../hooks/useAdminAPI';
 import AdminLayout from '../../components/admin/AdminLayout';
 import Error from '../../components/Error';
-import ConfirmModal from '../../components/admin/ConfirmModal';
 import Toast from '../../components/admin/Toast';
 
 // Premium Icons
@@ -56,16 +55,13 @@ const SkeletonRow = () => (
       <div className="h-6 bg-slate-200 dark:bg-slate-700 rounded-full w-20"></div>
     </td>
     <td className="px-3 sm:px-4 lg:px-6 py-3 sm:py-4">
-      <div className="h-4 bg-slate-200 dark:bg-slate-700 rounded w-12"></div>
+      <div className="h-4 bg-slate-200 dark:bg-slate-700 rounded w-20"></div>
     </td>
     <td className="px-3 sm:px-4 lg:px-6 py-3 sm:py-4">
-      <div className="h-6 bg-slate-200 dark:bg-slate-700 rounded-full w-24"></div>
+      <div className="h-4 bg-slate-200 dark:bg-slate-700 rounded w-20"></div>
     </td>
     <td className="px-3 sm:px-4 lg:px-6 py-3 sm:py-4">
       <div className="h-6 bg-slate-200 dark:bg-slate-700 rounded-full w-16"></div>
-    </td>
-    <td className="px-3 sm:px-4 lg:px-6 py-3 sm:py-4">
-      <div className="h-8 bg-slate-200 dark:bg-slate-700 rounded w-16 mx-auto"></div>
     </td>
   </tr>
 );
@@ -82,8 +78,6 @@ function StudentsList() {
   const [pageSize, setPageSize] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
   const [infiniteScroll, setInfiniteScroll] = useState(false);
-  const [showConfirmModal, setShowConfirmModal] = useState(false);
-  const [selectedStudent, setSelectedStudent] = useState(null);
   const [toast, setToast] = useState({ visible: false, message: '', type: 'success' });
 
   // React Query hook for students
@@ -96,8 +90,6 @@ function StudentsList() {
     search: searchQuery,
     status: statusFilter
   });
-
-  const allowRetakeMutation = useAllowRetake();
 
   // Extract data from response
   const students = studentsResponse?.students || (Array.isArray(studentsResponse) ? studentsResponse : []);
@@ -275,33 +267,6 @@ function StudentsList() {
     navigate(navigationUrl);
   };
 
-  const handleAllowRetake = (student) => {
-    setSelectedStudent(student);
-    setShowConfirmModal(true);
-  };
-
-  const confirmRetake = async () => {
-    if (!selectedStudent) return;
-
-    try {
-      await allowRetakeMutation.mutateAsync(selectedStudent.id);
-      setToast({
-        visible: true,
-        message: `Test retake enabled for ${selectedStudent.full_name}`,
-        type: 'success'
-      });
-      setShowConfirmModal(false);
-      setSelectedStudent(null);
-      // React Query will automatically refetch students
-    } catch (err) {
-      setToast({
-        visible: true,
-        message: `Failed to allow retake: ${err.message}`,
-        type: 'error'
-      });
-    }
-  };
-
   // Students are already filtered by backend, no need for client-side filtering
   // Use students directly from React Query
 
@@ -315,38 +280,6 @@ function StudentsList() {
   const handlePageSizeChange = (newSize) => {
     setPageSize(newSize);
     setCurrentPage(1);
-  };
-
-  const getReadinessBadge = (status) => {
-    if (!status) return null;
-    
-    const styles = {
-      'READY': 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 border-green-200 dark:border-green-800',
-      'PARTIALLY READY': 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-300 border-yellow-200 dark:border-yellow-800',
-      'NOT READY': 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300 border-red-200 dark:border-red-800'
-    };
-
-    return (
-      <span className={`px-2.5 py-1 rounded-full text-xs font-medium border ${styles[status] || 'bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300'}`}>
-        {status}
-      </span>
-    );
-  };
-
-  const getRiskBadge = (riskLevel) => {
-    if (!riskLevel) return null;
-
-    const styles = {
-      'LOW': 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 border-green-200 dark:border-green-800',
-      'MEDIUM': 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-300 border-yellow-200 dark:border-yellow-800',
-      'HIGH': 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300 border-red-200 dark:border-red-800'
-    };
-
-    return (
-      <span className={`px-2.5 py-1 rounded-full text-xs font-medium border ${styles[riskLevel] || 'bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300'}`}>
-        {riskLevel}
-      </span>
-    );
   };
 
   const getStatusBadge = (student) => {
@@ -503,11 +436,10 @@ function StudentsList() {
               <thead className="bg-slate-50 dark:bg-slate-700/50 sticky top-0 z-10 shadow-sm">
                 <tr>
                   <th className="px-3 sm:px-4 lg:px-6 py-3 sm:py-4 text-left text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider">Student</th>
+                  <th className="px-3 sm:px-4 lg:px-6 py-3 sm:py-4 text-left text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider">Student Contact</th>
+                  <th className="px-3 sm:px-4 lg:px-6 py-3 sm:py-4 text-left text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider">Parent's Contact</th>
                   <th className="px-3 sm:px-4 lg:px-6 py-3 sm:py-4 text-left text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider">Status</th>
                   <th className="px-3 sm:px-4 lg:px-6 py-3 sm:py-4 text-left text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider">Score</th>
-                  <th className="px-3 sm:px-4 lg:px-6 py-3 sm:py-4 text-left text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider">Readiness</th>
-                  <th className="px-3 sm:px-4 lg:px-6 py-3 sm:py-4 text-left text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider">Risk</th>
-                  <th className="px-3 sm:px-4 lg:px-6 py-3 sm:py-4 text-center text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-200 dark:divide-slate-700">
@@ -517,7 +449,7 @@ function StudentsList() {
                     Array.from({ length: pageSize }).map((_, i) => <SkeletonRow key={i} />)
                   ) : students.length === 0 ? (
                     <tr>
-                      <td colSpan="6" className="px-3 sm:px-4 lg:px-6 py-8 sm:py-12 text-center">
+                      <td colSpan="5" className="px-3 sm:px-4 lg:px-6 py-8 sm:py-12 text-center">
                         <div className="flex flex-col items-center gap-2">
                           <p className="text-sm sm:text-base text-slate-500 dark:text-slate-400">No students found</p>
                           {(searchQuery || statusFilter !== 'all') && (
@@ -557,6 +489,16 @@ function StudentsList() {
                           </div>
                         </td>
                         <td className="px-3 sm:px-4 lg:px-6 py-3 sm:py-4">
+                          <span className="text-xs sm:text-sm text-slate-700 dark:text-slate-300">
+                            {student.contact_number || student.mobile_number || student.mobile || student.phone || '—'}
+                          </span>
+                        </td>
+                        <td className="px-3 sm:px-4 lg:px-6 py-3 sm:py-4">
+                          <span className="text-xs sm:text-sm text-slate-700 dark:text-slate-300">
+                            {student.parent_contact_number || student.parent_mobile || student.parent_phone || '—'}
+                          </span>
+                        </td>
+                        <td className="px-3 sm:px-4 lg:px-6 py-3 sm:py-4">
                           {getStatusBadge(student)}
                         </td>
                         <td className="px-3 sm:px-4 lg:px-6 py-3 sm:py-4">
@@ -567,38 +509,6 @@ function StudentsList() {
                           ) : (
                             <span className="text-xs sm:text-sm text-slate-400">—</span>
                           )}
-                        </td>
-                        <td className="px-3 sm:px-4 lg:px-6 py-3 sm:py-4">
-                          {getReadinessBadge(student.readiness_status)}
-                        </td>
-                        <td className="px-3 sm:px-4 lg:px-6 py-3 sm:py-4">
-                          {getRiskBadge(student.risk_level)}
-                        </td>
-                        <td className="px-3 sm:px-4 lg:px-6 py-3 sm:py-4">
-                          <div className="flex items-center justify-center gap-2">
-                            {student.has_completed_test && (
-                              <>
-                                <motion.button
-                                  onClick={() => handleViewResult(student)}
-                                  className="p-2 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 touch-manipulation min-w-[44px] min-h-[44px] flex items-center justify-center"
-                                  whileHover={{ scale: 1.1 }}
-                                  whileTap={{ scale: 0.9 }}
-                                  title="View Result"
-                                >
-                                  <IconEye className="w-4 h-4" />
-                                </motion.button>
-                                <motion.button
-                                  onClick={() => handleAllowRetake(student)}
-                                  className="p-2 text-orange-600 dark:text-orange-400 hover:bg-orange-50 dark:hover:bg-orange-900/20 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-orange-500 touch-manipulation min-w-[44px] min-h-[44px] flex items-center justify-center"
-                                  whileHover={{ scale: 1.1 }}
-                                  whileTap={{ scale: 0.9 }}
-                                  title="Allow Retake"
-                                >
-                                  <IconRefreshCw className="w-4 h-4" />
-                                </motion.button>
-                              </>
-                            )}
-                          </div>
                         </td>
                       </motion.tr>
                     ))
@@ -660,30 +570,20 @@ function StudentsList() {
                         </span>
                       )}
                     </div>
-                    <div className="flex flex-wrap items-center gap-2">
-                      {getReadinessBadge(student.readiness_status)}
-                      {getRiskBadge(student.risk_level)}
-                    </div>
-                    {student.has_completed_test && (
-                      <div className="flex items-center gap-2 pt-2">
-                        <motion.button
-                          onClick={() => handleViewResult(student)}
-                          className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 rounded-lg text-sm font-medium hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-colors touch-manipulation min-h-[44px]"
-                          whileTap={{ scale: 0.98 }}
-                        >
-                          <IconEye className="w-4 h-4" />
-                          View Result
-                        </motion.button>
-                        <motion.button
-                          onClick={() => handleAllowRetake(student)}
-                          className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-orange-50 dark:bg-orange-900/20 text-orange-600 dark:text-orange-400 rounded-lg text-sm font-medium hover:bg-orange-100 dark:hover:bg-orange-900/30 transition-colors touch-manipulation min-h-[44px]"
-                          whileTap={{ scale: 0.98 }}
-                        >
-                          <IconRefreshCw className="w-4 h-4" />
-                          Allow Retake
-                        </motion.button>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs sm:text-sm text-slate-700 dark:text-slate-300">
+                      <div className="flex items-center justify-between sm:justify-start sm:gap-2">
+                        <span className="text-slate-500 dark:text-slate-400">Student Contact</span>
+                        <span className="font-medium text-slate-900 dark:text-slate-100">
+                          {student.contact_number || student.mobile || student.phone || '—'}
+                        </span>
                       </div>
-                    )}
+                      <div className="flex items-center justify-between sm:justify-start sm:gap-2">
+                        <span className="text-slate-500 dark:text-slate-400">Parent's Contact</span>
+                        <span className="font-medium text-slate-900 dark:text-slate-100">
+                          {student.parent_contact_number || student.parent_mobile || student.parent_phone || '—'}
+                        </span>
+                      </div>
+                    </div>
                   </div>
                 </motion.div>
               ))
@@ -775,21 +675,6 @@ function StudentsList() {
           )}
         </motion.div>
       </div>
-
-      {/* Confirm Modal */}
-      <ConfirmModal
-        isOpen={showConfirmModal}
-        onClose={() => {
-          setShowConfirmModal(false);
-          setSelectedStudent(null);
-        }}
-        onConfirm={confirmRetake}
-        title="Allow Test Retake"
-        message={`Are you sure you want to allow ${selectedStudent?.full_name} to retake the test? This will delete their current test results.`}
-        confirmText="Allow Retake"
-        cancelText="Cancel"
-        variant="warning"
-      />
 
       {/* Toast */}
       <Toast

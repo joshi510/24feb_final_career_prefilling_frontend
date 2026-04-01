@@ -69,7 +69,7 @@ const CareerProfilingVideo = () => {
   const currentSceneData = scenes[currentScene];
 
   return (
-    <div className="relative w-full h-64 bg-gradient-to-br from-blue-600 to-indigo-700 rounded-xl overflow-hidden">
+    <div className="relative w-full h-full min-h-40 bg-gradient-to-br from-blue-600 to-indigo-700 rounded-xl overflow-hidden">
 
       {/* Scene Content */}
       <AnimatePresence mode="wait">

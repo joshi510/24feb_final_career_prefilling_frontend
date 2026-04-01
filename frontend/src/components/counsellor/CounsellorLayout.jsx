@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../../context/AuthContext';
 import Footer from '../Footer';
+import AppLogo from '../AppLogo';
 
 const sidebarItems = [
   { path: '/counsellor', label: 'Dashboard', icon: 'dashboard' },
@@ -159,15 +160,7 @@ function CounsellorLayout({ children }) {
           {/* Logo Section */}
           <div className="px-4 sm:px-6 py-4 sm:py-5 border-b border-slate-200 dark:border-slate-700 flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <img 
-                src="/images/tops-logo.png" 
-                alt="TOPS TECHNOLOGIES Logo" 
-                className="h-10 w-auto max-w-[180px]"
-                style={{ objectFit: 'contain' }}
-                onError={(e) => {
-                  e.target.style.display = 'none';
-                }}
-              />
+              <AppLogo height={40} className="max-w-[180px]" />
             </div>
             {/* Close button only on mobile */}
             {isMobile && mobileSidebarOpen && (

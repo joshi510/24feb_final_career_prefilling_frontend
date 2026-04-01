@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="TOPS Career Profiler">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#2C3E50"/>
+      <stop offset="1" stop-color="#3498DB"/>
+    </linearGradient>
+  </defs>
+  <rect x="8" y="8" width="112" height="112" rx="28" fill="url(#g)"/>
+  <path d="M40 44h48v14H71v44H57V58H40V44z" fill="#ffffff" opacity="0.95"/>
+  <circle cx="96" cy="36" r="10" fill="#ffffff" opacity="0.18"/>
+</svg>
+

@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
 import { getFieldRecommendations } from '../utils/careerEngine.js';
+import { aliasCareerTitleForDisplay } from '../utils/careerTitleAliases.js';
 import {
   buildCounsellorReport,
   buildTopPathwayRowsForDisplay,
@@ -95,7 +96,7 @@ function pdfRiasecTitleLine(code) {
 }
 
 /** Same path as public folder; avoid CSS filters on logo — html2canvas often breaks them */
-const PDF_LOGO_SRC = '/images/tops-logo.png';
+const PDF_LOGO_SRC = '/images/logo-transparent.png';
 
 function PdfFooterLogo() {
   return (
@@ -693,18 +694,12 @@ function ResultPDF({ interpretation, counsellorNote, user, riasecReport, showDis
                   flexShrink: 0,
                   alignSelf: 'flex-start',
                   marginTop: 4,
-                  padding: '10px 14px',
-                  background: '#ffffff',
-                  borderRadius: 14,
-                  boxShadow: '0 6px 20px rgba(0, 0, 0, 0.18)',
-                  border: '1px solid rgba(255, 255, 255, 0.9)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center'
                 }}
                 title="TOPS Technologies"
               >
-                {/* No CSS filter — html2canvas often drops filters; white panel gives contrast on navy/blue header */}
                 <img
                   src={PDF_LOGO_SRC}
                   alt="TOPS Technologies"
@@ -714,7 +709,8 @@ function ResultPDF({ interpretation, counsellorNote, user, riasecReport, showDis
                     width: 'auto',
                     height: 'auto',
                     objectFit: 'contain',
-                    display: 'block'
+                    display: 'block',
+                    filter: 'drop-shadow(0 2px 8px rgba(0,0,0,0.25))'
                   }}
                   onError={(e) => {
                     e.target.style.display = 'none';
@@ -1232,311 +1228,9 @@ function ResultPDF({ interpretation, counsellorNote, user, riasecReport, showDis
       )}
       </PdfPageFrame>
 
+      {/* "Are you ready?" page removed (per requirement) */}
+
       <PdfPageFrame pageNum={4}>
-        {interpretation && (
-          <div style={{ marginBottom: 24 }}>
-            <SectionRibbon title="Are you ready?" accentColor={BRAND_COLORS.primary} />
-            <div
-              style={{
-                ...styles.card,
-                textAlign: 'center',
-                border: '2px solid rgba(52, 152, 219, 0.28)',
-                padding: '20px 16px',
-                background: 'linear-gradient(180deg,#ffffff,#f4f9fd)'
-              }}
-            >
-              <ReadinessGauge percent={interpretation.overall_percentage ?? 0} />
-            </div>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12, marginTop: 14 }}>
-              <div
-                style={{
-                  ...styles.card,
-                  padding: 14,
-                  background: 'linear-gradient(145deg,#e8f4fc,#ffffff)',
-                  borderLeft: `4px solid ${BRAND_COLORS.secondary}`
-                }}
-              >
-                <p
-                  style={{
-                    margin: '0 0 6px',
-                    fontSize: 10,
-                    fontWeight: 800,
-                    color: BRAND_COLORS.textLight,
-                    letterSpacing: '0.08em'
-                  }}
-                >
-                  STAGE
-                </p>
-                <p style={{ margin: 0, fontSize: 13, fontWeight: 800, color: BRAND_COLORS.primary }}>
-                  {interpretation.readiness_status
-                    ? friendlyReadinessLabel(interpretation.readiness_status)
-                    : '—'}
-                </p>
-              </div>
-              <div
-                style={{
-                  ...styles.card,
-                  padding: 14,
-                  background: 'linear-gradient(145deg,#fff8e6,#ffffff)',
-                  borderLeft: `4px solid ${BRAND_COLORS.warning}`
-                }}
-              >
-                <p
-                  style={{
-                    margin: '0 0 6px',
-                    fontSize: 10,
-                    fontWeight: 800,
-                    color: BRAND_COLORS.textLight,
-                    letterSpacing: '0.08em'
-                  }}
-                >
-                  RISK
-                </p>
-                <p style={{ margin: 0, fontSize: 13, fontWeight: 800, color: BRAND_COLORS.primary }}>
-                  {interpretation.risk_level ? friendlyRiskLabel(interpretation.risk_level) : '—'}
-                </p>
-              </div>
-              <div
-                style={{
-                  ...styles.card,
-                  padding: 14,
-                  background: 'linear-gradient(145deg,#fdecea,#ffffff)',
-                  borderLeft: `4px solid ${BRAND_COLORS.accent}`
-                }}
-              >
-                <p
-                  style={{
-                    margin: '0 0 6px',
-                    fontSize: 10,
-                    fontWeight: 800,
-                    color: BRAND_COLORS.textLight,
-                    letterSpacing: '0.08em'
-                  }}
-                >
-                  CLARITY
-                </p>
-                <p style={{ margin: 0, fontSize: 13, fontWeight: 800, color: BRAND_COLORS.primary }}>
-                  {pdfRiasecConfidence?.level
-                    ? friendlyCareerDirectionHeadline(pdfRiasecConfidence.level)
-                    : '—'}
-                </p>
-              </div>
-            </div>
-          </div>
-        )}
-
-      {/* Key Takeaway — same narrative as KeyTakeaway.jsx (not only stage title) */}
-      {interpretation?.readiness_status && (
-        <div style={styles.section}>
-          <h2 style={styles.sectionTitle}>What This Means</h2>
-          <div style={{
-            ...styles.card,
-            background: interpretation.readiness_status === 'READY'
-              ? 'linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%)'
-              : interpretation.readiness_status === 'PARTIALLY READY'
-              ? 'linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%)'
-              : 'linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%)',
-            borderLeft: interpretation.readiness_status === 'READY'
-              ? '4px solid #22c55e'
-              : interpretation.readiness_status === 'PARTIALLY READY'
-              ? '4px solid #f59e0b'
-              : '4px solid #ef4444'
-          }}>
-            <p style={{
-              margin: '0 0 8px 0',
-              fontSize: '12px',
-              fontWeight: '600',
-              color: '#64748b',
-              textTransform: 'uppercase',
-              letterSpacing: '0.04em'
-            }}>
-              {friendlyReadinessLabel(interpretation.readiness_status)}
-            </p>
-            <p style={{
-              margin: 0,
-              fontSize: '16px',
-              fontWeight: '600',
-              lineHeight: 1.55,
-              color: interpretation.readiness_status === 'READY'
-                ? '#166534'
-                : interpretation.readiness_status === 'PARTIALLY READY'
-                ? '#92400e'
-                : '#991b1b'
-            }}>
-              {keyTakeawayMessage(interpretation.readiness_status)}
-            </p>
-          </div>
-        </div>
-      )}
-
-      {/* Career Readiness & Decision Guidance — aligned with ReadinessStatus.jsx */}
-      {interpretation?.readiness_status && (
-        <div style={styles.section}>
-          <h2 style={styles.sectionTitle}>Are You Ready to Choose a Career?</h2>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-            <div style={{
-              ...styles.card,
-              background: interpretation.readiness_status === 'READY'
-                ? 'linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%)'
-                : interpretation.readiness_status === 'PARTIALLY READY'
-                ? 'linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%)'
-                : 'linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%)',
-              borderLeft: interpretation.readiness_status === 'READY'
-                ? '4px solid #22c55e'
-                : interpretation.readiness_status === 'PARTIALLY READY'
-                ? '4px solid #f59e0b'
-                : '4px solid #3b82f6'
-            }}>
-              <p style={{ margin: '0 0 6px 0', fontSize: '12px', color: '#64748b' }}>Career Readiness</p>
-              <p style={{
-                margin: '0 0 10px 0',
-                fontSize: '16px',
-                fontWeight: 'bold',
-                color: interpretation.readiness_status === 'READY'
-                  ? '#166534'
-                  : interpretation.readiness_status === 'PARTIALLY READY'
-                  ? '#92400e'
-                  : '#1e40af'
-              }}>
-                {friendlyReadinessLabel(interpretation.readiness_status)}
-              </p>
-              {interpretation.readiness_explanation && (
-                <p style={{ margin: '12px 0 0 0', fontSize: '12px', color: '#334155', lineHeight: 1.6 }}>
-                  {simplifyReportText(interpretation.readiness_explanation)}
-                </p>
-              )}
-            </div>
-            <div style={{
-              ...styles.card,
-              background: interpretation.risk_level === 'LOW'
-                ? 'linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%)'
-                : 'linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%)',
-              borderLeft: interpretation.risk_level === 'LOW' ? '4px solid #22c55e' : '4px solid #f59e0b'
-            }}>
-              <p style={{ margin: '0 0 6px 0', fontSize: '12px', color: '#64748b' }}>Decision Guidance</p>
-              {interpretation.risk_level && (
-                <p style={{
-                  margin: '0 0 10px 0',
-                  fontSize: '16px',
-                  fontWeight: 'bold',
-                  color: interpretation.risk_level === 'LOW' ? '#166534' : '#92400e'
-                }}>
-                  {friendlyRiskLabel(interpretation.risk_level)}
-                </p>
-              )}
-              {(interpretation.risk_explanation_human || interpretation.risk_explanation) && (
-                <p style={{ margin: '12px 0 0 0', fontSize: '12px', color: '#334155', lineHeight: 1.6 }}>
-                  {pdfRiskExplanationDisplay}
-                </p>
-              )}
-              {interpretation.risk_level === 'MEDIUM' && (
-                <p style={{
-                  margin: '10px 0 0 0',
-                  fontSize: '11px',
-                  color: '#92400e',
-                  fontStyle: 'italic',
-                  padding: '8px',
-                  backgroundColor: 'rgba(254, 243, 199, 0.6)',
-                  borderRadius: '6px'
-                }}>
-                  Take your time and get guidance before you decide.
-                </p>
-              )}
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Career Confidence — RIASEC engine when dimensions exist (same as ResultPage) */}
-      {pdfRiasecConfidence?.level && pdfCareerConfidenceExplanationDisplay && (
-        <div style={styles.section}>
-          <h2 style={styles.sectionTitle}>How Clear Is Your Career Direction?</h2>
-          <div style={{
-            ...styles.card,
-            background: pdfRiasecConfidence.level === 'HIGH' || pdfRiasecConfidence.level?.toUpperCase() === 'HIGH'
-              ? 'linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%)'
-              : pdfRiasecConfidence.level === 'MODERATE' || pdfRiasecConfidence.level?.toUpperCase() === 'MODERATE'
-              ? 'linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%)'
-              : 'linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%)',
-            borderLeft: pdfRiasecConfidence.level === 'HIGH' || pdfRiasecConfidence.level?.toUpperCase() === 'HIGH'
-              ? '4px solid #22c55e'
-              : pdfRiasecConfidence.level === 'MODERATE' || pdfRiasecConfidence.level?.toUpperCase() === 'MODERATE'
-              ? '4px solid #f59e0b'
-              : '4px solid #ef4444'
-          }}>
-            <div style={{ marginBottom: '15px' }}>
-              <p style={{ margin: '0 0 8px 0', fontSize: '12px', color: '#64748b' }}>Clarity Level</p>
-              <p style={{ 
-                margin: 0, 
-                fontSize: '18px', 
-                fontWeight: 'bold',
-                color: pdfRiasecConfidence.level === 'HIGH' || pdfRiasecConfidence.level?.toUpperCase() === 'HIGH'
-                  ? '#166534'
-                  : pdfRiasecConfidence.level === 'MODERATE' || pdfRiasecConfidence.level?.toUpperCase() === 'MODERATE'
-                  ? '#92400e'
-                  : '#991b1b'
-              }}>
-                {friendlyCareerDirectionHeadline(pdfRiasecConfidence.level)}
-              </p>
-            </div>
-            {pdfCareerConfidenceExplanationDisplay ? (
-              <p style={{ margin: '10px 0 0 0', fontSize: '12px', color: '#334155', lineHeight: '1.6' }}>
-                {pdfCareerConfidenceExplanationDisplay}
-              </p>
-            ) : null}
-          </div>
-        </div>
-      )}
-
-      {/* Do Now vs Do Later (coerced — API may send JSON string) */}
-      {(doNowList.length > 0 || doLaterList.length > 0) && (
-        <div style={styles.section}>
-          <h2 style={styles.sectionTitle}>Your Next Steps</h2>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
-            {doNowList.length > 0 && (
-          <div style={{
-            ...styles.card,
-            background: 'linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%)',
-            borderLeft: '4px solid #ef4444'
-          }}>
-                <h3 style={{ margin: '0 0 12px 0', fontSize: '14px', fontWeight: '600', color: '#991b1b' }}>
-                  🔥 Do Now
-                </h3>
-                <ul style={styles.bulletList}>
-                  {doNowList.map((action, idx) => (
-                    <li key={idx} style={{ ...styles.bulletItem, color: '#7f1d1d' }}>
-                      <span style={{ ...styles.bulletMarker, color: '#ef4444' }}>•</span>
-                      {action}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-            {doLaterList.length > 0 && (
-              <div style={{
-                ...styles.card,
-                background: 'linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%)',
-                borderLeft: '4px solid #3b82f6'
-              }}>
-                <h3 style={{ margin: '0 0 12px 0', fontSize: '14px', fontWeight: '600', color: '#1e40af' }}>
-                  📋 Do Later
-            </h3>
-                <ul style={styles.bulletList}>
-                  {doLaterList.map((action, idx) => (
-                    <li key={idx} style={{ ...styles.bulletItem, color: '#1e3a8a' }}>
-                      <span style={{ ...styles.bulletMarker, color: '#3b82f6' }}>•</span>
-                      {action}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-          </div>
-        </div>
-      )}
-      </PdfPageFrame>
-
-      <PdfPageFrame pageNum={5}>
         {interpretation && (
           <div style={styles.section}>
             <SectionRibbon title="Score breakdown" accentColor={BRAND_COLORS.success} />
@@ -1732,7 +1426,12 @@ function ResultPDF({ interpretation, counsellorNote, user, riasecReport, showDis
                     <span style={{ fontSize: 18 }}>📊</span> Your scores by section
                   </h4>
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 12 }}>
-                    {interpretation.section_scores.map((section, idx) => {
+                    {interpretation.section_scores
+                      .filter((section, idx) => {
+                        const sectionNum = section.section_number || section.sectionNumber || idx + 1;
+                        return Number(sectionNum) >= 1 && Number(sectionNum) <= 4;
+                      })
+                      .map((section, idx) => {
                       const sectionNum = section.section_number || section.sectionNumber || idx + 1;
                       let percentage;
                       if (section.score >= 0 && section.score <= 100 && section.score > 5) {
@@ -1752,27 +1451,12 @@ function ResultPDF({ interpretation, counsellorNote, user, riasecReport, showDis
                             4: 'Learning Style'
                           };
                           displayName = careerLabels[sectionNum] || `Section ${sectionNum}`;
-                        } else if (sectionNum >= 5 && sectionNum <= 10) {
-                          const riasecLabels = {
-                            5: 'Realistic (R)',
-                            6: 'Investigative (I)',
-                            7: 'Artistic (A)',
-                            8: 'Social (S)',
-                            9: 'Enterprising (E)',
-                            10: 'Conventional (C)'
-                          };
-                          displayName = riasecLabels[sectionNum] || `Section ${sectionNum}`;
                         } else {
                           displayName = `Section ${sectionNum}`;
                         }
                       }
                       const band = scoreBandStyle(percentage);
-                      const riasecOrder = ['R', 'I', 'A', 'S', 'E', 'C'];
-                      const riasecCode = sectionNum >= 5 && sectionNum <= 10 ? riasecOrder[sectionNum - 5] : null;
-                      const strokeColor =
-                        sectionNum <= 4
-                          ? BRAND_COLORS.secondary
-                          : RIASEC_COLORS[riasecCode]?.primary || '#9B59B6';
+                      const strokeColor = BRAND_COLORS.secondary;
                       const circumference = 2 * Math.PI * 36;
                       const offset = circumference * (1 - percentage / 100);
                       return (
@@ -1844,7 +1528,7 @@ function ResultPDF({ interpretation, counsellorNote, user, riasecReport, showDis
                               />
                             </svg>
                             <span style={{ position: 'relative', zIndex: 1, fontSize: 9, fontWeight: 800, color: BRAND_COLORS.text }}>
-                              {sectionNum <= 4 ? 'Career' : 'RIASEC'}
+                              Career
                             </span>
                           </div>
                         </div>
@@ -1858,7 +1542,7 @@ function ResultPDF({ interpretation, counsellorNote, user, riasecReport, showDis
         )}
       </PdfPageFrame>
 
-      <PdfPageFrame pageNum={6}>
+      <PdfPageFrame pageNum={5}>
       <SectionRibbon title="Career pathways" accentColor={BRAND_COLORS.warning} />
       {/* Potential Career Pathways — same engine as RIASECCareerPathways (careerEngine + reportEngine) */}
       {pathwayPayload?.fieldAnalysis?.valid === false && pathwayPayload.fieldAnalysis?.confidenceMessage && (
@@ -1979,7 +1663,7 @@ function ResultPDF({ interpretation, counsellorNote, user, riasecReport, showDis
                                       <span style={{ color: '#4f46e5', fontVariantNumeric: 'tabular-nums' }}>
                                         {pathIdx + 1}.
                                       </span>{' '}
-                                      {c.title}
+                                      {aliasCareerTitleForDisplay(c.title)}
                                       {c.scorePercent != null ? (
                                         <span style={{ fontWeight: 600, color: '#4f46e5', marginLeft: 4 }}>
                                           {c.scorePercent}%
@@ -2023,7 +1707,7 @@ function ResultPDF({ interpretation, counsellorNote, user, riasecReport, showDis
       )}
       </PdfPageFrame>
 
-      <PdfPageFrame pageNum={7}>
+      <PdfPageFrame pageNum={6}>
       {pdfArchetype && pathwayPayload?.fieldAnalysis?.valid !== false && (
         <div style={styles.section}>
           <SectionRibbon title="Your career archetype" accentColor={BRAND_COLORS.secondary} />
@@ -2048,31 +1732,7 @@ function ResultPDF({ interpretation, counsellorNote, user, riasecReport, showDis
         </div>
       )}
 
-      {interpretation?.counsellor_summary && String(interpretation.counsellor_summary).trim() && (
-        <div style={styles.section}>
-          <h2 style={styles.sectionTitle}>Counsellor Notes</h2>
-          <div
-            style={{
-              ...styles.card,
-              background: 'linear-gradient(145deg, #f4ecf9, #ffffff)',
-              borderLeft: `5px solid ${BRAND_COLORS.accent}`,
-              borderRadius: 14
-            }}
-          >
-            <p
-              style={{
-                margin: 0,
-                fontSize: 13,
-                color: BRAND_COLORS.text,
-                lineHeight: 1.8,
-                whiteSpace: 'pre-wrap'
-              }}
-            >
-              {simplifyReportText(String(interpretation.counsellor_summary).trim())}
-            </p>
-          </div>
-        </div>
-      )}
+      {/* Counsellor Notes removed (per UI requirement) */}
 
       {showDiscussionForCounsellor &&
         pathwayPayload?.report?.discussionPrompts?.length > 0 &&
@@ -2127,25 +1787,7 @@ function ResultPDF({ interpretation, counsellorNote, user, riasecReport, showDis
       </div>
 
 
-      {/* Counsellor Notes */}
-      {counsellorNote && counsellorNote.notes && counsellorNote.notes.trim() && (
-        <div style={styles.section}>
-          <h2 style={styles.sectionTitle}>Counsellor's Expert Notes</h2>
-          <div style={{
-            ...styles.card,
-            background: 'linear-gradient(145deg, #f5eef8, #ffffff)',
-            borderLeft: `5px solid ${BRAND_COLORS.accent}`,
-            borderRadius: 14
-          }}>
-            <div style={{ marginBottom: '10px', fontSize: '12px', color: BRAND_COLORS.textLight }}>
-              By {counsellorNote.counsellor_name || 'Counsellor'} • {new Date(counsellorNote.created_at || new Date()).toLocaleDateString()}
-            </div>
-            <p style={{ margin: 0, fontSize: '13px', color: BRAND_COLORS.text, lineHeight: '1.8', whiteSpace: 'pre-wrap' }}>
-              {counsellorNote.notes}
-            </p>
-          </div>
-        </div>
-      )}
+      {/* Counsellor Notes removed (per UI requirement) */}
       </PdfPageFrame>
     </div>
   );

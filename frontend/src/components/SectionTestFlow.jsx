@@ -1001,7 +1001,7 @@ function SectionTestFlow({ attemptId, initialSection, onSectionComplete, onCompl
   const progress = questions.length > 0 ? ((currentQuestionIndex + 1) / questions.length) * 100 : 0;
 
   return (
-    <div className="h-full flex flex-col overflow-hidden max-w-6xl mx-auto w-full px-2 sm:px-0">
+    <div className="h-full min-h-0 flex flex-col overflow-hidden max-w-6xl mx-auto w-full px-2 sm:px-0">
       {/* Section Header with Timer - Fixed at top */}
       <div className="flex-shrink-0 bg-white dark:bg-slate-800 rounded-xl shadow-lg p-3 mb-2 border border-slate-200 dark:border-slate-700 safe-area-top">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-2">
@@ -1081,7 +1081,7 @@ function SectionTestFlow({ attemptId, initialSection, onSectionComplete, onCompl
       )}
 
       {/* Main Content Area - Scrollable */}
-      <div className="flex-1 overflow-y-auto pr-0 sm:pr-1">
+      <div className="flex-1 min-h-0 overflow-y-auto pr-0 sm:pr-1">
         {loading ? (
           <div className="text-center py-12">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>

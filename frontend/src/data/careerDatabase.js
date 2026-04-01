@@ -145,6 +145,13 @@ export const careerDatabase = [
     why: ['Execution', 'Structure', 'Practical work']
   },
   {
+    id: 'administrative_officer',
+    name: 'Administrative Officer',
+    traits: { C: 0.6, E: 0.25, S: 0.15 },
+    cluster: 'Business',
+    why: ['Organization', 'Coordination', 'Process']
+  },
+  {
     id: 'digital_marketer',
     name: 'Digital Marketing Manager',
     traits: { E: 0.4, A: 0.35, S: 0.25 },
@@ -183,6 +190,13 @@ export const careerDatabase = [
     why: ['Hands-on problem solving', 'Machines']
   },
   {
+    id: 'automotive_engineer',
+    name: 'Automotive Engineer',
+    traits: { R: 0.55, I: 0.45 },
+    cluster: 'Engineering',
+    why: ['Vehicles & systems', 'Practical engineering']
+  },
+  {
     id: 'civil_engineer',
     name: 'Civil Engineer',
     traits: { R: 0.5, C: 0.5 },
@@ -203,6 +217,13 @@ export const careerDatabase = [
     traits: { R: 0.5, C: 0.5 },
     cluster: 'Technical',
     why: ['Practical work', 'Precision']
+  },
+  {
+    id: 'agriculture_specialist',
+    name: 'Agriculture Specialist',
+    traits: { R: 0.6, I: 0.4 },
+    cluster: 'Environment',
+    why: ['Outdoors', 'Applied science']
   },
 
   {
@@ -248,6 +269,13 @@ export const careerDatabase = [
     traits: { S: 0.55, A: 0.45 },
     cluster: 'Education',
     why: ['Helping others', 'Communication']
+  },
+  {
+    id: 'trainer_coach',
+    name: 'Trainer / Coach',
+    traits: { S: 0.6, E: 0.4 },
+    cluster: 'Education',
+    why: ['Guiding people', 'Motivation']
   },
   {
     id: 'career_counsellor',

@@ -7,23 +7,20 @@ import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import ResultHeader from '../components/ResultHeader';
 import ScoreSummary from '../components/ScoreSummary';
-import ReadinessStatus from '../components/ReadinessStatus';
-import KeyTakeaway from '../components/KeyTakeaway';
-import CounsellorSummary from '../components/CounsellorSummary';
-import CareerConfidence from '../components/CareerConfidence';
-import DoNowDoLater from '../components/DoNowDoLater';
 import AlertModal from '../components/AlertModal';
 import Toast from '../components/Toast';
 import { useAlert } from '../hooks/useAlert';
 import { generatePDF } from '../utils/pdfGenerator';
 import ResultPDF from '../components/ResultPDF';
 import RIASECProfile from '../components/RIASECProfile';
-import RIASECCareerPathways from '../components/RIASECCareerPathways';
-import CareerArchetypeSection from '../components/CareerArchetypeSection';
 import RIASECDimensionCard from '../components/RIASECDimensionCard';
 import RIASECDimensionsOverview from '../components/RIASECDimensionsOverview';
-import AppointmentFormModal from '../components/AppointmentFormModal';
 import { getRiasecConfidenceForDisplay } from '../utils/careerEngine.js';
+import CareerConfidence from '../components/CareerConfidence';
+import DoNowDoLater from '../components/DoNowDoLater';
+import CareerArchetypeSection from '../components/CareerArchetypeSection';
+import RIASECCareerPathways from '../components/RIASECCareerPathways';
+import AppointmentFormModal from '../components/AppointmentFormModal';
 
 function ResultPage() {
   const { attemptId } = useParams();
@@ -411,28 +408,12 @@ function ResultPage() {
             </div>
           )}
 
-          {/* Counsellor Summary - At the very top */}
-          {interpretation.counsellor_summary && (
-            <CounsellorSummary counsellorSummary={interpretation.counsellor_summary} />
-          )}
+          {/* Counsellor Summary removed (per requirement) */}
 
           {/* Score Summary */}
           <ScoreSummary interpretation={interpretation} />
 
-          {/* Key Takeaway - Single Line Summary */}
-          <KeyTakeaway 
-            readinessStatus={interpretation.readiness_status}
-            overallPercentage={interpretation.overall_percentage}
-          />
-
-          {/* Readiness Status and Risk Level */}
-          <ReadinessStatus
-            readinessStatus={interpretation.readiness_status}
-            readinessExplanation={interpretation.readiness_explanation}
-            riskLevel={interpretation.risk_level}
-            riskExplanation={interpretation.risk_explanation}
-            riskExplanationHuman={interpretation.risk_explanation_human}
-          />
+          {/* "Are you ready?" section removed (per requirement) */}
 
           {/* Career Confidence — RIASEC engine when dimensions exist (same as PDF), else API interpretation */}
           {((riasecConfidenceDisplay?.level && riasecConfidenceDisplay?.explanation) ||
@@ -467,66 +448,6 @@ function ResultPage() {
               />
             </>
           )}
-
-          {/* Counsellor Notes */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.6 }}
-            className="bg-gradient-to-br from-purple-50 to-indigo-50 dark:from-purple-900/20 dark:to-indigo-900/20 rounded-xl sm:rounded-2xl shadow-lg p-4 sm:p-6 border border-purple-200 dark:border-purple-800"
-          >
-            <div className="flex items-center gap-2 mb-3 sm:mb-4">
-              <div className="w-3 h-3 bg-purple-500 rounded-full flex-shrink-0"></div>
-              <h2 className="text-lg sm:text-xl font-semibold text-slate-900 dark:text-slate-100">Counsellor's Expert Notes</h2>
-            </div>
-
-            {counsellorNote ? (
-              <div className="bg-white/60 dark:bg-slate-800/60 rounded-xl p-3 sm:p-4 border border-purple-200 dark:border-purple-800">
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-0 mb-3">
-                  <p className="text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-300">
-                    By {counsellorNote.counsellor_name}
-                  </p>
-                  <p className="text-xs text-slate-500 dark:text-slate-400">
-                    {new Date(counsellorNote.created_at).toLocaleDateString()}
-                  </p>
-                </div>
-                <p className="text-xs sm:text-sm text-slate-700 dark:text-slate-300 whitespace-pre-wrap leading-relaxed">
-                  {counsellorNote.notes}
-                </p>
-              </div>
-            ) : (
-              <div className="bg-white/60 dark:bg-slate-800/60 rounded-xl p-4 sm:p-6 border border-purple-200 dark:border-purple-800 text-center">
-                <p className="text-sm text-slate-500 dark:text-slate-400 italic">
-                  No counsellor notes added yet
-                </p>
-              </div>
-            )}
-
-            {canEditNote && (
-              <div className="mt-4">
-                <textarea
-                  value={noteText}
-                  onChange={(e) => setNoteText(e.target.value)}
-                  placeholder="Add your professional notes and insights about this student's assessment results..."
-                  className="w-full px-3 sm:px-4 py-3 rounded-lg border border-purple-300 dark:border-purple-700 focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none text-sm sm:text-base text-slate-900 dark:text-slate-100 bg-white dark:bg-slate-800 min-h-[150px] resize-y"
-                />
-                <div className="mt-4 flex items-center justify-between">
-                  {noteSaved && (
-                    <span className="text-sm text-green-600 dark:text-green-400 font-medium">✓ Notes saved successfully</span>
-                  )}
-                  <motion.button
-                    onClick={handleSaveNote}
-                    disabled={savingNote || !hasNoteChanged || !noteText.trim()}
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    className="ml-auto px-6 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-lg font-medium shadow-lg shadow-purple-500/30 hover:shadow-xl hover:shadow-purple-500/40 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    {savingNote ? 'Saving...' : counsellorNote ? 'Update Notes' : 'Save Notes'}
-                  </motion.button>
-                </div>
-              </div>
-            )}
-          </motion.div>
 
           {/* Action Buttons */}
           <motion.div

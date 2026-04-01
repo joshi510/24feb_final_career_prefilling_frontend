@@ -197,8 +197,13 @@ function ScoreSummary({ interpretation }) {
             </svg>
             Your Scores
           </h4>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 sm:gap-4">
-            {sectionScoresWithPercentages.map((section, idx) => (
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
+            {sectionScoresWithPercentages
+              .filter((section, idx) => {
+                const sectionNum = Number(section.section_number || section.sectionNumber || (idx + 1));
+                return sectionNum >= 1 && sectionNum <= 4;
+              })
+              .map((section, idx) => (
               <motion.div
                 key={section.section_number || idx}
                 initial={{ opacity: 0, y: 10 }}
@@ -226,19 +231,6 @@ function ScoreSummary({ interpretation }) {
                           4: 'Learning Style'
                         };
                         return careerLabels[sectionNum] || `Section ${sectionNum}`;
-                      }
-                      
-                      // RIASEC labels for sections 5-10
-                      if (sectionNum >= 5 && sectionNum <= 10) {
-                        const riasecLabels = {
-                          5: 'Realistic (R)',
-                          6: 'Investigative (I)',
-                          7: 'Artistic (A)',
-                          8: 'Social (S)',
-                          9: 'Enterprising (E)',
-                          10: 'Conventional (C)'
-                        };
-                        return riasecLabels[sectionNum] || `Section ${sectionNum}`;
                       }
                       
                       return `Section ${sectionNum}`;
@@ -286,10 +278,7 @@ function ScoreSummary({ interpretation }) {
                     </div>
                   </div>
                   <div className="text-xs text-slate-500 dark:text-slate-400">
-                    {(() => {
-                      const sectionNum = section.section_number || section.sectionNumber || (idx + 1);
-                      return sectionNum <= 4 ? 'Career' : 'RIASEC';
-                    })()}
+                    Career
                   </div>
                 </div>
               </motion.div>

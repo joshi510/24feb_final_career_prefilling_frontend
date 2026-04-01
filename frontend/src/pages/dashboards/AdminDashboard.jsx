@@ -6,37 +6,11 @@ import AdminLayout from '../../components/admin/AdminLayout';
 import Loading from '../../components/Loading';
 import Error from '../../components/Error';
 import ReadinessChart from '../../components/ReadinessChart';
-import CareerClusterBarChart from '../../components/CareerClusterBarChart';
 
-// Premium Icon Components
-const IconUsers = ({ className }) => (
-  <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
-  </svg>
-);
+import { Users, CheckCircle2, Clock, AlertTriangle, TrendingUp } from 'lucide-react';
 
-const IconCheckCircle = ({ className }) => (
-  <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-  </svg>
-);
-
-const IconClock = ({ className }) => (
-  <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-  </svg>
-);
-
-const IconAlertTriangle = ({ className }) => (
-  <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-  </svg>
-);
-
-const IconTrendingUp = ({ className }) => (
-  <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-  </svg>
+const StatIcon = ({ Icon, className }) => (
+  <Icon className={className} strokeWidth={2.2} />
 );
 
 function AdminDashboard() {
@@ -53,7 +27,6 @@ function AdminDashboard() {
     { range: '61-80', count: 0, label: 'Good' },
     { range: '81-100', count: 0, label: 'Excellent' }
   ]);
-  const [careerClusterData, setCareerClusterData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
@@ -65,8 +38,6 @@ function AdminDashboard() {
     try {
       setLoading(true);
       setError('');
-
-      const analyticsResponse = await adminAPI.getAnalytics().catch(() => null);
 
       let allStudents = [];
       let currentPage = 1;
@@ -132,18 +103,6 @@ function AdminDashboard() {
         { range: '61-80', count: readinessRanges['61-80'], label: 'Good' },
         { range: '81-100', count: readinessRanges['81-100'], label: 'Excellent' }
       ]);
-
-      let careerClusterMap = {};
-      
-      if (analyticsResponse && analyticsResponse.career_cluster_distribution) {
-        careerClusterMap = analyticsResponse.career_cluster_distribution;
-      }
-
-      const careerClusterArray = Object.entries(careerClusterMap)
-        .map(([cluster, count]) => ({ cluster, count }))
-        .sort((a, b) => b.count - a.count);
-
-      setCareerClusterData(careerClusterArray);
     } catch (err) {
       setError(err.message || 'Failed to load dashboard data');
     } finally {
@@ -221,7 +180,7 @@ function AdminDashboard() {
               </p>
               {trend && (
                 <span className="flex items-center gap-1 text-xs font-medium text-green-600 dark:text-green-400">
-                  <IconTrendingUp className="w-3 h-3" />
+                  <StatIcon Icon={TrendingUp} className="w-3 h-3" />
                   {trend}
                 </span>
               )}
@@ -263,7 +222,7 @@ function AdminDashboard() {
         {/* Stats Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
           <StatCard
-            icon={IconUsers}
+            icon={Users}
             label="Total Students"
             value={stats.totalStudents}
             subtitle="Registered users"
@@ -272,7 +231,7 @@ function AdminDashboard() {
             delay={0}
           />
           <StatCard
-            icon={IconCheckCircle}
+            icon={CheckCircle2}
             label="Tests Completed"
             value={stats.completedAttempts}
             subtitle={`${completionRate}% completion rate`}
@@ -280,7 +239,7 @@ function AdminDashboard() {
             delay={0.1}
           />
           <StatCard
-            icon={IconClock}
+            icon={Clock}
             label="In Progress"
             value={stats.inProgressAttempts}
             subtitle="Active tests"
@@ -288,7 +247,7 @@ function AdminDashboard() {
             delay={0.2}
           />
           <StatCard
-            icon={IconAlertTriangle}
+            icon={AlertTriangle}
             label="High Risk Students"
             value={stats.highRiskStudents}
             subtitle="Require attention"
@@ -297,8 +256,8 @@ function AdminDashboard() {
           />
         </div>
 
-        {/* Charts Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
+        {/* Charts */}
+        <div className="grid grid-cols-1 gap-4 sm:gap-6">
           {/* Readiness Distribution */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -329,37 +288,6 @@ function AdminDashboard() {
               </div>
             )}
           </motion.div>
-
-          {/* Career Cluster Distribution */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5 }}
-            className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-4 sm:p-6 shadow-sm hover:shadow-md transition-shadow"
-          >
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 sm:mb-6 gap-3">
-              <div>
-                <h3 className="text-base sm:text-lg font-semibold text-slate-900 dark:text-slate-100">
-                  Career Clusters
-                </h3>
-                <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1">
-                  Career interest distribution
-                </p>
-              </div>
-              <span className="px-3 py-1 rounded-full text-xs font-medium bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300">
-                {careerClusterData.length} clusters
-              </span>
-            </div>
-            {careerClusterData.length > 0 ? (
-              <CareerClusterBarChart data={Object.fromEntries(careerClusterData.map(item => [item.cluster, item.count]))} />
-            ) : (
-              <div className="flex items-center justify-center h-64 text-slate-400 dark:text-slate-500">
-                <div className="text-center">
-                  <p className="text-sm">No career cluster data available</p>
-                </div>
-              </div>
-            )}
-          </motion.div>
         </div>
 
         {/* Quick Actions */}
@@ -380,7 +308,7 @@ function AdminDashboard() {
               whileTap={{ scale: 0.98 }}
             >
               <div className="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-lg group-hover:bg-blue-200 dark:group-hover:bg-blue-800/30 transition-colors flex-shrink-0">
-                <IconUsers className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600 dark:text-blue-400" />
+                <StatIcon Icon={Users} className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600 dark:text-blue-400" />
               </div>
               <div className="min-w-0">
                 <p className="font-medium text-sm sm:text-base text-slate-900 dark:text-slate-100">View Students</p>

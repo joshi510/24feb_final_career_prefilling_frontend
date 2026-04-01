@@ -268,18 +268,44 @@ function QuestionsList() {
     // Handle bulk delete (array of IDs)
     if (Array.isArray(selectedQuestion)) {
       try {
-        const promises = selectedQuestion.map(id => adminAPI.deleteQuestion(id));
-        await Promise.all(promises);
+        const results = await Promise.allSettled(selectedQuestion.map((id) => adminAPI.deleteQuestion(id)));
+        const ok = results.filter((r) => r.status === 'fulfilled').length;
+        const failed = results.length - ok;
+        const deletedIds = results
+          .map((r, idx) => (r.status === 'fulfilled' ? selectedQuestion[idx] : null))
+          .filter((x) => x != null);
         
         setToast({
           visible: true,
-          message: `${selectedQuestion.length} question(s) deleted successfully`,
-          type: 'success'
+          message:
+            failed === 0
+              ? `${ok} question(s) deleted successfully`
+              : `${ok} deleted, ${failed} failed (some questions may have dependencies)`,
+          type: failed === 0 ? 'success' : 'warning'
         });
+
+        // Optimistic UI update: remove deleted from current page + decrement total count.
+        if (deletedIds.length > 0) {
+          setQuestions((prev) => prev.filter((q) => !deletedIds.includes(q.id)));
+          setPagination((prev) => {
+            const total = Math.max(0, Number(prev?.total_records || 0) - deletedIds.length);
+            const limit = Number(prev?.limit || pageSize) || pageSize;
+            const totalPages = Math.max(1, Math.ceil(total / limit));
+            const current = Math.min(Number(prev?.current_page || currentPage) || currentPage, totalPages);
+            return {
+              ...(prev || {}),
+              total_records: total,
+              total_pages: totalPages,
+              current_page: current
+            };
+          });
+        }
+
         setSelectedQuestionIds(new Set());
         setSelectedQuestion(null);
         setShowConfirmModal(false);
-        loadQuestions(currentPage);
+        // Do not immediately reload; it can overwrite optimistic totals
+        // if the server is still returning cached/stale counts.
       } catch (err) {
         setToast({
           visible: true,
@@ -298,9 +324,23 @@ function QuestionsList() {
         message: 'Question deleted successfully',
         type: 'success'
       });
+      // Optimistic UI update: remove deleted + decrement total count.
+      setQuestions((prev) => prev.filter((q) => q.id !== selectedQuestion.id));
+      setPagination((prev) => {
+        const total = Math.max(0, Number(prev?.total_records || 0) - 1);
+        const limit = Number(prev?.limit || pageSize) || pageSize;
+        const totalPages = Math.max(1, Math.ceil(total / limit));
+        const current = Math.min(Number(prev?.current_page || currentPage) || currentPage, totalPages);
+        return {
+          ...(prev || {}),
+          total_records: total,
+          total_pages: totalPages,
+          current_page: current
+        };
+      });
       setShowConfirmModal(false);
       setSelectedQuestion(null);
-      loadQuestions(currentPage);
+      // Do not immediately reload; it can overwrite optimistic totals.
     } catch (err) {
       setToast({
         visible: true,
@@ -1411,8 +1451,8 @@ function QuestionsList() {
         onConfirm={confirmDelete}
         title={Array.isArray(selectedQuestion) ? "Delete Questions" : "Delete Question"}
         message={Array.isArray(selectedQuestion) 
-          ? `Are you sure you want to delete ${selectedQuestion.length} question(s)? This will set them to Inactive status.`
-          : `Are you sure you want to delete this question? This will set it to Inactive status.`}
+          ? `Are you sure you want to permanently delete ${selectedQuestion.length} question(s)? This cannot be undone.`
+          : `Are you sure you want to permanently delete this question? This cannot be undone.`}
         confirmText="Delete"
         cancelText="Cancel"
         variant="danger"

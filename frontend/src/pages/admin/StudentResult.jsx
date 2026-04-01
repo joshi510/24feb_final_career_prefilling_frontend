@@ -7,18 +7,9 @@ import AdminLayout from '../../components/admin/AdminLayout';
 import Loading from '../../components/Loading';
 import Error from '../../components/Error';
 import Toast from '../../components/admin/Toast';
-import RIASECProfile from '../../components/RIASECProfile';
-import RIASECCareerPathways from '../../components/RIASECCareerPathways';
-import CareerArchetypeSection from '../../components/CareerArchetypeSection';
 import RIASECDimensionCard from '../../components/RIASECDimensionCard';
 import RIASECDimensionsOverview from '../../components/RIASECDimensionsOverview';
 import ScoreSummary from '../../components/ScoreSummary';
-import CounsellorSummary from '../../components/CounsellorSummary';
-import KeyTakeaway from '../../components/KeyTakeaway';
-import ReadinessActionGuidance from '../../components/ReadinessActionGuidance';
-import ReadinessStatus from '../../components/ReadinessStatus';
-import CareerConfidence from '../../components/CareerConfidence';
-import DoNowDoLater from '../../components/DoNowDoLater';
 import { generatePDF } from '../../utils/pdfGenerator';
 import ResultPDF from '../../components/ResultPDF';
 import { getRiasecConfidenceForDisplay } from '../../utils/careerEngine.js';
@@ -384,76 +375,14 @@ function AdminStudentResult() {
             </div>
           )}
 
-          {/* Counsellor Summary - At the very top */}
-          {interpretation?.counsellor_summary && (
-            <CounsellorSummary counsellorSummary={interpretation.counsellor_summary} />
-          )}
+          {/* Counsellor Summary removed (per requirement) */}
 
           {/* Score Summary */}
           {interpretation && interpretation.overall_percentage !== undefined && (
             <ScoreSummary interpretation={interpretation} />
           )}
 
-          {/* Key Takeaway - Single Line Summary */}
-          {interpretation && (
-            <KeyTakeaway 
-              readinessStatus={interpretation.readiness_status}
-              overallPercentage={interpretation.overall_percentage}
-            />
-          )}
-
-          {/* Readiness Action Guidance */}
-          {interpretation?.readiness_action_guidance && interpretation.readiness_action_guidance.length > 0 && (
-            <ReadinessActionGuidance 
-              readinessActionGuidance={interpretation.readiness_action_guidance}
-              readinessStatus={interpretation.readiness_status}
-            />
-          )}
-
-          {/* Readiness Status and Risk Level */}
-          {interpretation && (
-            <ReadinessStatus
-              readinessStatus={interpretation.readiness_status}
-              readinessExplanation={interpretation.readiness_explanation}
-              riskLevel={interpretation.risk_level}
-              riskExplanation={interpretation.risk_explanation}
-              riskExplanationHuman={interpretation.risk_explanation_human}
-            />
-          )}
-
-          {/* Career Confidence Indicator */}
-          {((riasecConfidenceDisplay?.level && riasecConfidenceDisplay?.explanation) ||
-            (interpretation?.career_confidence_level && interpretation.career_confidence_explanation)) && (
-            <CareerConfidence
-              careerConfidenceLevel={
-                riasecConfidenceDisplay?.level ?? interpretation.career_confidence_level
-              }
-              careerConfidenceExplanation={
-                riasecConfidenceDisplay?.explanation ?? interpretation.career_confidence_explanation
-              }
-            />
-          )}
-
-          {/* Do Now vs Do Later */}
-          {((interpretation?.do_now_actions && interpretation.do_now_actions.length > 0) || 
-            (interpretation?.do_later_actions && interpretation.do_later_actions.length > 0)) && (
-            <DoNowDoLater
-              doNowActions={interpretation.do_now_actions}
-              doLaterActions={interpretation.do_later_actions}
-            />
-          )}
-
-          {/* Career archetype + pathways */}
-          {riasecReport && riasecReport.dimensions && riasecReport.dimensions.length > 0 && (
-            <>
-              <CareerArchetypeSection dimensions={riasecReport.dimensions} />
-              <RIASECCareerPathways
-                careerPathways={riasecReport.careerPathways}
-                dimensions={riasecReport.dimensions}
-                showDiscussionForCounsellor={false}
-              />
-            </>
-          )}
+          {/* Only keep "Your Scores" section (per requirement) */}
 
         {/* Test Attempts Timeline */}
         {testAttempts.length > 1 && (

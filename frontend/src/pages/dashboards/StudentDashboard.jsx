@@ -312,7 +312,7 @@ function StudentDashboard() {
         <div className="flex-shrink-0">
           <Navbar />
         </div>
-        <div className="flex-1 overflow-y-auto px-4 py-4">
+        <div className="flex-1 overflow-hidden px-2 sm:px-4 py-3 sm:py-4">
           <SectionTestFlow
             attemptId={attemptId}
             initialSection={selectedSection}

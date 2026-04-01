@@ -12,14 +12,13 @@ const CounsellorDashboard = lazy(() => import('./pages/dashboards/CounsellorDash
 const AdminDashboard = lazy(() => import('./pages/dashboards/AdminDashboard'));
 const StudentsList = lazy(() => import('./pages/admin/StudentsList'));
 const AdminStudentResult = lazy(() => import('./pages/admin/StudentResult'));
-const Analytics = lazy(() => import('./pages/admin/Analytics'));
 const QuestionsList = lazy(() => import('./pages/admin/QuestionsList'));
 const QuestionForm = lazy(() => import('./pages/admin/QuestionForm'));
 const AddCounsellor = lazy(() => import('./pages/admin/AddCounsellor'));
 const CounselorsList = lazy(() => import('./pages/admin/CounselorsList'));
-const Appointments = lazy(() => import('./pages/admin/Appointments'));
 const CounsellorAppointments = lazy(() => import('./pages/counsellor/Appointments'));
 const ResultPage = lazy(() => import('./pages/ResultPage'));
+const LandingPage = lazy(() => import('./pages/LandingPage'));
 
 function LoadingFallback() {
   return (
@@ -54,8 +53,8 @@ function App() {
         <Router>
           <Suspense fallback={<LoadingFallback />}>
             <Routes>
-              {/* Root path shows registration for students */}
-              <Route path="/" element={<Login />} />
+              {/* Root path shows landing page */}
+              <Route path="/" element={<LandingPage />} />
               {/* Student registration */}
               <Route path="/register" element={<Login />} />
               {/* Admin login */}
@@ -121,14 +120,6 @@ function App() {
                 }
               />
               <Route
-                path="/admin/analytics"
-                element={
-                  <ProtectedRoute allowedRoles={['ADMIN']}>
-                    <Analytics />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
                 path="/admin/questions"
                 element={
                   <ProtectedRoute allowedRoles={['ADMIN']}>
@@ -165,14 +156,6 @@ function App() {
                 element={
                   <ProtectedRoute allowedRoles={['ADMIN']}>
                     <CounselorsList />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/admin/appointments"
-                element={
-                  <ProtectedRoute allowedRoles={['ADMIN']}>
-                    <Appointments />
                   </ProtectedRoute>
                 }
               />

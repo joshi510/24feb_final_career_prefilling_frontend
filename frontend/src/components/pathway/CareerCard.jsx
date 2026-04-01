@@ -1,15 +1,17 @@
 import React from 'react';
 import PathwayBlock from './PathwayBlock.jsx';
+import { aliasCareerTitleForDisplay } from '../../utils/careerTitleAliases.js';
 
 function CareerCard({ title, scorePercent, explanation, pathwaySections, careerIndex }) {
+  const displayTitle = aliasCareerTitleForDisplay(title);
   const titleLine =
     careerIndex != null && careerIndex > 0 ? (
       <>
         <span className="tabular-nums text-indigo-600 dark:text-indigo-400">{careerIndex}.</span>{' '}
-        <span>{title}</span>
+        <span>{displayTitle}</span>
       </>
     ) : (
-      title
+      displayTitle
     );
   return (
     <div className="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-sm">

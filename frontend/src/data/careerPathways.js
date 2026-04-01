@@ -208,6 +208,12 @@ export const CAREER_PATHWAYS = {
     afterGraduation: ['B.Ed and state eligibility exams where needed'],
     alternativePath: ['EdTech tutoring + teaching certifications']
   },
+  trainer_coach: {
+    after10th: ['Build communication, leadership, and subject/sports interest'],
+    after12th: ['UG in subject area; coaching certifications if sports/fitness'],
+    afterGraduation: ['Training roles in institutes/companies; specialize in a domain'],
+    alternativePath: ['Start as tutor/assistant coach + build results and certifications']
+  },
   psychologist: {
     after10th: ['Build empathy and communication habits'],
     after12th: ['BA/BSc Psychology after 12th'],
@@ -267,6 +273,12 @@ export const CAREER_PATHWAYS = {
     after12th: ['ITI Electrician; optional diploma for higher study'],
     afterGraduation: ['Wireman / supervisor licences as per state rules'],
     alternativePath: ['Apprenticeship under a licensed contractor']
+  },
+  agriculture_specialist: {
+    after10th: ['Science/Agri interest; build biology basics'],
+    after12th: ['BSc Agriculture / Horticulture / related', 'Field visits and internships'],
+    afterGraduation: ['Specialize (soil, crop, agri-tech) or pursue MSc/PG in agriculture'],
+    alternativePath: ['Agri extension work + agri-tech certifications']
   },
   entrepreneur: {
     after10th: ['Any stream — problem-solving and basic money sense'],
@@ -394,6 +406,12 @@ export const CAREER_PATHWAYS = {
     afterGraduation: ['GATE / M.Tech or plant / design experience'],
     alternativePath: ['Diploma Mechanical + lateral B.Tech']
   },
+  automotive_engineer: {
+    after10th: ['Science (PCM) or vocational engineering interest'],
+    after12th: ['B.Tech / BE Mechanical / Automobile', 'Build CAD + basics of engines/EV systems'],
+    afterGraduation: ['Automotive design / manufacturing roles; consider M.Tech for specialization'],
+    alternativePath: ['Diploma Mechanical/Automobile + OEM internships']
+  },
   mobile_app_developer: {
     after10th: ['Science or computer interest — logic practice'],
     after12th: ['BCA / B.Tech with programming papers'],
@@ -411,6 +429,12 @@ export const CAREER_PATHWAYS = {
     after12th: ['BBA / B.Com / B.Tech'],
     afterGraduation: ['MBA operations or supply chain'],
     alternativePath: ['Shift supervisor / executive track in logistics or manufacturing']
+  },
+  administrative_officer: {
+    after10th: ['Any stream — focus on communication and organisation'],
+    after12th: ['BA / B.Com / BBA; strengthen typing, MS Office, documentation'],
+    afterGraduation: ['Office administration roles; consider MBA/PGDM for growth'],
+    alternativePath: ['Start as office executive + upskill in HR/admin tools']
   },
   photographer: {
     after10th: ['Any stream — visual sense'],

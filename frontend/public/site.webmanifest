@@ -1,0 +1,16 @@
+{
+  "name": "Career Profiling Platform",
+  "short_name": "Career Profiler",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ],
+  "theme_color": "#2C3E50",
+  "background_color": "#FFFFFF",
+  "display": "standalone"
+}
+

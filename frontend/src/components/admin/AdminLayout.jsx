@@ -3,85 +3,43 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../../context/AuthContext';
 import Footer from '../Footer';
+import AppLogo from '../AppLogo';
 
 const sidebarItems = [
   { path: '/admin', label: 'Dashboard', icon: 'dashboard' },
   { path: '/admin/students', label: 'Students', icon: 'users' },
   { path: '/admin/questions', label: 'Questions', icon: 'questions' },
-  { path: '/admin/analytics', label: 'Analytics', icon: 'analytics' },
   { path: '/admin/counselors', label: 'Counsellors', icon: 'add-user' },
-  { path: '/admin/appointments', label: 'Appointments', icon: 'calendar' },
 ];
 
-// SVG Icon Components - Modern SaaS Style
+// SVG Icon Components - Modern minimal style (transparent / stroke-first)
 const IconDashboard = ({ className }) => (
-  <svg className={className} fill="none" viewBox="0 0 24 24">
-    {/* Modern dashboard with grid layout and metrics */}
-    <defs>
-      <linearGradient id="dashGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" stopColor="currentColor" stopOpacity="0.8" />
-        <stop offset="100%" stopColor="currentColor" stopOpacity="0.4" />
-      </linearGradient>
-    </defs>
-    {/* Grid background */}
-    <rect x="4" y="4" width="7" height="7" rx="1.5" stroke="currentColor" strokeWidth="1.8" fill="currentColor" fillOpacity="0.1" />
-    <rect x="13" y="4" width="7" height="7" rx="1.5" stroke="currentColor" strokeWidth="1.8" fill="currentColor" fillOpacity="0.1" />
-    <rect x="4" y="13" width="7" height="7" rx="1.5" stroke="currentColor" strokeWidth="1.8" fill="currentColor" fillOpacity="0.1" />
-    <rect x="13" y="13" width="7" height="7" rx="1.5" stroke="currentColor" strokeWidth="1.8" fill="currentColor" fillOpacity="0.1" />
-    {/* Chart bars - modern touch */}
-    <rect x="6" y="12" width="1.5" height="6" rx="0.75" fill="currentColor" fillOpacity="0.6" />
-    <rect x="8.5" y="9" width="1.5" height="9" rx="0.75" fill="currentColor" fillOpacity="0.6" />
-    <rect x="15" y="11" width="1.5" height="7" rx="0.75" fill="currentColor" fillOpacity="0.6" />
-    <rect x="17.5" y="8" width="1.5" height="10" rx="0.75" fill="currentColor" fillOpacity="0.6" />
-    {/* Trend line */}
-    <path d="M6 6 L8 7 L10 5.5 L12 8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+  <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round">
+    <rect x="3.5" y="3.5" width="7.5" height="7.5" rx="2" />
+    <rect x="13" y="3.5" width="7.5" height="7.5" rx="2" />
+    <rect x="3.5" y="13" width="7.5" height="7.5" rx="2" />
+    <path d="M15 20.5v-5.5" />
+    <path d="M18 20.5v-9" />
   </svg>
 );
 
 const IconUsers = ({ className }) => (
-  <svg className={className} fill="none" viewBox="0 0 24 24">
-    {/* Modern users icon with gradient and depth */}
-    <defs>
-      <linearGradient id="usersGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" stopColor="currentColor" stopOpacity="0.9" />
-        <stop offset="100%" stopColor="currentColor" stopOpacity="0.5" />
-      </linearGradient>
-    </defs>
-    {/* User 1 - left */}
-    <circle cx="8" cy="7" r="3" stroke="currentColor" strokeWidth="2" fill="currentColor" fillOpacity="0.15" />
-    <path d="M3 18 C3 15, 5 13, 8 13 C11 13, 13 15, 13 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" fill="none" />
-    {/* User 2 - center */}
-    <circle cx="12" cy="7" r="3" stroke="currentColor" strokeWidth="2" fill="currentColor" fillOpacity="0.15" />
-    <path d="M7 18 C7 15, 9 13, 12 13 C15 13, 17 15, 17 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" fill="none" />
-    {/* User 3 - right with plus badge */}
-    <circle cx="16" cy="7" r="3" stroke="currentColor" strokeWidth="2" fill="currentColor" fillOpacity="0.15" />
-    <path d="M11 18 C11 15, 13 13, 16 13 C19 13, 21 15, 21 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" fill="none" />
-    {/* Connection line - modern touch */}
-    <line x1="10.5" y1="7" x2="13.5" y2="7" stroke="currentColor" strokeWidth="1.5" strokeOpacity="0.3" strokeDasharray="2 2" />
+  <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M16 19c0-2.2-1.8-4-4-4s-4 1.8-4 4" />
+    <circle cx="12" cy="8" r="3.2" />
+    <path d="M20 19c0-1.6-1-3-2.4-3.7" opacity="0.65" />
+    <path d="M6.4 15.3C5 16 4 17.4 4 19" opacity="0.65" />
   </svg>
 );
 
 const IconAnalytics = ({ className }) => (
-  <svg className={className} fill="none" viewBox="0 0 24 24">
-    {/* Modern analytics with bars and trend */}
-    <defs>
-      <linearGradient id="analyticsGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" stopColor="currentColor" stopOpacity="0.8" />
-        <stop offset="100%" stopColor="currentColor" stopOpacity="0.3" />
-      </linearGradient>
-    </defs>
-    {/* Bar chart - left */}
-    <rect x="4" y="16" width="3" height="4" rx="1.5" fill="currentColor" fillOpacity="0.6" />
-    <rect x="8" y="12" width="3" height="8" rx="1.5" fill="currentColor" fillOpacity="0.6" />
-    <rect x="12" y="14" width="3" height="6" rx="1.5" fill="currentColor" fillOpacity="0.6" />
-    {/* Trend line chart - right */}
-    <path d="M17 18 L18.5 15 L20 12 L21.5 8" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
-    <circle cx="17" cy="18" r="1.5" fill="currentColor" fillOpacity="0.8" />
-    <circle cx="18.5" cy="15" r="1.5" fill="currentColor" fillOpacity="0.8" />
-    <circle cx="20" cy="12" r="1.5" fill="currentColor" fillOpacity="0.8" />
-    <circle cx="21.5" cy="8" r="1.5" fill="currentColor" fillOpacity="0.8" />
-    {/* Grid lines */}
-    <line x1="4" y1="20" x2="15" y2="20" stroke="currentColor" strokeWidth="1" strokeOpacity="0.2" strokeDasharray="2 2" />
+  <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M4 19V5" opacity="0.7" />
+    <path d="M4 19h16" opacity="0.7" />
+    <path d="M7 15.5v-3.5" />
+    <path d="M11 15.5v-6.5" />
+    <path d="M15 15.5v-5" />
+    <path d="M19 9l-4.2 4.2-2.6-2.6L8 14.8" />
   </svg>
 );
 
@@ -116,68 +74,32 @@ const IconChevronDown = ({ className }) => (
 );
 
 const IconFileText = ({ className }) => (
-  <svg className={className} fill="none" viewBox="0 0 24 24">
-    {/* Modern document with lines and corner fold */}
-    <defs>
-      <linearGradient id="fileGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" stopColor="currentColor" stopOpacity="0.8" />
-        <stop offset="100%" stopColor="currentColor" stopOpacity="0.4" />
-      </linearGradient>
-    </defs>
-    {/* Document base */}
-    <rect x="5" y="4" width="14" height="16" rx="2" stroke="currentColor" strokeWidth="2" fill="currentColor" fillOpacity="0.08" />
-    {/* Corner fold - modern detail */}
-    <path d="M15 4 L19 4 L19 8 L15 4 Z" fill="currentColor" fillOpacity="0.2" stroke="currentColor" strokeWidth="1.5" />
-    <line x1="15" y1="4" x2="19" y2="8" stroke="currentColor" strokeWidth="1.5" />
-    {/* Text lines */}
-    <line x1="7" y1="9" x2="13" y2="9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-    <line x1="7" y1="12" x2="15" y2="12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-    <line x1="7" y1="15" x2="13" y2="15" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-    {/* Question mark badge */}
-    <circle cx="17" cy="7" r="2.5" fill="currentColor" fillOpacity="0.2" stroke="currentColor" strokeWidth="1.5" />
-    <path d="M17 6.5 L17 7.5 M17 9 L17 9.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+  <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z" />
+    <path d="M14 3v5h5" />
+    <path d="M8 12h8" opacity="0.8" />
+    <path d="M8 15.5h6" opacity="0.8" />
   </svg>
 );
 
 const IconUserPlus = ({ className }) => (
-  <svg className={className} fill="none" viewBox="0 0 24 24">
-    {/* Modern user with plus badge */}
-    <defs>
-      <linearGradient id="userPlusGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" stopColor="currentColor" stopOpacity="0.9" />
-        <stop offset="100%" stopColor="currentColor" stopOpacity="0.5" />
-      </linearGradient>
-    </defs>
-    {/* User circle */}
-    <circle cx="12" cy="8" r="4" stroke="currentColor" strokeWidth="2" fill="currentColor" fillOpacity="0.15" />
-    {/* User body */}
-    <path d="M5 20 C5 16, 8 14, 12 14 C16 14, 19 16, 19 20" stroke="currentColor" strokeWidth="2" strokeLinecap="round" fill="none" />
-    {/* Plus badge - modern touch */}
-    <circle cx="17" cy="6" r="4" fill="currentColor" fillOpacity="0.2" stroke="currentColor" strokeWidth="2" />
-    <line x1="17" y1="4" x2="17" y2="8" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
-    <line x1="15" y1="6" x2="19" y2="6" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
+  <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="10" cy="8" r="3.2" />
+    <path d="M4 19c0-2.2 1.8-4 4-4h4c2.2 0 4 1.8 4 4" />
+    <path d="M18.5 8v5" />
+    <path d="M16 10.5h5" />
   </svg>
 );
 
 const IconCalendar = ({ className }) => (
-  <svg className={className} fill="none" viewBox="0 0 24 24">
-    {/* Modern minimalist calendar with appointment badge - SaaS style */}
-    {/* Calendar base with rounded corners */}
-    <rect x="4" y="5" width="16" height="15" rx="2.5" stroke="currentColor" strokeWidth="2" fill="none" />
-    {/* Calendar top header */}
-    <rect x="4" y="5" width="16" height="4" rx="2.5" fill="currentColor" fillOpacity="0.12" />
-    {/* Spiral binding detail */}
-    <circle cx="6.5" cy="5" r="0.8" fill="currentColor" fillOpacity="0.3" />
-    <circle cx="17.5" cy="5" r="0.8" fill="currentColor" fillOpacity="0.3" />
-    {/* Subtle grid lines */}
-    <line x1="8.5" y1="9" x2="8.5" y2="20" stroke="currentColor" strokeWidth="1" strokeOpacity="0.15" />
-    <line x1="12" y1="9" x2="12" y2="20" stroke="currentColor" strokeWidth="1" strokeOpacity="0.15" />
-    <line x1="15.5" y1="9" x2="15.5" y2="20" stroke="currentColor" strokeWidth="1" strokeOpacity="0.15" />
-    <line x1="4" y1="12.5" x2="20" y2="12.5" stroke="currentColor" strokeWidth="1" strokeOpacity="0.15" />
-    <line x1="4" y1="16" x2="20" y2="16" stroke="currentColor" strokeWidth="1" strokeOpacity="0.15" />
-    {/* Modern appointment notification badge */}
-    <circle cx="17" cy="16" r="3" fill="currentColor" fillOpacity="0.2" stroke="currentColor" strokeWidth="1.5" />
-    <path d="M15.8 16 L16.5 16.7 L18.2 15" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+  <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round">
+    <rect x="3.5" y="5" width="17" height="15.5" rx="2.5" />
+    <path d="M7 3.5v3" />
+    <path d="M17 3.5v3" />
+    <path d="M3.5 9h17" opacity="0.75" />
+    <path d="M8 13h2" opacity="0.85" />
+    <path d="M12 13h2" opacity="0.85" />
+    <path d="M16 13h2" opacity="0.85" />
   </svg>
 );
 
@@ -279,15 +201,7 @@ function AdminLayout({ children }) {
           {/* Logo Section */}
           <div className="px-6 py-5 border-b border-slate-200 dark:border-slate-700 flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <img 
-                src="/images/tops-logo.png" 
-                alt="TOPS TECHNOLOGIES Logo" 
-                className="h-10 w-auto max-w-[180px]"
-                style={{ objectFit: 'contain' }}
-                onError={(e) => {
-                  e.target.style.display = 'none';
-                }}
-              />
+              <AppLogo height={52} className="max-w-[220px]" />
             </div>
             {/* Close button only on mobile */}
             {isMobile && mobileSidebarOpen && (
@@ -319,7 +233,7 @@ function AdminLayout({ children }) {
                   whileTap={{ scale: 0.98 }}
                 >
                   <span className={`flex-shrink-0 ${active ? 'text-blue-600 dark:text-blue-400' : ''}`}>
-                    {getIcon(item.icon, 'w-5 h-5')}
+                    {getIcon(item.icon, 'w-[22px] h-[22px]')}
                   </span>
                   <span className="truncate">
                     {item.label}

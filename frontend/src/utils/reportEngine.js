@@ -350,6 +350,268 @@ export function buildTopPathwayRowsForDisplay(
   }));
 }
 
+// ─── Blended Top Matches (Top 9) ───────────────────────────────────────────
+
+function cleanCanonicalBaseTitle(title) {
+  return String(title || '')
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9\s]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function canonicalizeCareerTitle(title, canonicalTitleMap) {
+  const cleaned = cleanCanonicalBaseTitle(title);
+  if (!cleaned) return '';
+  const map = canonicalTitleMap && typeof canonicalTitleMap === 'object' ? canonicalTitleMap : null;
+  return map && typeof map[cleaned] === 'string' && map[cleaned].trim()
+    ? cleanCanonicalBaseTitle(map[cleaned])
+    : cleaned;
+}
+
+function flattenDetailedGridFromRows(topTypes, rows, canonicalTitleMap) {
+  const out = [];
+  let order = 0;
+  for (const type of topTypes) {
+    const row = rows.find((r) => r?.riasecCode === type);
+    const fields = row?.fields || [];
+    for (let pathwayIndex = 0; pathwayIndex < fields.length; pathwayIndex += 1) {
+      const field = fields[pathwayIndex];
+      const careers = Array.isArray(field?.careers) ? field.careers : [];
+      for (let positionIndex = 0; positionIndex < careers.length; positionIndex += 1) {
+        const c = careers[positionIndex];
+        const title = String(c?.title || '').trim();
+        if (!title) continue;
+        out.push({
+          title,
+          canonical: canonicalizeCareerTitle(title, canonicalTitleMap),
+          type,
+          pathwayIndex,
+          positionIndex,
+          originalOrder: order++
+        });
+      }
+    }
+  }
+  return out;
+}
+
+function isBetterStrength(a, b) {
+  if (!b) return true;
+  if (!a) return false;
+  if (a.pathwayIndex !== b.pathwayIndex) return a.pathwayIndex < b.pathwayIndex;
+  if (a.positionIndex !== b.positionIndex) return a.positionIndex < b.positionIndex;
+  return a.originalOrder < b.originalOrder;
+}
+
+function strengthTuple(item) {
+  return [Number(item?.pathwayIndex ?? 99), Number(item?.positionIndex ?? 99)];
+}
+
+function significantlyStronger(candidate, current) {
+  const [cp, ci] = strengthTuple(candidate);
+  const [wp, wi] = strengthTuple(current);
+  if (cp < wp) return true;
+  if (cp === wp && wi - ci >= 2) return true;
+  return false;
+}
+
+function buildTypePool(flatItems, typeCode) {
+  return flatItems
+    .filter((x) => x.type === typeCode && x.canonical)
+    .sort((a, b) => {
+      if (a.pathwayIndex !== b.pathwayIndex) return a.pathwayIndex - b.pathwayIndex;
+      if (a.positionIndex !== b.positionIndex) return a.positionIndex - b.positionIndex;
+      return a.originalOrder - b.originalOrder;
+    });
+}
+
+function pickNextFromPool(pool, selectedCanonicals, allowCanonicals = null) {
+  for (const item of pool) {
+    if (!item?.canonical) continue;
+    if (allowCanonicals && !allowCanonicals.has(item.canonical)) continue;
+    if (selectedCanonicals.has(item.canonical)) continue;
+    selectedCanonicals.add(item.canonical);
+    return item;
+  }
+  return null;
+}
+
+function computeCommonCanonicals(poolA, poolB) {
+  const a = new Set(poolA.map((x) => x.canonical).filter(Boolean));
+  const common = new Set();
+  for (const x of poolB) {
+    if (x?.canonical && a.has(x.canonical)) common.add(x.canonical);
+  }
+  return common;
+}
+
+function pickBalancedForMix({ typeA, typeB, poolA, poolB, selectedCanonicals }) {
+  const commonCanonicals = computeCommonCanonicals(poolA, poolB);
+  const picks = [];
+  let insufficientBalance = false;
+
+  // 1) Common pick (if available)
+  const commonPick =
+    commonCanonicals.size > 0 ? pickNextFromPool([...poolA, ...poolB], selectedCanonicals, commonCanonicals) : null;
+  if (commonPick) picks.push(commonPick);
+
+  // 2) Strong from A
+  const pickA = pickNextFromPool(poolA, selectedCanonicals);
+  if (pickA) picks.push(pickA);
+
+  // 3) Strong from B
+  const pickB = pickNextFromPool(poolB, selectedCanonicals);
+  if (pickB) picks.push(pickB);
+
+  // If we didn't reach 3, fill from union (still no duplicates)
+  if (picks.length < 3) {
+    const union = [...poolA, ...poolB].sort((x, y) => (isBetterStrength(x, y) ? -1 : 1));
+    while (picks.length < 3) {
+      const extra = pickNextFromPool(union, selectedCanonicals);
+      if (!extra) break;
+      picks.push(extra);
+    }
+  }
+
+  // Ensure "balanced feel" when possible.
+  const hasA = picks.some((p) => p.type === typeA);
+  const hasB = picks.some((p) => p.type === typeB);
+  if ((!hasA || !hasB) && (poolA.length > 0 && poolB.length > 0)) {
+    // Try to rebalance by swapping a non-common pick.
+    const missingType = hasA ? typeB : typeA;
+    const neededPool = missingType === typeA ? poolA : poolB;
+    const replacement = pickNextFromPool(neededPool, selectedCanonicals);
+    if (replacement) {
+      // Replace weakest pick that is not from missingType.
+      let weakestIdx = -1;
+      for (let i = 0; i < picks.length; i += 1) {
+        if (picks[i].type === missingType) continue;
+        if (weakestIdx === -1 || isBetterStrength(picks[weakestIdx], picks[i])) weakestIdx = i;
+      }
+      if (weakestIdx !== -1) picks[weakestIdx] = replacement;
+    } else {
+      insufficientBalance = true;
+    }
+  }
+
+  if (poolA.length === 0 || poolB.length === 0) {
+    insufficientBalance = true;
+  }
+
+  // Smart adjustment (deterministic): replace weakest with significantly stronger next best
+  // candidate, only if balance stays valid.
+  const unionSorted = [...poolA, ...poolB].sort((a, b) => {
+    if (a.pathwayIndex !== b.pathwayIndex) return a.pathwayIndex - b.pathwayIndex;
+    if (a.positionIndex !== b.positionIndex) return a.positionIndex - b.positionIndex;
+    return a.originalOrder - b.originalOrder;
+  });
+  const weakest = [...picks].sort((a, b) => (isBetterStrength(a, b) ? 1 : -1))[0];
+  const candidate = unionSorted.find((c) => c?.canonical && !selectedCanonicals.has(c.canonical));
+  if (weakest && candidate && significantlyStronger(candidate, weakest)) {
+    // Check balance if we replace weakest with candidate.
+    const replaced = picks.map((p) => (p === weakest ? candidate : p));
+    const okA = replaced.some((p) => p.type === typeA);
+    const okB = replaced.some((p) => p.type === typeB);
+    if (okA && okB) {
+      selectedCanonicals.add(candidate.canonical);
+      const idx = picks.indexOf(weakest);
+      if (idx >= 0) picks[idx] = candidate;
+    }
+  }
+
+  return { picks: picks.slice(0, 3), insufficientBalance };
+}
+
+/**
+ * Build Blended Top 9 careers from the already-provided 27-career detailed grid.
+ * Uses only the given careers (no generation), canonicalized for de-dupe.
+ *
+ * @param {Array<{riasecCode: string, fields: Array<{ careers?: Array<{title: string}> }>} >} detailedRows
+ * @param {string[]} topTypes length 3: [X, Y, Z]
+ * @param {Record<string, string>} [canonicalTitleMap] keys must be pre-cleaned lowercase forms
+ */
+export function buildBlendedTopMatchesFromDetailedRows(
+  detailedRows,
+  topTypes,
+  canonicalTitleMap = {}
+) {
+  const types = Array.isArray(topTypes) ? topTypes.map((t) => String(t || '').toUpperCase()) : [];
+  const normalizedTopTypes = types.filter(Boolean).slice(0, 3);
+  const rows = Array.isArray(detailedRows) ? detailedRows : [];
+
+  if (normalizedTopTypes.length !== 3) {
+    return {
+      topTypes: normalizedTopTypes,
+      blended: [],
+      detailed: rows,
+      meta: { deduped: true, alsoInTopMatches: [] }
+    };
+  }
+
+  const [X, Y, Z] = normalizedTopTypes;
+  const flat = flattenDetailedGridFromRows(normalizedTopTypes, rows, canonicalTitleMap);
+  const pools = {
+    [X]: buildTypePool(flat, X),
+    [Y]: buildTypePool(flat, Y),
+    [Z]: buildTypePool(flat, Z)
+  };
+  const selectedCanonicals = new Set();
+  const mixDefs = [
+    { mix: `${X}+${Y}`, title: `Mix of ${X} and ${Y}`, a: X, b: Y },
+    { mix: `${Y}+${Z}`, title: `Mix of ${Y} and ${Z}`, a: Y, b: Z },
+    { mix: `${Z}+${X}`, title: `Mix of ${Z} and ${X}`, a: Z, b: X }
+  ];
+
+  const blended = mixDefs.map((m) => {
+    const poolA = pools[m.a] || [];
+    const poolB = pools[m.b] || [];
+    const { picks, insufficientBalance } = pickBalancedForMix({
+      typeA: m.a,
+      typeB: m.b,
+      poolA,
+      poolB,
+      selectedCanonicals
+    });
+    return {
+      mix: m.mix,
+      title: m.title,
+      careers: picks.map((p) => p.title),
+      insufficientBalance
+    };
+  });
+
+  const alsoInTopMatches = blended.flatMap((b) => b.careers || []).filter(Boolean);
+  const pickedCanonicals = new Set();
+  const pickedItems = [];
+  for (const m of blended) {
+    // Reconstruct picked items from pools by title+canonical to rank overall deterministically.
+    // We keep this display-only and stable; it does not change the blend selection.
+    const mixTypes = String(m.mix || '').split('+').filter(Boolean);
+    const union = mixTypes.flatMap((t) => pools[t] || []);
+    for (const title of m.careers || []) {
+      const item = union.find((x) => x.title === title) || null;
+      if (!item?.canonical || pickedCanonicals.has(item.canonical)) continue;
+      pickedCanonicals.add(item.canonical);
+      pickedItems.push(item);
+    }
+  }
+  pickedItems.sort((a, b) => {
+    if (a.pathwayIndex !== b.pathwayIndex) return a.pathwayIndex - b.pathwayIndex;
+    if (a.positionIndex !== b.positionIndex) return a.positionIndex - b.positionIndex;
+    return a.originalOrder - b.originalOrder;
+  });
+  const top3OverallPicks = pickedItems.slice(0, 3).map((x) => x.title).filter(Boolean);
+
+  return {
+    topTypes: normalizedTopTypes,
+    blended,
+    detailed: rows,
+    meta: { deduped: true, alsoInTopMatches, top3OverallPicks }
+  };
+}
+
 /**
  * Centralized policy for cross-row placement (single source for pathway override behavior).
  * Keeping these in one object avoids hidden rule drift across functions/files.

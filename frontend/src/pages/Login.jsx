@@ -173,7 +173,7 @@ function Login() {
               {/* Logo */}
               <div className="flex items-center gap-2">
                 <img 
-                  src="/images/tops-logo.png" 
+                  src="/images/logo-transparent.png" 
                   alt="TOPS TECHNOLOGIES Logo" 
                   className="h-10 w-auto max-w-[200px]"
                   style={{ objectFit: 'contain' }}
@@ -656,7 +656,7 @@ function Login() {
                 {/* Logo Section */}
                 <div className="flex justify-center flex-shrink-0 mb-4">
                   <img 
-                    src="/images/tops-logo.png" 
+                    src="/images/logo-transparent.png" 
                     alt="TOPS TECHNOLOGIES Logo" 
                     className="w-auto max-w-[220px] sm:max-w-[280px] h-12 sm:h-14"
                     style={{ objectFit: 'contain' }}
